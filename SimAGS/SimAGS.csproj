@@ -67,6 +67,7 @@
     <Compile Include="Components\TwoWindTrans.cs" />
     <Compile Include="Components\Zone.cs" />
     <Compile Include="DataProcess.cs" />
+    <Compile Include="DynModels\MonModels\BranFlow.cs" />
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
     <Compile Include="MainForm.cs">
@@ -87,6 +88,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimConfig.cs" />
+    <Compile Include="SimUtil\Jacob.cs" />
+    <Compile Include="SimUtil\YMatrix.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -125,5 +128,6 @@
     <Content Include="img\simAGC_Stop_Icon.png" />
     <Content Include="img\simAGC_View_Icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

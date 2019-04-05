@@ -7,13 +7,17 @@
         private static SimConfig _config;
         public static SimConfig GetConfig()
         {
-            return _config ?? new SimConfig();
+            if (_config == null)
+            {
+                _config = new SimConfig();
+            }
+            return _config;
         }
 
         private SimConfig() { }
 
         #endregion
-        
+
 
     }
 }

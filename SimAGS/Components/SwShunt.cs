@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    class SwShunt
+    public class SwShunt
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.PfProcessor
 {
-    class PfVoltageHelper
+    public class PfVoltageHelper
     {
     }
 }

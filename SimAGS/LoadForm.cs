@@ -43,7 +43,7 @@ namespace SimAGS
             {
                 SubmitHandler();
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

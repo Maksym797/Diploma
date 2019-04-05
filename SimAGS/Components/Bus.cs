@@ -3,10 +3,453 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimAGS.Components.ExtendOption;
 
 namespace SimAGS.Components
 {
     public class Bus
     {
+        // data loaded from raw file 
+        public int I = 0;       // bus number 
+        public String NAME = "";        // bus name 
+        public double BASKV = 0;        // bus base voltage in kV
+        public int IDE = 0;     // bus type (1 - load bus; 2 - gen bus; 3 - slack bus; 4- dis-connected bus)
+        public double GL = 0.0;         // P component of shunt admittance to ground in MW at per unit 
+        public double BL = 0.0;     // Q component of shunt admittance to ground in MVar (+ capacitor; - reactor)
+        public int AREA = 0;        // area number
+        public int ZONE = 0;        // zone number
+        public double VM = 1.0;     // bus voltage magnitude [pu] 
+        public double VA = 0.0;     // bus phase angle [deg]
+        public int OWNER = 0;       // owner number
+
+        public static int DATALENGTH = 11;  // default data line 
+
+        // extended variables 
+        public const double DEFAULT_VMAX = 1.5;                     // maximum voltage for PQ bus
+        public const double DEFAULT_VMIN = 0.2;                     // minimum voltage for PQ bus
+
+        // computed data section 
+        public double volt = 1.0;                               // computed bus voltage after the inter-PQ loop is finished
+        public double ang = 0.0;                                // computed phase angle after the inter-PQ loop is finished
+        public double Pset = 0.0;                               // power injection = PG - PL 
+        public double Qset = 0.0;                               // power injection = QG - QL 
+        public int calcType = 0;                                // 1--> PQ bus; 2--> PV bus for PV <-> PQ conversion if necessary 
+
+        public int vmagPos = 0;                                     // index for bus voltage in the pf solution vector
+        public int vangPos = 0;                                     // index for bus angle in the pf solution vector
+        public int yMatIndx = 0;                                    // position in the sortedList; 
+
+        public List<Bus> adjBusList = new List<Bus>();    // store adjacent buses connected by activated branches 
+
+        // add generators to bus (for multiple generators at the same bus)
+        // assumption: all of the generator at the same bus regulating the same bus (either local or remote bus)
+        public bool bHasGen = false;
+        public List<Gen> busGens = new List<Gen>();       // all generators connected
+        public double aggPGen = 0.0;                        // total power P gen 
+        public double aggQGen = 0.0;                        // total power Q gen 
+        public double aggQMax = 1E4;                        // Total Q Max only valid for PV bus; for PQ bus, it is set to  10000
+        public double aggQMin = -1E4;                       // Total Q Min only valid for PV bus; for PQ bus, it is set to -10000
+        public double aggQUpperMargin = 0.0;                        // total Qmax - Qgen
+        public double aggQBottomMargin = 0.0;                       // total Qgen - Qmin 
+
+        public bool bBusHasRegGen = false;
+        public List<int> genRegBusNumList;                 // regulating bus list
+        public List<double> regBusVoltSetList;             // regulating sitting list
+        public double regBusVoltSet = 0.0;                          // targeting voltage magnitude
+        public int genRegBusNum = 0;                            // generator regulated bus (all generators should regulate the same bus)
+        public double genBusVoltSetCalc = 0.0;                      // generator terminal voltage setting (=1 regulating voltage is the terminal bus is regulated)		
+
+
+        // add loads to bus (for multiple loads at the same bus)
+        public bool bHasLoad = false;
+        public List<Load> busLoads = new List<Load>();
+        public double aggCPLoadP = 0.0;                         // total pure P load [pu]
+        public double aggCPLoadQ = 0.0;                         // total pure Q load [pu]
+        public double aggCCLoadP = 0.0;                         // total P of constant current load [pu]
+        public double aggCCLoadQ = 0.0;                         // total Q of constant current load [pu] 
+        public double aggCYLoadP = 0.0;                         // total P of constant impedance load [pu]
+        public double aggCYLoadQ = 0.0;                         // total Q of constant impedance load [pu]
+
+        public double PLoadTotalSet = 0.0;                          // total MW load at 1.0 [pu]
+        public double QLoadTotalSet = 0.0;                          // total MVAR load at 1.0 [pu] 
+
+        public double aggTotalPLoad = 0.0;                          // total MW load after power flow converged 
+        public double aggTotalQLoad = 0.0;                          // total MWAR load after power flow converged
+
+        //public bool bIncludeLoadInYMat = true;					// include constant-impedance component into yMatrix 
+
+        // external PQ injection to bus (Gen, Load)
+        public double extPInj = 0.0;
+        public double extQInj = 0.0;
+
+        // add switched shunts (for multiple shunts at the same bus)
+        public bool bHasSwShunt = false;
+        public List<SwShunt> busSwShunts = new List<SwShunt>();
+        public int swshuntRegBusNum = 0;
+        public double aggSWshuntBusBMax = 0;                        // total shunt BMax [pu]
+        public double aggSWshuntBusBMin = 0;                        // total shunt BMin [pu]
+        public double aggSWshuntBusBMargin = 0;                     // shunt margin [pu]
+        public double swshuntCalcB = 0;
+
+        // extended voltage regulation option 
+        public BaseExtOption voltExtOption;
+        public int GGIndx = 0;                                  // index in GG sub-matrix (for gen bus only) 
+        public int LLIndx = 0;                                  // index in LL sub-matrix (for load bus and switchable shunt bus only)
+        public bool bVoltRegulated = false;                      // bool - if this bus is regulated by others 
+        public double VoltRegulatedSet = 0.0;                       // the target voltage 
+
+        // for dynamic load [dynamic simulation]
+        public bool bHasDynLoad = false;                         // has dynamic load 
+        public DynLoadModel dynLoad;                                // aggregated load models  
+
+
+        // for bus frequency [dynamic simulation]
+        public BUSFREQ busFreqCalc;                                 // store if the bus's frequency is measured (for forming jacobian matrix)
+        public bool bHasFreqMeasure = false;
+        public double busFreq = 0.0;                                // bus frequency deviation (in pu) 
+        public int busFreq_Pos = 0;
+
+        // for ACE in AGC simulation [dynamic simulation]
+        public double areaFreqWeight = 0.0;
+
+        // for wind data injection modeling [dynamic simulation]
+        public DYNWIND windModel;
+        public bool bWindMWEnable = false;
+        public double windMWInj = 0.0;
+
+        // neigbring buses 
+        public List<Bus> neighborBusList = new List<Bus>();
+
+        // 
+        //public bool bDynSimMon = false;						// decide if it will be stored
+
+
+        // presenting data purpose 
+        public static String[] header = { "Number", "Name", "Type", "Norm kV", "PU Volt", "Angle", "G", "B", "Area", "Zone", "Owner" };
+        public static int tableColNum = 11;
+
+        // Read data from string line 
+        public bus(String line)
+        {
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
+            I = int.Parse(dataEntry[0]);
+            NAME = dataEntry[1].substring(1, dataEntry[1].lastIndexOf("'"));
+            BASKV = Double.Parse(dataEntry[2]);
+            IDE = int.Parse(dataEntry[3]);
+            GL = Double.Parse(dataEntry[4]) / SBASE;
+            BL = Double.Parse(dataEntry[5]) / SBASE;
+            AREA = int.Parse(dataEntry[6]);
+            ZONE = int.Parse(dataEntry[7]);
+            VM = Double.Parse(dataEntry[8]);
+            VA = Double.Parse(dataEntry[9]) * Deg2Rad;
+            OWNER = int.Parse(dataEntry[10]);
+
+            // initialize the attached bus devices 
+            adjBusList = new List<Bus>();
+            busGens = new List<Gen>();
+            busLoads = new List<Load>();
+            busSwShunts = new List<SwShunt>();
+
+            // aggregated bus Q
+            aggQMax = 0.0;
+            aggQMin = 0.0;
+            aggPGen = 0.0;
+
+            // for generator voltage regulation 
+            genRegBusNumList = new List<int>();
+            regBusVoltSetList = new List<Double>();
+
+            // update calculated variables 
+            calcType = IDE;
+            volt = VM;
+            ang = VA;
+        }
+
+
+
+        // add power flow load model 
+        public void addLoad(load loadModel)
+        {
+            bHasLoad = true;
+            //bDynSimMon = true; 
+            busLoads.add(loadModel);
+        }
+
+        // add power flow generator model 
+        public void addGen(gen genModel)
+        {
+            bHasGen = true;
+            // set the network variable position in yVector - power flow solution vector
+            genModel.setHostBus(this);
+            busGens.add(genModel);
+
+            // store the bus generator regulation info
+            genRegBusNumList.add(genModel.IREG);
+            regBusVoltSetList.add(genModel.VS);
+        }
+
+        // add power flow switchable shunt model
+        public void addSwShunt(swshunt swshuntModel)
+        {
+            bHasSwShunt = true;
+            busSwShunts.add(swshuntModel);
+            System.out.println("[defiend in bus.java] Bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
+        }
+
+
+        // pre-process bus data 
+        public String setup()
+        {
+
+            // [0] check if PV bus has generator model 
+            if (IDE == 2 || IDE == 3)
+            {
+                if (!bHasGen)
+                {
+                    return ("#ERROR: PF Bus at " + I + " has no valid generator data!");
+                }
+            }
+
+            // [1] generator regulation 
+            if (bHasGen)
+            {
+                genRegBusNum = genRegBusNumList.get(0);                         // will be the regulated bus if no conflicts  
+                for (int i = 1; i < genRegBusNumList.size(); i++)
+                {
+                    if (genRegBusNumList.get(i) != genRegBusNum)
+                    {
+                        return ("#ERROR: PF gen at bus " + I + " have different regulated buses");
+                    }
+                }
+
+                regBusVoltSet = regBusVoltSetList.get(0);                       // will be the regulated voltage magnitude if no conflicts 
+                for (int i = 1; i < regBusVoltSetList.size(); i++)
+                {
+                    if (regBusVoltSetList.get(i) != regBusVoltSet)
+                    {
+                        return ("#ERROR: PF gen at bus " + I + " have different regulated voltage magnitude");
+                    }
+                }
+
+                bBusHasRegGen = (genRegBusNum != 0) ? true : false;
+                genBusVoltSetCalc = regBusVoltSet;                              // use generator section voltage is initialize volt magnitude
+                if (bBusHasRegGen)
+                {
+                    System.out.println("[definde in bus.java] Bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
+                    voltExtOption = new genRegOption(this);
+                }
+
+                // calculate the aggregated Q limt 
+                for (gen genTemp: busGens)
+                {
+                    if (genTemp.STAT == 1)
+                    {
+                        aggPGen += genTemp.PG;
+                    }
+                    if (calcType == 2 || calcType == 3)
+                    {               // for PV->PQ conversion [don't limit Q for Swing bus] 
+                        aggQMax += genTemp.realQT;
+                        aggQMin += genTemp.realQB;
+                    }
+                }
+
+                // calculate the MW and MVar share based on the ratio of individual Qmax to total Qmax
+                for (gen genTemp: busGens)
+                {
+                    if (calcType == 2 || calcType == 3)
+                    {
+                        genTemp.busMWShare = genTemp.PG / aggPGen;
+                        genTemp.busMVarShare = genTemp.realQT / aggQMax;
+                    }
+                }
+                //System.out.println("At bus " + I + " pgen = " + aggPGen + " qmax = " + aggQMax + " qmin =" + aggQMin); 
+            }
+
+            // [2] switchable shunt regulation 
+            if (bHasSwShunt)
+            {
+                for (swshunt swshuntTemp: busSwShunts)
+                {
+                    regBusVoltSet = swshuntTemp.VSWLO;
+                    aggSWshuntBusBMin += swshuntTemp.calcBMin;
+                    aggSWshuntBusBMax += swshuntTemp.calcBMax;
+                    swshuntCalcB += swshuntTemp.BINIT;
+                    swshuntRegBusNum = (swshuntTemp.SWREM == 0) ? I : swshuntTemp.SWREM;
+                }
+                voltExtOption = new swShuntRegOption(this);
+            }
+
+            // aggregate bus loads 
+            for (load loadTemp: busLoads)
+            {
+                if (loadTemp.STATUS == 1)
+                {
+                    aggCPLoadP += loadTemp.PL;              // for multiple loads 
+                    aggCPLoadQ += loadTemp.QL;
+                    aggCCLoadP += loadTemp.IP;
+                    aggCCLoadQ += loadTemp.IQ;
+                    aggCYLoadP += loadTemp.YP;
+                    aggCYLoadQ += loadTemp.YQ;              // + for capactive load; - for reactive load
+                }
+            }
+
+            //if (!busLoads.isEmpty()) {					// base for load schedule in dynamic simulation 
+            //	PLoadTotalSet = aggCPLoadP + aggCCLoadP + aggCYLoadP; 
+            //	QLoadTotalSet = aggCPLoadQ + aggCCLoadQ - aggCYLoadQ; 
+            //}
+
+            return null;
+        }
+
+        // calculate the external power injection to the bus (Gen - Load) 
+        public void calcExtPQInj(double voltMag)
+        {
+
+            extPInj = 0.0;
+            extQInj = 0.0;
+
+            // take into accounts the generation
+            if (bHasGen)
+            {
+                //extPInj += aggPGen + windMWInj;			// calculate additional power injection from wind turbine
+                extPInj += aggPGen;
+                extQInj += aggQGen;
+            }
+
+            // take into accounts the load consumption 
+            if (bHasLoad)
+            {
+                extPInj += -(aggCPLoadP + voltMag * aggCCLoadP + voltMag * voltMag * aggCYLoadP);
+                extQInj += -(aggCPLoadQ + voltMag * aggCCLoadQ - voltMag * voltMag * aggCYLoadQ);
+            }
+        }
+
+
+        // initialize all of the dynamic models attached to a given bus 
+        public void dynIni(double[,] yVector, double[,] xVector) throws simException
+        {
+            // initialize the network variable  
+            yVector.setQuick(vangPos, 0, ang);
+		yVector.setQuick(vmagPos, 0, volt); 
+
+		// <1> regular dynamic model 
+		for (gen genTemp: busGens) {
+			genTemp.genDyn.ini(yVector, xVector);
+			if (genTemp.hasExcModel) genTemp.excDyn.ini(yVector, xVector);
+			if (genTemp.hasGovModel) genTemp.govDyn.ini(yVector, xVector);
+    }
+
+		// <2> initialize bus frequency 
+		if (bHasFreqMeasure) busFreqCalc.ini(yVector, xVector); 
+
+		// <3> initialize dynamic load 
+		if (bHasLoad) dynLoad.ini(yVector, xVector); 
+
+		// <4> initialize wind data
+		if (bWindMWEnable) windModel.ini(yVector, xVector);
+}
+
+// update generators results if they are connected to the same bus 
+public void updateResults()
+{
+    for (gen genTemp: busGens)
+    {
+        if (calcType == 2 || calcType == 3)
+        {
+            genTemp.updateState();              // assign the bus voltage and angle to generators and calculate power injections  
+        }
+    }
+}
+
+// get voltage for dynamic simulation 
+public double getVolt(double[,] yVector)
+{
+    return yVector.getQuick(vmagPos, 0);
+}
+
+// get angle for dynamic simulation 
+public double getAngle(double[,] yVector)
+{
+    return yVector.getQuick(vangPos, 0);
+}
+
+// get MW load 
+public double getRealPLoad(double[,] yVector)
+{
+    //return yVector.getQuick(dynRealPLoad_Pos, 0); 
+    return -9999;
+}
+
+// get MVAr load
+public double getRealQLoad(double[,] yVector)
+{
+    //return yVector.getQuick(dynRealQLoad_Pos,0); 
+    return -9999;
+}
+
+// return bus extended option for voltage regulation
+public abstractExtOption getVoltExtOption()
+{
+    return voltExtOption;
+}
+
+// update YMatrix 
+public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+{
+    if (this.IDE != 4)
+    {                                                       //active bus 
+                                                            // [1] bus self shunt
+        yMatRe.setQuick(yMatIndx, yMatIndx, GL + yMatRe.getQuick(yMatIndx, yMatIndx));
+        yMatIm.setQuick(yMatIndx, yMatIndx, BL + yMatIm.getQuick(yMatIndx, yMatIndx));
+
+        // ### [2] add constant impedance load model 
+        // ### if (bHasLoad && bIncludeLoadInYMat){
+        // ###	for (load loadTemp: busLoads){
+        // ###		if (loadTemp.STATUS == 1) {
+        // ###			yMatRe.setQuick(yMatIndx, yMatIndx, loadTemp.calcGII + yMatRe.getQuick(yMatIndx, yMatIndx)); 
+        // ###			yMatIm.setQuick(yMatIndx, yMatIndx, loadTemp.calcBII + yMatIm.getQuick(yMatIndx, yMatIndx)); 
+        // ###		}
+        // ###	}
+        // ###}
+
+        // [2] add switchable shunts 
+        if (bHasSwShunt)
+        {
+            yMatIm.set(yMatIndx, yMatIndx, swshuntCalcB + yMatIm.getQuick(yMatIndx, yMatIndx));
+        }
+    }
+}
+
+
+
+// add neighboring bus 
+public void addNeighborBus(bus busTemp)
+{
+    if (!neighborBusList.contains(busTemp))
+    {
+        neighborBusList.add(busTemp);
+    }
+}
+
+
+// export data for tabular showing 
+public Object[] setTable()
+{
+    Object[] ret = new Object[tableColNum];
+    ret[0] = I;
+    ret[1] = NAME;
+    ret[2] = IDE;
+    ret[3] = String.format("%1.2f", BASKV);
+    ret[4] = String.format("%1.4f", volt);
+    ret[5] = String.format("%1.2f", ang / Deg2Rad);
+    ret[6] = String.format("%1.2f", GL * SBASE);
+    ret[7] = String.format("%1.2f", BL * SBASE);
+    ret[8] = AREA;
+    ret[9] = ZONE;
+    ret[10] = OWNER;
+    return ret;
+}
+	
+	
     }
 }
