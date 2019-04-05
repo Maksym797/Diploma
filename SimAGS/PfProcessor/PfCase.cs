@@ -32,7 +32,7 @@ namespace SimAGS.PfProcessor
 
         public void LoadCaseDate(FileStream pfFile)
         {
-            new PfCaseLoad(this).Exacute(pfFile);
+            new PfCaseLoad(this).Execute(pfFile);
         }
     }
 }

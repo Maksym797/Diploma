@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components.ExtendOption
 {
-    internal class BaseExtOption
+    public class BaseExtOption
     {
         //TODO
         //public Algebra matrixOpt = new Algebra();
