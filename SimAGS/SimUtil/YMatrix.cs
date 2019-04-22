@@ -17,8 +17,8 @@ namespace SimAGS.SimUtil
 
             if ((nYNode = pfCaseMaseter.SortBusArrayList.Count) != 0)
             {
-                //  yMatRe = new SparseDoubleMatrix2D(nYNode, nYNode);
-                //  yMatIm = new SparseDoubleMatrix2D(nYNode, nYNode);
+                //  yMatRe = new Sparsedouble[,](nYNode, nYNode);
+                //  yMatIm = new Sparsedouble[,](nYNode, nYNode);
                     
                 //  //--------------------- add bus admittance -----------------------//
                 //  for (bus busTemp: pfCaseMaseter.sortBusArrayList)

@@ -13,11 +13,11 @@ namespace SimAGS.Components.ExtendOption
 
         //public int getVoltOptmVarIndx() { return 0; }
 
-        //public void buildLGMatWithRegCtr(DoubleMatrix2D LGMat) { }
+        //public void buildLGMatWithRegCtr(double[,] LGMat) { }
 
-        //public void buildInequConCofMat(DoubleMatrix2D optmInEquConConfMat) { }
+        //public void buildInequConCofMat(double[,] optmInEquConConfMat) { }
 
-        //public void buildInequbMat(DoubleMatrix2D optmInEqubMat) { }
+        //public void buildInequbMat(double[,] optmInEqubMat) { }
 
         //public void updateRegVar(Optimisation.Result result) { }
 

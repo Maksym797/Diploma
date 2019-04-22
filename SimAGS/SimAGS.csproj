@@ -67,7 +67,13 @@
     <Compile Include="Components\TwoWindTrans.cs" />
     <Compile Include="Components\Zone.cs" />
     <Compile Include="DataProcess.cs" />
+    <Compile Include="DynModels\DynLoadModels\DynLoadModel.cs" />
+    <Compile Include="DynModels\ExcModels\ExcModel.cs" />
+    <Compile Include="DynModels\GenModels\GenModel.cs" />
+    <Compile Include="DynModels\GovModels\GovModel.cs" />
     <Compile Include="DynModels\MonModels\BranFlow.cs" />
+    <Compile Include="DynModels\MonModels\BusFreq.cs" />
+    <Compile Include="DynModels\WindModels\DynWind.cs" />
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
     <Compile Include="MainForm.cs">

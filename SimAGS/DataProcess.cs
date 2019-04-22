@@ -8,22 +8,22 @@ namespace SimAGS
 {
     internal class DataProcess
     {
-        //// read in data using specified token 
-        //public static String[] getDataFields(String str, String token)
-        //{
-        //    //final StringTokenizer st = new StringTokenizer(str, token);
-        //    //int m = st.countTokens();
-        //    //String s1[] = new String[m];
-        //    //for (int i = 0; i < m; i++)
-        //    //{
-        //    //    s1[i] = st.nextToken().trim();
-        //    //}
-        //    //return s1;
-        //    throw new NotImplementedException();
-        //}
+        // read in data using specified token 
+        public static String[] GetDataFields(String str, String token)
+        {
+            //final StringTokenizer st = new StringTokenizer(str, token);
+            //int m = st.countTokens();
+            //String s1[] = new String[m];
+            //for (int i = 0; i < m; i++)
+            //{
+            //    s1[i] = st.nextToken().trim();
+            //}
+            //return s1;
+            throw new NotImplementedException();
+        }
 
         //// combine two vector x = [x1;x2]
-        //public static DoubleMatrix2D combVector(DoubleMatrix2D x1, DoubleMatrix2D x2)
+        //public static double[,] combVector(double[,] x1, double[,] x2)
         //{
         //    //int rowX1 = x1.rows();
         //    //int rowX2 = x2.rows();
@@ -36,7 +36,7 @@ namespace SimAGS
         //    //    System.exit(0);
         //    //}
         //    //
-        //    //DoubleMatrix2D ret = new SparseDoubleMatrix2D(rowX1 + rowX2, colX1);
+        //    //double[,] ret = new Sparsedouble[,](rowX1 + rowX2, colX1);
         //    //
         //    //for (int i = 0; i < rowX1; i++)
         //    //{
@@ -59,7 +59,7 @@ namespace SimAGS
         //}
 
         //// matrix operation a*x1 + b*x2
-        //public static DoubleMatrix2D matAdd(DoubleMatrix2D x1, DoubleMatrix2D x2, double a, double b)
+        //public static double[,] matAdd(double[,] x1, double[,] x2, double a, double b)
         //{
         //    //int rowX1 = x1.rows();
         //    //int rowX2 = x2.rows();
@@ -74,7 +74,7 @@ namespace SimAGS
         //    //    System.exit(0);
         //    //}
         //    //
-        //    //DoubleMatrix2D ret = new SparseDoubleMatrix2D(rowX1, colX1);
+        //    //double[,] ret = new Sparsedouble[,](rowX1, colX1);
         //    //for (int i = 0; i < rowX1; i++)
         //    //{
         //    //    for (int j = 0; j < colX1; j++)
@@ -87,7 +87,7 @@ namespace SimAGS
         //}
 
 
-        //public static void dispMat(DoubleMatrix2D xMat)
+        //public static void dispMat(double[,] xMat)
         //{
         //    //String str = "";
         //    //for (int i = 0; i < xMat.rows(); i++)

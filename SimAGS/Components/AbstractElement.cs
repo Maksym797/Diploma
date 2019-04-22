@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathNet.Numerics.LinearAlgebra;
-using SimAGS.Components.ExtendOption;
+﻿using SimAGS.Components.ExtendOption;
+using System;
 
 namespace SimAGS.Components
 {
     public abstract class AbstractElement
     {
         public const int SBase = 100;
-        public const double Deg2Ras = Math.PI / 180;
+        public const double Deg2Rad = Math.PI / 180;
 
         public BaseExtOption GetVoltExtOption()
         {

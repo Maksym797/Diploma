@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using SimAGS.Components.ExtendOption;
+using SimAGS.DynModels.DynLoadModels;
+using SimAGS.DynModels.MonModels;
+using SimAGS.DynModels.WindModels;
 
 namespace SimAGS.Components
 {
-    public class Bus
+    public class Bus : AbstractElement
     {
         // data loaded from raw file 
         public int I = 0;       // bus number 
@@ -104,7 +108,7 @@ namespace SimAGS.Components
 
 
         // for bus frequency [dynamic simulation]
-        public BUSFREQ busFreqCalc;                                 // store if the bus's frequency is measured (for forming jacobian matrix)
+        public BusFreq busFreqCalc;                                 // store if the bus's frequency is measured (for forming jacobian matrix)
         public bool bHasFreqMeasure = false;
         public double busFreq = 0.0;                                // bus frequency deviation (in pu) 
         public int busFreq_Pos = 0;
@@ -113,7 +117,7 @@ namespace SimAGS.Components
         public double areaFreqWeight = 0.0;
 
         // for wind data injection modeling [dynamic simulation]
-        public DYNWIND windModel;
+        public DynWind windModel;
         public bool bWindMWEnable = false;
         public double windMWInj = 0.0;
 
@@ -129,15 +133,15 @@ namespace SimAGS.Components
         public static int tableColNum = 11;
 
         // Read data from string line 
-        public bus(String line)
+        public Bus(String line)
         {
-            String[] dataEntry = dataProcess.getDataFields(line, ",");
+            String[] dataEntry = DataProcess.GetDataFields(line, ",");
             I = int.Parse(dataEntry[0]);
-            NAME = dataEntry[1].substring(1, dataEntry[1].lastIndexOf("'"));
+            NAME = dataEntry[1].Substring(1, dataEntry[1].LastIndexOf("'"));
             BASKV = Double.Parse(dataEntry[2]);
             IDE = int.Parse(dataEntry[3]);
-            GL = Double.Parse(dataEntry[4]) / SBASE;
-            BL = Double.Parse(dataEntry[5]) / SBASE;
+            GL = Double.Parse(dataEntry[4]) / SBase;
+            BL = Double.Parse(dataEntry[5]) / SBase;
             AREA = int.Parse(dataEntry[6]);
             ZONE = int.Parse(dataEntry[7]);
             VM = Double.Parse(dataEntry[8]);
@@ -168,32 +172,32 @@ namespace SimAGS.Components
 
 
         // add power flow load model 
-        public void addLoad(load loadModel)
+        public void addLoad(Load loadModel)
         {
             bHasLoad = true;
             //bDynSimMon = true; 
-            busLoads.add(loadModel);
+            busLoads.Add(loadModel);
         }
 
         // add power flow generator model 
-        public void addGen(gen genModel)
+        public void addGen(Gen genModel)
         {
             bHasGen = true;
             // set the network variable position in yVector - power flow solution vector
             genModel.setHostBus(this);
-            busGens.add(genModel);
+            busGens.Add(genModel);
 
             // store the bus generator regulation info
-            genRegBusNumList.add(genModel.IREG);
-            regBusVoltSetList.add(genModel.VS);
+            genRegBusNumList.Add(genModel.IREG);
+            regBusVoltSetList.Add(genModel.VS);
         }
 
         // add power flow switchable shunt model
-        public void addSwShunt(swshunt swshuntModel)
+        public void addSwShunt(SwShunt swshuntModel)
         {
             bHasSwShunt = true;
-            busSwShunts.add(swshuntModel);
-            System.out.println("[defiend in bus.java] Bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
+            busSwShunts.Add(swshuntModel);
+            MessageBox.Show("[defiend in bus.java] Bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
         }
 
 
@@ -213,19 +217,19 @@ namespace SimAGS.Components
             // [1] generator regulation 
             if (bHasGen)
             {
-                genRegBusNum = genRegBusNumList.get(0);                         // will be the regulated bus if no conflicts  
-                for (int i = 1; i < genRegBusNumList.size(); i++)
+                genRegBusNum = genRegBusNumList[0];                         // will be the regulated bus if no conflicts  
+                for (int i = 1; i < genRegBusNumList.Count; i++)
                 {
-                    if (genRegBusNumList.get(i) != genRegBusNum)
+                    if (genRegBusNumList[i] != genRegBusNum)
                     {
                         return ("#ERROR: PF gen at bus " + I + " have different regulated buses");
                     }
                 }
 
-                regBusVoltSet = regBusVoltSetList.get(0);                       // will be the regulated voltage magnitude if no conflicts 
-                for (int i = 1; i < regBusVoltSetList.size(); i++)
+                regBusVoltSet = regBusVoltSetList[0];                       // will be the regulated voltage magnitude if no conflicts 
+                for (int i = 1; i < regBusVoltSetList.Count; i++)
                 {
-                    if (regBusVoltSetList.get(i) != regBusVoltSet)
+                    if (regBusVoltSetList[i] != regBusVoltSet)
                     {
                         return ("#ERROR: PF gen at bus " + I + " have different regulated voltage magnitude");
                     }
@@ -235,12 +239,12 @@ namespace SimAGS.Components
                 genBusVoltSetCalc = regBusVoltSet;                              // use generator section voltage is initialize volt magnitude
                 if (bBusHasRegGen)
                 {
-                    System.out.println("[definde in bus.java] Bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
-                    voltExtOption = new genRegOption(this);
+                    MessageBox.Show("[definde in bus.java] Bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
+                    voltExtOption = new GenRegOption(this);
                 }
 
                 // calculate the aggregated Q limt 
-                for (gen genTemp: busGens)
+                foreach (var genTemp in busGens)
                 {
                     if (genTemp.STAT == 1)
                     {
@@ -254,7 +258,7 @@ namespace SimAGS.Components
                 }
 
                 // calculate the MW and MVar share based on the ratio of individual Qmax to total Qmax
-                for (gen genTemp: busGens)
+                foreach(var genTemp in busGens)
                 {
                     if (calcType == 2 || calcType == 3)
                     {
@@ -262,13 +266,13 @@ namespace SimAGS.Components
                         genTemp.busMVarShare = genTemp.realQT / aggQMax;
                     }
                 }
-                //System.out.println("At bus " + I + " pgen = " + aggPGen + " qmax = " + aggQMax + " qmin =" + aggQMin); 
+                //MessageBox.Show("At bus " + I + " pgen = " + aggPGen + " qmax = " + aggQMax + " qmin =" + aggQMin); 
             }
 
             // [2] switchable shunt regulation 
             if (bHasSwShunt)
             {
-                for (swshunt swshuntTemp: busSwShunts)
+                foreach (var swshuntTemp in busSwShunts)
                 {
                     regBusVoltSet = swshuntTemp.VSWLO;
                     aggSWshuntBusBMin += swshuntTemp.calcBMin;
@@ -276,7 +280,7 @@ namespace SimAGS.Components
                     swshuntCalcB += swshuntTemp.BINIT;
                     swshuntRegBusNum = (swshuntTemp.SWREM == 0) ? I : swshuntTemp.SWREM;
                 }
-                voltExtOption = new swShuntRegOption(this);
+                voltExtOption = new SwShuntRegOption(this);
             }
 
             // aggregate bus loads 
@@ -326,130 +330,131 @@ namespace SimAGS.Components
 
 
         // initialize all of the dynamic models attached to a given bus 
-        public void dynIni(double[,] yVector, double[,] xVector) throws simException
+        public void dynIni(double[,] yVector, double[,] xVector)
         {
             // initialize the network variable  
             yVector.setQuick(vangPos, 0, ang);
-		yVector.setQuick(vmagPos, 0, volt); 
+            yVector.setQuick(vmagPos, 0, volt);
 
-		// <1> regular dynamic model 
-		for (gen genTemp: busGens) {
-			genTemp.genDyn.ini(yVector, xVector);
-			if (genTemp.hasExcModel) genTemp.excDyn.ini(yVector, xVector);
-			if (genTemp.hasGovModel) genTemp.govDyn.ini(yVector, xVector);
-    }
+            // <1> regular dynamic model 
+            for (gen genTemp: busGens)
+            {
+                genTemp.genDyn.ini(yVector, xVector);
+                if (genTemp.hasExcModel) genTemp.excDyn.ini(yVector, xVector);
+                if (genTemp.hasGovModel) genTemp.govDyn.ini(yVector, xVector);
+            }
 
-		// <2> initialize bus frequency 
-		if (bHasFreqMeasure) busFreqCalc.ini(yVector, xVector); 
+            // <2> initialize bus frequency 
+            if (bHasFreqMeasure) busFreqCalc.ini(yVector, xVector);
 
-		// <3> initialize dynamic load 
-		if (bHasLoad) dynLoad.ini(yVector, xVector); 
+            // <3> initialize dynamic load 
+            if (bHasLoad) dynLoad.ini(yVector, xVector);
 
-		// <4> initialize wind data
-		if (bWindMWEnable) windModel.ini(yVector, xVector);
-}
-
-// update generators results if they are connected to the same bus 
-public void updateResults()
-{
-    for (gen genTemp: busGens)
-    {
-        if (calcType == 2 || calcType == 3)
-        {
-            genTemp.updateState();              // assign the bus voltage and angle to generators and calculate power injections  
+            // <4> initialize wind data
+            if (bWindMWEnable) windModel.ini(yVector, xVector);
         }
-    }
-}
 
-// get voltage for dynamic simulation 
-public double getVolt(double[,] yVector)
-{
-    return yVector.getQuick(vmagPos, 0);
-}
-
-// get angle for dynamic simulation 
-public double getAngle(double[,] yVector)
-{
-    return yVector.getQuick(vangPos, 0);
-}
-
-// get MW load 
-public double getRealPLoad(double[,] yVector)
-{
-    //return yVector.getQuick(dynRealPLoad_Pos, 0); 
-    return -9999;
-}
-
-// get MVAr load
-public double getRealQLoad(double[,] yVector)
-{
-    //return yVector.getQuick(dynRealQLoad_Pos,0); 
-    return -9999;
-}
-
-// return bus extended option for voltage regulation
-public abstractExtOption getVoltExtOption()
-{
-    return voltExtOption;
-}
-
-// update YMatrix 
-public void updateYMat(double[,] yMatRe, double[,] yMatIm)
-{
-    if (this.IDE != 4)
-    {                                                       //active bus 
-                                                            // [1] bus self shunt
-        yMatRe.setQuick(yMatIndx, yMatIndx, GL + yMatRe.getQuick(yMatIndx, yMatIndx));
-        yMatIm.setQuick(yMatIndx, yMatIndx, BL + yMatIm.getQuick(yMatIndx, yMatIndx));
-
-        // ### [2] add constant impedance load model 
-        // ### if (bHasLoad && bIncludeLoadInYMat){
-        // ###	for (load loadTemp: busLoads){
-        // ###		if (loadTemp.STATUS == 1) {
-        // ###			yMatRe.setQuick(yMatIndx, yMatIndx, loadTemp.calcGII + yMatRe.getQuick(yMatIndx, yMatIndx)); 
-        // ###			yMatIm.setQuick(yMatIndx, yMatIndx, loadTemp.calcBII + yMatIm.getQuick(yMatIndx, yMatIndx)); 
-        // ###		}
-        // ###	}
-        // ###}
-
-        // [2] add switchable shunts 
-        if (bHasSwShunt)
+        // update generators results if they are connected to the same bus 
+        public void updateResults()
         {
-            yMatIm.set(yMatIndx, yMatIndx, swshuntCalcB + yMatIm.getQuick(yMatIndx, yMatIndx));
+            for (gen genTemp: busGens)
+            {
+                if (calcType == 2 || calcType == 3)
+                {
+                    genTemp.updateState();              // assign the bus voltage and angle to generators and calculate power injections  
+                }
+            }
         }
-    }
-}
+
+        // get voltage for dynamic simulation 
+        public double getVolt(double[,] yVector)
+        {
+            return yVector.getQuick(vmagPos, 0);
+        }
+
+        // get angle for dynamic simulation 
+        public double getAngle(double[,] yVector)
+        {
+            return yVector.getQuick(vangPos, 0);
+        }
+
+        // get MW load 
+        public double getRealPLoad(double[,] yVector)
+        {
+            //return yVector.getQuick(dynRealPLoad_Pos, 0); 
+            return -9999;
+        }
+
+        // get MVAr load
+        public double getRealQLoad(double[,] yVector)
+        {
+            //return yVector.getQuick(dynRealQLoad_Pos,0); 
+            return -9999;
+        }
+
+        // return bus extended option for voltage regulation
+        public abstractExtOption getVoltExtOption()
+        {
+            return voltExtOption;
+        }
+
+        // update YMatrix 
+        public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+        {
+            if (this.IDE != 4)
+            {                                                       //active bus 
+                                                                    // [1] bus self shunt
+                yMatRe.setQuick(yMatIndx, yMatIndx, GL + yMatRe.getQuick(yMatIndx, yMatIndx));
+                yMatIm.setQuick(yMatIndx, yMatIndx, BL + yMatIm.getQuick(yMatIndx, yMatIndx));
+
+                // ### [2] add constant impedance load model 
+                // ### if (bHasLoad && bIncludeLoadInYMat){
+                // ###	for (load loadTemp: busLoads){
+                // ###		if (loadTemp.STATUS == 1) {
+                // ###			yMatRe.setQuick(yMatIndx, yMatIndx, loadTemp.calcGII + yMatRe.getQuick(yMatIndx, yMatIndx)); 
+                // ###			yMatIm.setQuick(yMatIndx, yMatIndx, loadTemp.calcBII + yMatIm.getQuick(yMatIndx, yMatIndx)); 
+                // ###		}
+                // ###	}
+                // ###}
+
+                // [2] add switchable shunts 
+                if (bHasSwShunt)
+                {
+                    yMatIm.set(yMatIndx, yMatIndx, swshuntCalcB + yMatIm.getQuick(yMatIndx, yMatIndx));
+                }
+            }
+        }
 
 
 
-// add neighboring bus 
-public void addNeighborBus(bus busTemp)
-{
-    if (!neighborBusList.contains(busTemp))
-    {
-        neighborBusList.add(busTemp);
-    }
-}
+        // add neighboring bus 
+        public void addNeighborBus(bus busTemp)
+        {
+            if (!neighborBusList.contains(busTemp))
+            {
+                neighborBusList.add(busTemp);
+            }
+        }
 
 
-// export data for tabular showing 
-public Object[] setTable()
-{
-    Object[] ret = new Object[tableColNum];
-    ret[0] = I;
-    ret[1] = NAME;
-    ret[2] = IDE;
-    ret[3] = String.format("%1.2f", BASKV);
-    ret[4] = String.format("%1.4f", volt);
-    ret[5] = String.format("%1.2f", ang / Deg2Rad);
-    ret[6] = String.format("%1.2f", GL * SBASE);
-    ret[7] = String.format("%1.2f", BL * SBASE);
-    ret[8] = AREA;
-    ret[9] = ZONE;
-    ret[10] = OWNER;
-    return ret;
-}
-	
-	
+        // export data for tabular showing 
+        public Object[] setTable()
+        {
+            Object[] ret = new Object[tableColNum];
+            ret[0] = I;
+            ret[1] = NAME;
+            ret[2] = IDE;
+            ret[3] = String.format("%1.2f", BASKV);
+            ret[4] = String.format("%1.4f", volt);
+            ret[5] = String.format("%1.2f", ang / Deg2Rad);
+            ret[6] = String.format("%1.2f", GL * SBASE);
+            ret[7] = String.format("%1.2f", BL * SBASE);
+            ret[8] = AREA;
+            ret[9] = ZONE;
+            ret[10] = OWNER;
+            return ret;
+        }
+
+
     }
 }
