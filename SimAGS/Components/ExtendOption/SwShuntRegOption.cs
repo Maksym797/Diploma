@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ojalgo;
+using org.ojalgo.optimisation;
 
 namespace SimAGS.Components.ExtendOption
 {
@@ -58,7 +54,7 @@ namespace SimAGS.Components.ExtendOption
         {
 
             double oldSWShunt = hostBus.swshuntCalcB;
-            double newSWShunt = oldSWShunt + result.Get(voltOptmVarIndx);
+            double newSWShunt = oldSWShunt + result.get(voltOptmVarIndx).doubleValue();
             bYMatReBuild = false;
 
             // update the swshuntCalcB setting 
