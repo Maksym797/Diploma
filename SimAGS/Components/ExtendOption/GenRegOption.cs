@@ -17,13 +17,13 @@ namespace SimAGS.Components.ExtendOption
         public int voltOptmVarIndx = 0;                 // index in the final optimum solution vector 
 
         // inherent variables 
-        public Bus hostBus;                             // the bus hosting this function 
+        public bus hostBus;                             // the bus hosting this function 
         public YMatrix yMat;
 
-        public List<Bus> loadBusArrayList = new List<Bus>();
+        public List<bus> loadBusArrayList = new List<bus>();
 
         // default constructor
-        public GenRegOption(Bus busTemp)
+        public GenRegOption(bus busTemp)
         {
             this.hostBus = busTemp;
         }
@@ -33,7 +33,7 @@ namespace SimAGS.Components.ExtendOption
             this.yMat = yMat;
         }
 
-        public void setLoadBusList(List<Bus> list)
+        public void setLoadBusList(List<bus> list)
         {
             loadBusArrayList = list;
         }
@@ -83,7 +83,7 @@ namespace SimAGS.Components.ExtendOption
         //      double oldVoltSet = hostBus.genBusVoltSetCalc;
         //      double newVoltSet = oldVoltSet + result.get(voltOptmVarIndx).doubleValue();
         //      hostBus.genBusVoltSetCalc = newVoltSet;
-        //      MessageBox.Show("----->VoltSet at Gen Bus " + hostBus.I + " changes from " + String.Format("%5.5f", oldVoltSet) + " to " + String.Format("%5.5f", newVoltSet));
+        //      MessageBox.Show("----->VoltSet at gen bus " + hostBus.I + " changes from " + String.Format("%5.5f", oldVoltSet) + " to " + String.Format("%5.5f", newVoltSet));
         //  }
 
         // set voltOptmVarIndx by pfVoltageHelper

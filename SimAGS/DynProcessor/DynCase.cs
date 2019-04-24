@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.DynProcessor
 {
-    class DynCase
+    public class DynCase
     {
     }
 }

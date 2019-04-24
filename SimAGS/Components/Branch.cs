@@ -3,7 +3,7 @@ using System;
 
 namespace SimAGS.Components
 {
-    public class Branch : AbstractElement
+    public class branch : AbstractElement
     {
         // data loaded from raw file 
         public int I = 0;       // from bus number
@@ -34,8 +34,8 @@ namespace SimAGS.Components
 
         // extended variable 
         public int measureEnd = 0;      // 0 - measured at from bus; 1 - measured at to bus 
-        public Bus frBus = null;        // from bus object
-        public Bus toBus = null;        // to bus object
+        public bus frBus = null;        // from bus object
+        public bus toBus = null;        // to bus object
         public int frBusV_Pos = 0;
         public int frBusA_Pos = 0;
         public int toBusV_Pos = 0;
@@ -72,11 +72,11 @@ namespace SimAGS.Components
         public int MWFlow_Pos = 0;
 
         // presenting data purpose 
-        public static String[] header = { "From Bus", "To Bus", "ID", "Status", "R", "X", "B", "MW", "MVar", "Lim A", "Lim B", "Lim C", "OverLoad[%]" };
+        public static String[] header = { "From bus", "To bus", "ID", "Status", "R", "X", "B", "MW", "MVar", "Lim A", "Lim B", "Lim C", "OverLoad[%]" };
         public static int tableColNum = 13;
 
         // Read data from string line 
-        public Branch(String line)
+        public branch(String line)
         {
             //  String[] dataEntry = dataProcess.getDataFields(line, ",");
             //  I = int.Parse(dataEntry[0]);
@@ -168,7 +168,7 @@ namespace SimAGS.Components
         }
 
         // set from bus 
-        public void setFromBus(Bus busTemp)
+        public void setFromBus(bus busTemp)
         {
             //  frBus = busTemp;
             //  frBusV_Pos = frBus.vmagPos;
@@ -176,7 +176,7 @@ namespace SimAGS.Components
         }
 
         // set to bus 
-        public void setToBus(Bus busTemp)
+        public void setToBus(bus busTemp)
         {
             //  toBus = busTemp;
             //  toBusV_Pos = toBus.vmagPos;

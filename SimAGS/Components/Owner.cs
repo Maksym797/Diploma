@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class Owner
+    public class owner
     {
     }
 }

@@ -10,13 +10,13 @@ using SimAGS.DynModels.GovModels;
 
 namespace SimAGS.Components
 {
-    public class Gen : AbstractElement
+    public class gen : AbstractElement
     {
         // data loaded from raw file 
         public int I = 0;       // bus number
         public String ID = "'1'";   // busID 
-        public double PG = 0.0;     // P Gen in MW 
-        public double QG = 0.0;     // Q Gen in MVar
+        public double PG = 0.0;     // P gen in MW 
+        public double QG = 0.0;     // Q gen in MVar
         public double QT = 0.0;     // Q max in MVar
         public double QB = 0.0;     // Q min in MVar
         public double VS = 1.0;     // Regulated voltage setpoint in pu 
@@ -43,7 +43,7 @@ namespace SimAGS.Components
         public static int DATALENGTH = 26;      // default data line 
 
         // extended variables 
-        public Bus hostBus;
+        public bus hostBus;
 
         public double busMWShare = 1.0;                 // calculate the shared MW for multiple generators at the same bus
         public double busMVarShare = 1.0;                   // calculate the shared MVAR for multiple generators at the same bus
@@ -83,32 +83,32 @@ namespace SimAGS.Components
         public bool InService = false;               // used for tripping generators during dynamic simulation
 
         // for tabular display 
-        public static String[] header = { "Number", "ID", "Status", "Gen MW", "Gen MVar", "SetVolt", "RegBus", "Min MVar", "Max MVar", "Min MW", "Max MW", "MVABase" };
+        public static String[] header = { "Number", "ID", "Status", "gen MW", "gen MVar", "SetVolt", "RegBus", "Min MVar", "Max MVar", "Min MW", "Max MW", "MVABase" };
         public static int tableColNum = 12;
 
 
         // Read data from string line 
-        public Gen(String line)
+        public gen(String line)
         {
-            String[] dataEntry = DataProcess.GetDataFields(line, ",");
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
             I = int.Parse(dataEntry[0]);
             ID = dataEntry[1].Substring(1, dataEntry[1].LastIndexOf("'")).Trim();
-            PG = Double.Parse(dataEntry[2]) / SBase;
-            QG = Double.Parse(dataEntry[3]) / SBase;
-            QT = Double.Parse(dataEntry[4]) / SBase;
-            QB = Double.Parse(dataEntry[5]) / SBase;
+            PG = Double.Parse(dataEntry[2]) / SBASE;
+            QG = Double.Parse(dataEntry[3]) / SBASE;
+            QT = Double.Parse(dataEntry[4]) / SBASE;
+            QB = Double.Parse(dataEntry[5]) / SBASE;
             VS = Double.Parse(dataEntry[6]);
             IREG = int.Parse(dataEntry[7]);
             MBASE = Double.Parse(dataEntry[8]);
-            ZR = Double.Parse(dataEntry[9]) / MBASE *  SBase;
-            ZX = Double.Parse(dataEntry[10]) / MBASE * SBase;
-            RT = Double.Parse(dataEntry[11]) / MBASE * SBase;
-            XT = Double.Parse(dataEntry[12]) / MBASE * SBase;
+            ZR = Double.Parse(dataEntry[9]) / MBASE *  SBASE;
+            ZX = Double.Parse(dataEntry[10]) / MBASE * SBASE;
+            RT = Double.Parse(dataEntry[11]) / MBASE * SBASE;
+            XT = Double.Parse(dataEntry[12]) / MBASE * SBASE;
             GTAP = Double.Parse(dataEntry[13]);
             STAT = int.Parse(dataEntry[14]);
             RMPCT = Double.Parse(dataEntry[15]) / 100;
-            PT = Double.Parse(dataEntry[16]) / SBase;
-            PB = Double.Parse(dataEntry[17]) / SBase;
+            PT = Double.Parse(dataEntry[16]) / SBASE;
+            PB = Double.Parse(dataEntry[17]) / SBASE;
             O1 = int.Parse(dataEntry[18]);
             F1 = Double.Parse(dataEntry[19]);
             if (dataEntry.Length > 20)
@@ -139,7 +139,7 @@ namespace SimAGS.Components
         }
 
         //set the host bus to generators 
-        public void setHostBus(Bus busTemp)
+        public void setHostBus(bus busTemp)
         {
             hostBus = busTemp;
         }
@@ -170,14 +170,14 @@ namespace SimAGS.Components
         {
             if (hasGovModel == true)
             {
-                govDyn.setMWRef(PSetVal / SBase);
+                govDyn.setMWRef(PSetVal / SBASE);
                 MessageBox.Show("genertor govDyn setting is changed");
             }
             else
             {
                 if (hasGenModel == true)
                 {
-                    genDyn.setPmRef(PSetVal / SBase);
+                    genDyn.setPmRef(PSetVal / SBASE);
                     MessageBox.Show("genertor genDyn setting is changed");
                 }
                 else
@@ -224,14 +224,14 @@ namespace SimAGS.Components
             ret[0] = I;
             ret[1] = ID;
             ret[2] = STAT == 1 ? "Closed" : "OSS";
-            ret[3] = String.Format("%1.2f", calcPgen * SBase);
-            ret[4] = String.Format("%1.2f", calcQgen * SBase);
+            ret[3] = String.Format("%1.2f", calcPgen * SBASE);
+            ret[4] = String.Format("%1.2f", calcQgen * SBASE);
             ret[5] = String.Format("%1.4f", VS);
             ret[6] = String.Format("%6d", IREG);
-            ret[7] = String.Format("%1.2f", QB * SBase);
-            ret[8] = String.Format("%1.2f", QT * SBase);
-            ret[9] = String.Format("%1.2f", PB * SBase);
-            ret[10] = String.Format("%1.2f", PT * SBase);
+            ret[7] = String.Format("%1.2f", QB * SBASE);
+            ret[8] = String.Format("%1.2f", QT * SBASE);
+            ret[9] = String.Format("%1.2f", PB * SBASE);
+            ret[10] = String.Format("%1.2f", PT * SBASE);
             ret[11] = String.Format("%1.2f", MBASE);
             return ret;
         }

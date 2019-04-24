@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class Area : AbstractElement
+    public class area : AbstractElement
     {
         // data loaded from raw file
         public int I = 0;           // area number
@@ -21,7 +21,7 @@ namespace SimAGS.Components
         public static String[] header = { "Number", "SlackBus", "DesiredMW", "InterChangeTol", "Name" };
         public static int tableColNum = DATALENGTH;
 
-        public Area(string line)
+        public area(string line)
         {
             //String[] dataEntry = dataProcess.getDataFields(line, ",");
             //I = Integer.parseInt(dataEntry[0]);

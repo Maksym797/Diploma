@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Ojalgo;
 
 namespace SimAGS.Components.ExtendOption
 {
-    public class SwShuntRegOption
+    public class SwShuntRegOption : BaseExtOption
     {
-        //public int regBusNum	= 0;					// regulating generator Bus 
-        public Bus hostBus;                             // the Bus hosting this function 
+        //public int regBusNum	= 0;					// regulating generator bus 
+        public bus hostBus;                             // the bus hosting this function 
         public int voltOptmVarIndx = 0;                 // index in the final optimum solution vector 
 
         public double swshuntBusBMax = 0.0;
@@ -19,7 +20,7 @@ namespace SimAGS.Components.ExtendOption
         public bool bYMatReBuild = false;
         
         // default constructor
-        public SwShuntRegOption(Bus busTemp)
+        public SwShuntRegOption(bus busTemp)
         {
             this.hostBus = busTemp;
             this.swshuntBusBMax = busTemp.aggSWshuntBusBMax;
@@ -38,7 +39,7 @@ namespace SimAGS.Components.ExtendOption
         {
             if (isToUpdate)
             {
-                optmInEquConConfMat[2 * voltOptmVarIndx, voltOptmVarIndx] 1;          // upper limit 
+                optmInEquConConfMat[2 * voltOptmVarIndx, voltOptmVarIndx] = 1;          // upper limit 
                 optmInEquConConfMat[2 * voltOptmVarIndx + 1, voltOptmVarIndx]= -1;             // lower limit 
             }
         }
@@ -53,27 +54,27 @@ namespace SimAGS.Components.ExtendOption
         }
 
         // update regulating variables after each iteration 
-        public void updateRegVar(/*Optimisation.Result*/object result)
+        public void updateRegVar(Optimisation.Result result)
         {
 
             double oldSWShunt = hostBus.swshuntCalcB;
-            double newSWShunt = oldSWShunt + result.get(voltOptmVarIndx).doubleValue();
+            double newSWShunt = oldSWShunt + result.Get(voltOptmVarIndx);
             bYMatReBuild = false;
 
             // update the swshuntCalcB setting 
             if (newSWShunt > swshuntBusBMax)
             {
                 newSWShunt = swshuntBusBMax;
-                MessageBox.Show("---> SW Shunt at Bus " + hostBus.I + " hits high limit");
+                MessageBox.Show("---> SW Shunt at bus " + hostBus.I + " hits high limit");
             }
             if (newSWShunt < swshuntBusBMin)
             {
                 newSWShunt = swshuntBusBMin;
-                MessageBox.Show("---> SW Shunt at Bus " + hostBus.I + " hits low limit");
+                MessageBox.Show("---> SW Shunt at bus " + hostBus.I + " hits low limit");
             }
             hostBus.swshuntCalcB = newSWShunt;
             bYMatReBuild = true;
-            MessageBox.Show("----> SWShunt at Bus " + hostBus.I + " changes from " + String.Format("%.2f", oldSWShunt) + " to " + String.Format("%.2f", newSWShunt));
+            MessageBox.Show("----> SWShunt at bus " + hostBus.I + " changes from " + String.Format("%.2f", oldSWShunt) + " to " + String.Format("%.2f", newSWShunt));
         }
 
         // set voltOptmVarIndx by pfVoltageHelper

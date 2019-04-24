@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class ThreeWindTrans
+    public class threeWindTrans
     {
     }
 }

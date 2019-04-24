@@ -30,8 +30,8 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pf_button = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.powerFlowCaseFile_textBox = new System.Windows.Forms.TextBox();
+            this.dynDataCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.dyn_button = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.wind_button = new System.Windows.Forms.Button();
@@ -63,21 +63,21 @@
             this.pf_button.UseVisualStyleBackColor = true;
             this.pf_button.Click += new System.EventHandler(this.pf_button_Click);
             // 
-            // textBox1
+            // powerFlowCaseFile_textBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox1.Location = new System.Drawing.Point(182, 41);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(312, 26);
-            this.textBox1.TabIndex = 1;
+            this.powerFlowCaseFile_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.powerFlowCaseFile_textBox.Location = new System.Drawing.Point(182, 41);
+            this.powerFlowCaseFile_textBox.Name = "powerFlowCaseFile_textBox";
+            this.powerFlowCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
+            this.powerFlowCaseFile_textBox.TabIndex = 1;
             // 
-            // textBox2
+            // dynDataCaseFile_textBox
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox2.Location = new System.Drawing.Point(182, 90);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(312, 26);
-            this.textBox2.TabIndex = 3;
+            this.dynDataCaseFile_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.dynDataCaseFile_textBox.Location = new System.Drawing.Point(182, 90);
+            this.dynDataCaseFile_textBox.Name = "dynDataCaseFile_textBox";
+            this.dynDataCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
+            this.dynDataCaseFile_textBox.TabIndex = 3;
             // 
             // dyn_button
             // 
@@ -237,9 +237,9 @@
             this.Controls.Add(this.wind_button);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.ags_button);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.dynDataCaseFile_textBox);
             this.Controls.Add(this.dyn_button);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.powerFlowCaseFile_textBox);
             this.Controls.Add(this.pf_button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "LoadForm";
@@ -253,8 +253,8 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button pf_button;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox powerFlowCaseFile_textBox;
+        private System.Windows.Forms.TextBox dynDataCaseFile_textBox;
         private System.Windows.Forms.Button dyn_button;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button wind_button;

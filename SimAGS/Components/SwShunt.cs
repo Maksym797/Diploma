@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class SwShunt
+    public class swshunt
     {
         public int I = 0;       // bus number
         public int MODSW = 0;       // control mode
@@ -47,9 +47,9 @@ namespace SimAGS.Components
 
 
         // Read data from string line 
-        public SwShunt(String line)
+        public swshunt(String line)
         {
-            String[] dataEntry = DataProcess.GetDataFields(line, ",");
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
             int iData = dataEntry.Length;
             calcBMax = 0.0;
             calcBMin = 0.0;

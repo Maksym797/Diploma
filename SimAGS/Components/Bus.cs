@@ -11,7 +11,7 @@ using SimAGS.DynModels.WindModels;
 
 namespace SimAGS.Components
 {
-    public class Bus : AbstractElement
+    public class bus : AbstractElement
     {
         // data loaded from raw file 
         public int I = 0;       // bus number 
@@ -43,12 +43,12 @@ namespace SimAGS.Components
         public int vangPos = 0;                                     // index for bus angle in the pf solution vector
         public int yMatIndx = 0;                                    // position in the sortedList; 
 
-        public List<Bus> adjBusList = new List<Bus>();    // store adjacent buses connected by activated branches 
+        public List<bus> adjBusList = new List<bus>();    // store adjacent buses connected by activated branches 
 
         // add generators to bus (for multiple generators at the same bus)
         // assumption: all of the generator at the same bus regulating the same bus (either local or remote bus)
         public bool bHasGen = false;
-        public List<Gen> busGens = new List<Gen>();       // all generators connected
+        public List<gen> busGens = new List<gen>();       // all generators connected
         public double aggPGen = 0.0;                        // total power P gen 
         public double aggQGen = 0.0;                        // total power Q gen 
         public double aggQMax = 1E4;                        // Total Q Max only valid for PV bus; for PQ bus, it is set to  10000
@@ -66,7 +66,7 @@ namespace SimAGS.Components
 
         // add loads to bus (for multiple loads at the same bus)
         public bool bHasLoad = false;
-        public List<Load> busLoads = new List<Load>();
+        public List<load> busLoads = new List<load>();
         public double aggCPLoadP = 0.0;                         // total pure P load [pu]
         public double aggCPLoadQ = 0.0;                         // total pure Q load [pu]
         public double aggCCLoadP = 0.0;                         // total P of constant current load [pu]
@@ -82,13 +82,13 @@ namespace SimAGS.Components
 
         //public bool bIncludeLoadInYMat = true;					// include constant-impedance component into yMatrix 
 
-        // external PQ injection to bus (Gen, Load)
+        // external PQ injection to bus (gen, load)
         public double extPInj = 0.0;
         public double extQInj = 0.0;
 
         // add switched shunts (for multiple shunts at the same bus)
         public bool bHasSwShunt = false;
-        public List<SwShunt> busSwShunts = new List<SwShunt>();
+        public List<swshunt> busSwShunts = new List<swshunt>();
         public int swshuntRegBusNum = 0;
         public double aggSWshuntBusBMax = 0;                        // total shunt BMax [pu]
         public double aggSWshuntBusBMin = 0;                        // total shunt BMin [pu]
@@ -122,26 +122,26 @@ namespace SimAGS.Components
         public double windMWInj = 0.0;
 
         // neigbring buses 
-        public List<Bus> neighborBusList = new List<Bus>();
+        public List<bus> neighborBusList = new List<bus>();
 
         // 
         //public bool bDynSimMon = false;						// decide if it will be stored
 
 
         // presenting data purpose 
-        public static String[] header = { "Number", "Name", "Type", "Norm kV", "PU Volt", "Angle", "G", "B", "Area", "Zone", "Owner" };
+        public static String[] header = { "Number", "Name", "Type", "Norm kV", "PU Volt", "Angle", "G", "B", "area", "zone", "owner" };
         public static int tableColNum = 11;
 
         // Read data from string line 
-        public Bus(String line)
+        public bus(String line)
         {
-            String[] dataEntry = DataProcess.GetDataFields(line, ",");
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
             I = int.Parse(dataEntry[0]);
             NAME = dataEntry[1].Substring(1, dataEntry[1].LastIndexOf("'"));
             BASKV = Double.Parse(dataEntry[2]);
             IDE = int.Parse(dataEntry[3]);
-            GL = Double.Parse(dataEntry[4]) / SBase;
-            BL = Double.Parse(dataEntry[5]) / SBase;
+            GL = Double.Parse(dataEntry[4]) / SBASE;
+            BL = Double.Parse(dataEntry[5]) / SBASE;
             AREA = int.Parse(dataEntry[6]);
             ZONE = int.Parse(dataEntry[7]);
             VM = Double.Parse(dataEntry[8]);
@@ -149,10 +149,10 @@ namespace SimAGS.Components
             OWNER = int.Parse(dataEntry[10]);
 
             // initialize the attached bus devices 
-            adjBusList = new List<Bus>();
-            busGens = new List<Gen>();
-            busLoads = new List<Load>();
-            busSwShunts = new List<SwShunt>();
+            adjBusList = new List<bus>();
+            busGens = new List<gen>();
+            busLoads = new List<load>();
+            busSwShunts = new List<swshunt>();
 
             // aggregated bus Q
             aggQMax = 0.0;
@@ -172,7 +172,7 @@ namespace SimAGS.Components
 
 
         // add power flow load model 
-        public void addLoad(Load loadModel)
+        public void addLoad(load loadModel)
         {
             bHasLoad = true;
             //bDynSimMon = true; 
@@ -180,7 +180,7 @@ namespace SimAGS.Components
         }
 
         // add power flow generator model 
-        public void addGen(Gen genModel)
+        public void addGen(gen genModel)
         {
             bHasGen = true;
             // set the network variable position in yVector - power flow solution vector
@@ -193,11 +193,11 @@ namespace SimAGS.Components
         }
 
         // add power flow switchable shunt model
-        public void addSwShunt(SwShunt swshuntModel)
+        public void addSwShunt(swshunt swshuntModel)
         {
             bHasSwShunt = true;
             busSwShunts.Add(swshuntModel);
-            MessageBox.Show("[defiend in bus.java] Bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
+            MessageBox.Show("[defiend in bus.java] bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
         }
 
 
@@ -210,7 +210,7 @@ namespace SimAGS.Components
             {
                 if (!bHasGen)
                 {
-                    return ("#ERROR: PF Bus at " + I + " has no valid generator data!");
+                    return ("#ERROR: PF bus at " + I + " has no valid generator data!");
                 }
             }
 
@@ -239,7 +239,7 @@ namespace SimAGS.Components
                 genBusVoltSetCalc = regBusVoltSet;                              // use generator section voltage is initialize volt magnitude
                 if (bBusHasRegGen)
                 {
-                    MessageBox.Show("[definde in bus.java] Bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
+                    MessageBox.Show("[definde in bus.java] bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
                     voltExtOption = new GenRegOption(this);
                 }
 
@@ -284,7 +284,7 @@ namespace SimAGS.Components
             }
 
             // aggregate bus loads 
-            for (load loadTemp: busLoads)
+            foreach (var loadTemp in busLoads)
             {
                 if (loadTemp.STATUS == 1)
                 {
@@ -305,7 +305,7 @@ namespace SimAGS.Components
             return null;
         }
 
-        // calculate the external power injection to the bus (Gen - Load) 
+        // calculate the external power injection to the bus (gen - load) 
         public void calcExtPQInj(double voltMag)
         {
 
@@ -333,11 +333,11 @@ namespace SimAGS.Components
         public void dynIni(double[,] yVector, double[,] xVector)
         {
             // initialize the network variable  
-            yVector.setQuick(vangPos, 0, ang);
-            yVector.setQuick(vmagPos, 0, volt);
+            yVector[vangPos, 0] = ang;
+            yVector[vmagPos, 0] = volt;
 
             // <1> regular dynamic model 
-            for (gen genTemp: busGens)
+            foreach (var genTemp in busGens)
             {
                 genTemp.genDyn.ini(yVector, xVector);
                 if (genTemp.hasExcModel) genTemp.excDyn.ini(yVector, xVector);
@@ -357,7 +357,7 @@ namespace SimAGS.Components
         // update generators results if they are connected to the same bus 
         public void updateResults()
         {
-            for (gen genTemp: busGens)
+            foreach (var genTemp in busGens)
             {
                 if (calcType == 2 || calcType == 3)
                 {
@@ -369,13 +369,13 @@ namespace SimAGS.Components
         // get voltage for dynamic simulation 
         public double getVolt(double[,] yVector)
         {
-            return yVector.getQuick(vmagPos, 0);
+            return yVector[vmagPos, 0];
         }
 
         // get angle for dynamic simulation 
         public double getAngle(double[,] yVector)
         {
-            return yVector.getQuick(vangPos, 0);
+            return yVector[vangPos, 0];
         }
 
         // get MW load 
@@ -393,7 +393,7 @@ namespace SimAGS.Components
         }
 
         // return bus extended option for voltage regulation
-        public abstractExtOption getVoltExtOption()
+        public BaseExtOption getVoltExtOption()
         {
             return voltExtOption;
         }
@@ -404,8 +404,8 @@ namespace SimAGS.Components
             if (this.IDE != 4)
             {                                                       //active bus 
                                                                     // [1] bus self shunt
-                yMatRe.setQuick(yMatIndx, yMatIndx, GL + yMatRe.getQuick(yMatIndx, yMatIndx));
-                yMatIm.setQuick(yMatIndx, yMatIndx, BL + yMatIm.getQuick(yMatIndx, yMatIndx));
+                yMatRe[yMatIndx, yMatIndx]= GL + yMatRe[yMatIndx, yMatIndx];
+                yMatIm[yMatIndx, yMatIndx]= BL + yMatIm[yMatIndx, yMatIndx];
 
                 // ### [2] add constant impedance load model 
                 // ### if (bHasLoad && bIncludeLoadInYMat){
@@ -420,7 +420,7 @@ namespace SimAGS.Components
                 // [2] add switchable shunts 
                 if (bHasSwShunt)
                 {
-                    yMatIm.set(yMatIndx, yMatIndx, swshuntCalcB + yMatIm.getQuick(yMatIndx, yMatIndx));
+                    yMatIm[yMatIndx, yMatIndx] = swshuntCalcB + yMatIm[yMatIndx, yMatIndx];
                 }
             }
         }
@@ -430,9 +430,9 @@ namespace SimAGS.Components
         // add neighboring bus 
         public void addNeighborBus(bus busTemp)
         {
-            if (!neighborBusList.contains(busTemp))
+            if (!neighborBusList.Contains(busTemp))
             {
-                neighborBusList.add(busTemp);
+                neighborBusList.Add(busTemp);
             }
         }
 
@@ -444,11 +444,11 @@ namespace SimAGS.Components
             ret[0] = I;
             ret[1] = NAME;
             ret[2] = IDE;
-            ret[3] = String.format("%1.2f", BASKV);
-            ret[4] = String.format("%1.4f", volt);
-            ret[5] = String.format("%1.2f", ang / Deg2Rad);
-            ret[6] = String.format("%1.2f", GL * SBASE);
-            ret[7] = String.format("%1.2f", BL * SBASE);
+            ret[3] = String.Format("%1.2f", BASKV);
+            ret[4] = String.Format("%1.4f", volt);
+            ret[5] = String.Format("%1.2f", ang / Deg2Rad);
+            ret[6] = String.Format("%1.2f", GL * SBASE);
+            ret[7] = String.Format("%1.2f", BL * SBASE);
             ret[8] = AREA;
             ret[9] = ZONE;
             ret[10] = OWNER;

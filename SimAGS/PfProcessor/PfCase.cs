@@ -6,17 +6,17 @@ using System.IO;
 
 namespace SimAGS.PfProcessor
 {
-    public class PfCase
+    public class PFCase
     {
         #region state
-        public List<Bus> BusArrayList { get; set; }
-        public List<Branch> BranchArrayList { get; set; }
-        public List<TwoWindTrans> TwoWindTransArrayList { get; set; }
-        public List<ThreeWindTrans> ThrWindTransArrayList { get; set; }
-        public List<Area> AreaArrayList { get; set; }
-        public List<Zone> ZoneArrayList { get; set; }
-        public List<Owner> OwnerArrayList { get; set; }
-        public List<Bus> SortBusArrayList { get; set; }
+        public List<bus> busArrayList { get; set; }
+        public List<branch> branchArrayList { get; set; }
+        public List<twoWindTrans> twoWindTransArrayList { get; set; }
+        public List<threeWindTrans> thrWindTransArrayList { get; set; }
+        public List<area> areaArrayList { get; set; }
+        public List<zone> zoneArrayList { get; set; }
+        public List<owner> ownerArrayList { get; set; }
+        public List<bus> sortBusArrayList { get; set; }
 
         // default system parameters (fixed)
         public const double DefaultBlowup = 1E5;           // terminate power flow calculation if difference is too large 
@@ -65,8 +65,8 @@ namespace SimAGS.PfProcessor
 
         // voltage regulation 
         public PfVoltageHelper voltHelper;
-        public List<Bus> loadBusList = new List<Bus>();
-        public List<Bus> genBusList = new List<Bus>();
+        public List<bus> loadBusList = new List<bus>();
+        public List<bus> genBusList = new List<bus>();
         public int[] loadQPosArray;
         public int[] genQPosArray;
 
@@ -75,22 +75,22 @@ namespace SimAGS.PfProcessor
 
         #endregion
 
-        public PfCase()
+        public PFCase()
         {
-            BusArrayList = new List<Bus>();
-            BranchArrayList = new List<Branch>();
-            TwoWindTransArrayList = new List<TwoWindTrans>();
-            ThrWindTransArrayList = new List<ThreeWindTrans>();
-            AreaArrayList = new List<Area>();
-            ZoneArrayList = new List<Zone>();
-            OwnerArrayList = new List<Owner>();
+            busArrayList = new List<bus>();
+            branchArrayList = new List<branch>();
+            twoWindTransArrayList = new List<twoWindTrans>();
+            thrWindTransArrayList = new List<threeWindTrans>();
+            areaArrayList = new List<area>();
+            zoneArrayList = new List<zone>();
+            ownerArrayList = new List<owner>();
 
-            SortBusArrayList = new List<Bus>();
+            sortBusArrayList = new List<bus>();
         }
 
-        public void LoadCaseDate(FileStream pfFile)
+        public void LoadCaseData(JFile pfFile)
         {
-            new PfCaseLoad(this).Execute(pfFile);
+            new PFCaseLoad(this).exec(pfFile);
         }
     }
 }

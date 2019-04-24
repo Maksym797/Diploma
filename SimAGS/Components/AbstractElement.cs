@@ -5,7 +5,7 @@ namespace SimAGS.Components
 {
     public abstract class AbstractElement
     {
-        public const int SBase = 100;
+        public const int SBASE = 100;
         public const double Deg2Rad = Math.PI / 180;
 
         public BaseExtOption GetVoltExtOption()

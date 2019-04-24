@@ -76,6 +76,7 @@
     <Compile Include="DynModels\WindModels\DynWind.cs" />
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
+    <Compile Include="ExtetsionHandlers.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +135,11 @@
     <Content Include="img\simAGC_Stop_Icon.png" />
     <Content Include="img\simAGC_View_Icon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Ojalgo\Ojalgo.csproj">
+      <Project>{9b4da24b-c5fd-42dc-969a-62fe32ab6648}</Project>
+      <Name>Ojalgo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

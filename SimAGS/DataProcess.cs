@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimAGS.Components;
 
 namespace SimAGS
 {
-    internal class DataProcess
+    internal class dataProcess
     {
         // read in data using specified token 
-        public static String[] GetDataFields(String str, String token)
+        public static String[] getDataFields(String str, String token)
         {
             //final StringTokenizer st = new StringTokenizer(str, token);
             //int m = st.countTokens();
@@ -125,18 +126,18 @@ namespace SimAGS
 
         ////------------------ miscellaneous functions -----------------------//
         //// get bus position 
-        //public static bus getBusAt(int busNum, ArrayList<bus> busList)
-        //{
-        //    //for (int i = 0; i < busList.size(); i++)
-        //    //{
-        //    //    bus busTemp = busList.get(i);
-        //    //    if (busTemp.I == busNum)
-        //    //    {
-        //    //        return busTemp;
-        //    //    }
-        //    //}
-        //    //return null;
-        //    throw new NotImplementedException();
-        //}
+        public static bus getBusAt(int busNum, List<bus> busList)
+        {
+            //for (int i = 0; i < busList.size(); i++)
+            //{
+            //    bus busTemp = busList.get(i);
+            //    if (busTemp.I == busNum)
+            //    {
+            //        return busTemp;
+            //    }
+            //}
+            //return null;
+            throw new NotImplementedException();
+        }
     }
 }
