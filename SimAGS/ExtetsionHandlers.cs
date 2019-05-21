@@ -48,6 +48,34 @@ namespace SimAGS
         }
         #endregion
 
+        #region <T[,]>
+        public static int rows<T>(this T[,] array)
+        {
+            if (array.Rank == 2)
+            {
+                return array.GetUpperBound(0) - array.GetLowerBound(0) + 1;
+            }
+            throw new Exception("Array rank must eq 2.");
+        }
+        public static int columns<T>(this T[,] array)
+        {
+            if (array.Rank == 2)
+            {
+                return array.GetUpperBound(1) - array.GetLowerBound(1) + 1;
+            }
+            throw new Exception("Array rank must eq 2.");
+        }
+        #endregion
+
+        #region <T[]>
+
+        public static int length<T>(this T[] s)
+        {
+            return s.Length;
+        }
+
+        #endregion
+
         #region IList
         public static void add<T>(this IList<T> s, T v)
         {
@@ -56,7 +84,11 @@ namespace SimAGS
         public static int size(this IList s)
         {
             return s.Count;
-        } 
+        }
+        public static T get<T>(this IList<T> s, int i)
+        {
+            return s[i];
+        }
         #endregion
     }
 

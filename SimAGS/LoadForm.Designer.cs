@@ -70,6 +70,8 @@
             this.powerFlowCaseFile_textBox.Name = "powerFlowCaseFile_textBox";
             this.powerFlowCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
             this.powerFlowCaseFile_textBox.TabIndex = 1;
+            this.powerFlowCaseFile_textBox.Text = "C:\\Users\\Maksym_Misiuchenko\\_Diploma\\SimAGC_03052014_final_ver (1)\\SimAGC\\data\\ku" +
+    "nder_case\\new_TwoAreaTest.raw";
             // 
             // dynDataCaseFile_textBox
             // 
@@ -78,6 +80,8 @@
             this.dynDataCaseFile_textBox.Name = "dynDataCaseFile_textBox";
             this.dynDataCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
             this.dynDataCaseFile_textBox.TabIndex = 3;
+            this.dynDataCaseFile_textBox.Text = "C:\\Users\\Maksym_Misiuchenko\\_Diploma\\SimAGC_03052014_final_ver (1)\\SimAGC\\data\\ku" +
+    "nder_case\\DYN_TwoAreaTest.dyr";
             // 
             // dyn_button
             // 

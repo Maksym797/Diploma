@@ -225,19 +225,23 @@ namespace SimAGS.PfProcessor
 
                 MessageBox.Show(">>>>>>>> Process.... Case data is loaded!");
 
-                /* 
-                    MessageBox.Show("           Bus = " + mainCase.nBus); 
-                    MessageBox.Show("          Load = " + mainCase.nLoad); 
-                    MessageBox.Show("           Gen = " + mainCase.nGen);
-                    MessageBox.Show("        Branch = " + mainCase.nBranch); 
-                    MessageBox.Show("2W Transformer = " + mainCase.nTwoWindTransformer); 
-                    MessageBox.Show("3W Transformer = " + mainCase.nThrWindTransformer);
-                    MessageBox.Show("          Area = " + mainCase.nArea); 
-                    MessageBox.Show("      SW Shunt = " + mainCase.nSWShunt); 
-                    MessageBox.Show("          Zone = " + mainCase.nZone); 
-                    MessageBox.Show("         Owner = " + mainCase.nOwner); 
-                 */
+                #region Data results
 
+                var dataList = new List<string>();
+
+                dataList.Add("Bus = " + mainCase.nBus);
+                dataList.Add("Load = " + mainCase.nLoad);
+                dataList.Add("Gen = " + mainCase.nGen);
+                dataList.Add("Branch = " + mainCase.nBranch);
+                dataList.Add("2W Transformer = " + mainCase.nThrWindXfrm);
+                dataList.Add("3W Transformer = " + mainCase.nThrWindXfrm);
+                dataList.Add("Area = " + mainCase.nArea);
+                dataList.Add("SW Shunt = " + mainCase.nSWShunt);
+                dataList.Add("Zone = " + mainCase.nZone);
+                dataList.Add("Owner = " + mainCase.nOwner);
+
+                MessageBox.Show(string.Join("\n",dataList));
+                #endregion
             }
             catch (IOException e)
             {

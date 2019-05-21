@@ -6,8 +6,6 @@ using SimAGS.PfProcessor;
 
 namespace SimAGS
 {
-
-
     public partial class LoadForm : Form
     {
         // general setting of power flow computation 

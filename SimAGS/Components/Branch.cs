@@ -1,5 +1,6 @@
 ﻿using SimAGS.DynModels.MonModels;
 using System;
+using ikvm.extensions;
 
 namespace SimAGS.Components
 {
@@ -78,47 +79,47 @@ namespace SimAGS.Components
         // Read data from string line 
         public branch(String line)
         {
-            //  String[] dataEntry = dataProcess.getDataFields(line, ",");
-            //  I = int.Parse(dataEntry[0]);
-            //  J = int.Parse(dataEntry[1]);
-            //  if (J < 0)
-            //  {
-            //      J = Math.Abs(J);
-            //      measureEnd = 1;
-            //  }
-            //  CKT = dataEntry[2].substring(1, dataEntry[2].lastIndexOf("'")).trim();
-            //  R = Double.parseDouble(dataEntry[3]);
-            //  X = Double.parseDouble(dataEntry[4]);
-            //  B = Double.parseDouble(dataEntry[5]);
-            //  RATEA = Double.parseDouble(dataEntry[6]) / SBASE;
-            //  RATEA = RATEA <= 0 ? 99 : RATEA;                        // avoid zero rating
-            //  RATEB = Double.parseDouble(dataEntry[7]) / SBASE;
-            //  RATEC = Double.parseDouble(dataEntry[8]) / SBASE;
-            //  GI = Double.parseDouble(dataEntry[9]);
-            //  BI = Double.parseDouble(dataEntry[10]);
-            //  GJ = Double.parseDouble(dataEntry[11]);
-            //  BJ = Double.parseDouble(dataEntry[12]);
-            //  ST = Integer.parseInt(dataEntry[13]);
-            //  LEN = Double.parseDouble(dataEntry[14]);
-            //  O1 = Integer.parseInt(dataEntry[15]);
-            //  F1 = Double.parseDouble(dataEntry[16]);
-            //  if (dataEntry.length > 17)
-            //  {
-            //      O2 = Integer.parseInt(dataEntry[17]);
-            //      F2 = Double.parseDouble(dataEntry[18]);
-            //      if (dataEntry.length > 19)
-            //      {
-            //          O3 = Integer.parseInt(dataEntry[19]);
-            //          F3 = Double.parseDouble(dataEntry[20]);
-            //          if (dataEntry.length > 21)
-            //          {
-            //              O4 = Integer.parseInt(dataEntry[21]);
-            //              F4 = Double.parseDouble(dataEntry[22]);
-            //          }
-            //      }
-            //  }
-            //  
-            //  calcPara();
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
+            I = int.Parse(dataEntry[0]);
+            J = int.Parse(dataEntry[1]);
+            if (J < 0)
+            {
+                J = Math.Abs(J);
+                measureEnd = 1;
+            }
+            CKT = dataEntry[2].substring(1, dataEntry[2].lastIndexOf("'")).trim();
+            R = Double.Parse(dataEntry[3]);
+            X = Double.Parse(dataEntry[4]);
+            B = Double.Parse(dataEntry[5]);
+            RATEA = Double.Parse(dataEntry[6]) / SBASE;
+            RATEA = RATEA <= 0 ? 99 : RATEA;                        // avoid zero rating
+            RATEB = Double.Parse(dataEntry[7]) / SBASE;
+            RATEC = Double.Parse(dataEntry[8]) / SBASE;
+            GI = Double.Parse(dataEntry[9]);
+            BI = Double.Parse(dataEntry[10]);
+            GJ = Double.Parse(dataEntry[11]);
+            BJ = Double.Parse(dataEntry[12]);
+            ST = Integer.parseInt(dataEntry[13]);
+            LEN = Double.Parse(dataEntry[14]);
+            O1 = Integer.parseInt(dataEntry[15]);
+            F1 = Double.Parse(dataEntry[16]);
+            if (dataEntry.length() > 17)
+            {
+                O2 = Integer.parseInt(dataEntry[17]);
+                F2 = Double.Parse(dataEntry[18]);
+                if (dataEntry.length() > 19)
+                {
+                    O3 = Integer.parseInt(dataEntry[19]);
+                    F3 = Double.Parse(dataEntry[20]);
+                    if (dataEntry.length() > 21)
+                    {
+                        O4 = Integer.parseInt(dataEntry[21]);
+                        F4 = Double.Parse(dataEntry[22]);
+                    }
+                }
+            }
+            
+            calcPara();
         }
 
         // calculate parameters for building Y matrix 
@@ -142,45 +143,45 @@ namespace SimAGS.Components
         // calculate power flow 
         public void calPQFlow()
         {
-            //  frBusV = frBus.volt;
-            //  frBusA = frBus.ang;
-            //  toBusV = toBus.volt;
-            //  toBusA = toBus.ang;
-            //  
-            //  if (ST == 1)
-            //  {
-            //      // calculate PQ flow 
-            //      double sinAij = Math.sin(frBusA - toBusA);
-            //      double cosAij = Math.cos(frBusA - toBusA);
-            //      frBusP = frBusV * frBusV * calcGII + frBusV * toBusV * (calcGIJ * cosAij + calcBIJ * sinAij);
-            //      frBusQ = -frBusV * frBusV * calcBII + frBusV * toBusV * (calcGIJ * sinAij - calcBIJ * cosAij);
-            //  
-            //      toBusP = toBusV * toBusV * calcGJJ + toBusV * frBusV * (calcGJI * cosAij - calcBJI * sinAij);
-            //      toBusQ = -toBusV * toBusV * calcBJJ + toBusV * frBusV * (-calcGJI * sinAij - calcBJI * cosAij);
-            //  
-            //      // calculate PQ loss
-            //      pLoss = frBusP + toBusP;
-            //      qLoss = frBusQ + toBusQ;
-            //  
-            //      // calculate overloading at normal condition 
-            //      overLoadRateA = measureEnd == 0 ? Math.sqrt(frBusP * frBusP + frBusQ * frBusQ) / RATEA * 100 : Math.sqrt(toBusP * toBusP + toBusQ * toBusQ) / RATEA * 100;
-            //  }
+            frBusV = frBus.volt;
+            frBusA = frBus.ang;
+            toBusV = toBus.volt;
+            toBusA = toBus.ang;
+            
+            if (ST == 1)
+            {
+                // calculate PQ flow 
+                double sinAij = Math.Sin(frBusA - toBusA);
+                double cosAij = Math.Cos(frBusA - toBusA);
+                frBusP = frBusV * frBusV * calcGII + frBusV * toBusV * (calcGIJ * cosAij + calcBIJ * sinAij);
+                frBusQ = -frBusV * frBusV * calcBII + frBusV * toBusV * (calcGIJ * sinAij - calcBIJ * cosAij);
+            
+                toBusP = toBusV * toBusV * calcGJJ + toBusV * frBusV * (calcGJI * cosAij - calcBJI * sinAij);
+                toBusQ = -toBusV * toBusV * calcBJJ + toBusV * frBusV * (-calcGJI * sinAij - calcBJI * cosAij);
+            
+                // calculate PQ loss
+                pLoss = frBusP + toBusP;
+                qLoss = frBusQ + toBusQ;
+            
+                // calculate overloading at normal condition 
+                overLoadRateA = measureEnd == 0 ? Math.Sqrt(frBusP * frBusP + frBusQ * frBusQ) / RATEA * 100 : Math.Sqrt(toBusP * toBusP + toBusQ * toBusQ) / RATEA * 100;
+            }
         }
 
         // set from bus 
         public void setFromBus(bus busTemp)
         {
-            //  frBus = busTemp;
-            //  frBusV_Pos = frBus.vmagPos;
-            //  frBusA_Pos = frBus.vangPos;
+            frBus = busTemp;
+            frBusV_Pos = frBus.vmagPos;
+            frBusA_Pos = frBus.vangPos;
         }
 
         // set to bus 
         public void setToBus(bus busTemp)
         {
-            //  toBus = busTemp;
-            //  toBusV_Pos = toBus.vmagPos;
-            //  toBusA_Pos = toBus.vangPos;
+            toBus = busTemp;
+            toBusV_Pos = toBus.vmagPos;
+            toBusA_Pos = toBus.vangPos;
         }
 
         // update Y Matrix 
@@ -188,20 +189,20 @@ namespace SimAGS.Components
         {
             if (ST == 1)
             {       // for closed line only 
-                //int iPos = frBus.yMatIndx;
-                //int jPos = toBus.yMatIndx;
-                //
-                //// off-diagonal element 
-                //yMatRe.setQuick(iPos, jPos, calcGIJ + yMatRe.getQuick(iPos, jPos));
-                //yMatIm.setQuick(iPos, jPos, calcBIJ + yMatIm.getQuick(iPos, jPos));
-                //yMatRe.setQuick(jPos, iPos, calcGJI + yMatRe.getQuick(jPos, iPos));
-                //yMatIm.setQuick(jPos, iPos, calcBJI + yMatIm.getQuick(jPos, iPos));
-                //
-                //// diagonal element
-                //yMatRe.setQuick(iPos, iPos, calcGII + yMatRe.getQuick(iPos, iPos));
-                //yMatIm.setQuick(iPos, iPos, calcBII + yMatIm.getQuick(iPos, iPos));
-                //yMatRe.setQuick(jPos, jPos, calcGJJ + yMatRe.getQuick(jPos, jPos));
-                //yMatIm.setQuick(jPos, jPos, calcBJJ + yMatIm.getQuick(jPos, jPos));
+                int iPos = frBus.yMatIndx;
+                int jPos = toBus.yMatIndx;
+                
+                // off-diagonal element 
+                yMatRe.setQuick(iPos, jPos, calcGIJ + yMatRe.getQuick(iPos, jPos));
+                yMatIm.setQuick(iPos, jPos, calcBIJ + yMatIm.getQuick(iPos, jPos));
+                yMatRe.setQuick(jPos, iPos, calcGJI + yMatRe.getQuick(jPos, iPos));
+                yMatIm.setQuick(jPos, iPos, calcBJI + yMatIm.getQuick(jPos, iPos));
+                
+                // diagonal element
+                yMatRe.setQuick(iPos, iPos, calcGII + yMatRe.getQuick(iPos, iPos));
+                yMatIm.setQuick(iPos, iPos, calcBII + yMatIm.getQuick(iPos, iPos));
+                yMatRe.setQuick(jPos, jPos, calcGJJ + yMatRe.getQuick(jPos, jPos));
+                yMatIm.setQuick(jPos, jPos, calcBJJ + yMatIm.getQuick(jPos, jPos));
             }
         }
 
@@ -210,23 +211,21 @@ namespace SimAGS.Components
         // export data for tabular showing 
         public Object[] setTable()
         {
-            //  Object[] ret = new Object[tableColNum];
-            //  ret[0] = I;
-            //  ret[1] = J;
-            //  ret[2] = CKT;
-            //  ret[3] = ST == 1 ? "Closed" : "Open";
-            //  ret[4] = String.format("%1.4f", R);
-            //  ret[5] = String.format("%1.4f", X);
-            //  ret[6] = String.format("%1.4f", B);
-            //  ret[7] = measureEnd == 0 ? String.format("%1.2f", frBusP * SBASE) : String.format("%1.2f", toBusP * SBASE);
-            //  ret[8] = measureEnd == 1 ? String.format("%1.2f", frBusQ * SBASE) : String.format("%1.2f", toBusQ * SBASE);
-            //  ret[9] = String.format("%1.2f", RATEA * SBASE);
-            //  ret[10] = String.format("%1.2f", RATEB * SBASE);
-            //  ret[11] = String.format("%1.2f", RATEC * SBASE);
-            //  ret[12] = String.format("%5.2f", overLoadRateA);
-            //  return ret;
-
-            throw new NotImplementedException();
+            Object[] ret = new Object[tableColNum];
+            ret[0] = I;
+            ret[1] = J;
+            ret[2] = CKT;
+            ret[3] = ST == 1 ? "Closed" : "Open";
+            ret[4] = String.Format("%1.4f", R);
+            ret[5] = String.Format("%1.4f", X);
+            ret[6] = String.Format("%1.4f", B);
+            ret[7] = measureEnd == 0 ? String.Format("%1.2f", frBusP * SBASE) : String.Format("%1.2f", toBusP * SBASE);
+            ret[8] = measureEnd == 1 ? String.Format("%1.2f", frBusQ * SBASE) : String.Format("%1.2f", toBusQ * SBASE);
+            ret[9] = String.Format("%1.2f", RATEA * SBASE);
+            ret[10] = String.Format("%1.2f", RATEB * SBASE);
+            ret[11] = String.Format("%1.2f", RATEC * SBASE);
+            ret[12] = String.Format("%5.2f", overLoadRateA);
+            return ret;
         }
 
 
