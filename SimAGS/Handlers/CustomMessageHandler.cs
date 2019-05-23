@@ -14,7 +14,7 @@ namespace SimAGS.Handlers
             _textBox = viewer;
             _messageShower = (m) =>
             {
-                _textBox.Text = $"{m.Replace("\n", "\r\n")}\r\n";
+                _textBox.Text += $"{m.Replace("\n", "\r\n")}\r\n";
             };
         }
 
