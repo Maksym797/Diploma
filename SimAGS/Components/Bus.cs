@@ -8,6 +8,7 @@ using SimAGS.Components.ExtendOption;
 using SimAGS.DynModels.DynLoadModels;
 using SimAGS.DynModels.MonModels;
 using SimAGS.DynModels.WindModels;
+using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
@@ -197,7 +198,7 @@ namespace SimAGS.Components
         {
             bHasSwShunt = true;
             busSwShunts.Add(swshuntModel);
-            MessageBox.Show("[defiend in bus.java] bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
+            CustomMessageHandler.Show("[defiend in bus.java] bus " + I + " switchable shunt regualte bus = " + swshuntModel.SWREM + " to Volt = " + swshuntModel.VSWLO);
         }
 
 
@@ -239,7 +240,7 @@ namespace SimAGS.Components
                 genBusVoltSetCalc = regBusVoltSet;                              // use generator section voltage is initialize volt magnitude
                 if (bBusHasRegGen)
                 {
-                    MessageBox.Show("[definde in bus.java] bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
+                    CustomMessageHandler.Show("[definde in bus.java] bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
                     voltExtOption = new GenRegOption(this);
                 }
 
@@ -266,7 +267,7 @@ namespace SimAGS.Components
                         genTemp.busMVarShare = genTemp.realQT / aggQMax;
                     }
                 }
-                //MessageBox.Show("At bus " + I + " pgen = " + aggPGen + " qmax = " + aggQMax + " qmin =" + aggQMin); 
+                //CustomMessageHandler.Show("At bus " + I + " pgen = " + aggPGen + " qmax = " + aggQMax + " qmin =" + aggQMin); 
             }
 
             // [2] switchable shunt regulation 
@@ -398,7 +399,7 @@ namespace SimAGS.Components
             return voltExtOption;
         }
 
-        // update YMatrix 
+        // update yMatrix 
         public void updateYMat(double[,] yMatRe, double[,] yMatIm)
         {
             if (this.IDE != 4)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SimAGS.Components;
+using SimAGS.Handlers;
 
 namespace SimAGS.PfProcessor
 {
@@ -94,7 +95,7 @@ namespace SimAGS.PfProcessor
                             }
                             else
                             {                                   // load bus doesn't exist
-                                MessageBox.Show("Warning: Load [" + loadModel.I + "_" + loadModel.ID + "] can't be loaded in PF case!");
+                                CustomMessageHandler.Show("Warning: Load [" + loadModel.I + "_" + loadModel.ID + "] can't be loaded in PF case!");
                             }
 
                         }
@@ -108,7 +109,7 @@ namespace SimAGS.PfProcessor
                             }
                             else
                             {
-                                MessageBox.Show("Warning: generator [" + genModel.I + "_" + genModel.ID + "] can't be loaded in PF case!");
+                                CustomMessageHandler.Show("Warning: generator [" + genModel.I + "_" + genModel.ID + "] can't be loaded in PF case!");
                             }
 
                         }
@@ -167,7 +168,7 @@ namespace SimAGS.PfProcessor
                             }
                             else
                             {
-                                MessageBox.Show("Warning:SW Shunt [" + swshuntModel.I + "] can't be loaded in PF case!");
+                                CustomMessageHandler.Show("Warning:SW Shunt [" + swshuntModel.I + "] can't be loaded in PF case!");
                             }
 
                         }
@@ -223,24 +224,24 @@ namespace SimAGS.PfProcessor
                 mainCase.nZone = zoneArrayList.size();
                 mainCase.nOwner = ownerArrayList.size();
 
-                MessageBox.Show(">>>>>>>> Process.... Case data is loaded!");
+                CustomMessageHandler.Show(">>>>>>>> Process.... Case data is loaded!");
 
                 #region Data results
 
                 var dataList = new List<string>();
 
-                dataList.Add("Bus = " + mainCase.nBus);
-                dataList.Add("Load = " + mainCase.nLoad);
-                dataList.Add("Gen = " + mainCase.nGen);
-                dataList.Add("Branch = " + mainCase.nBranch);
-                dataList.Add("2W Transformer = " + mainCase.nThrWindXfrm);
+                dataList.Add("           Bus = " + mainCase.nBus); 
+                dataList.Add("          Load = " + mainCase.nLoad); 
+                dataList.Add("           Gen = " + mainCase.nGen);
+                dataList.Add("        Branch = " + mainCase.nBranch); 
+                dataList.Add("2W Transformer = " + mainCase.nTwoWindXfrm); 
                 dataList.Add("3W Transformer = " + mainCase.nThrWindXfrm);
-                dataList.Add("Area = " + mainCase.nArea);
-                dataList.Add("SW Shunt = " + mainCase.nSWShunt);
-                dataList.Add("Zone = " + mainCase.nZone);
-                dataList.Add("Owner = " + mainCase.nOwner);
+                dataList.Add("          Area = " + mainCase.nArea); 
+                dataList.Add("      SW Shunt = " + mainCase.nSWShunt); 
+                dataList.Add("          Zone = " + mainCase.nZone); 
+                dataList.Add("         Owner = " + mainCase.nOwner);
 
-                MessageBox.Show(string.Join("\n",dataList));
+                CustomMessageHandler.Show(string.Join("\n",dataList));
                 #endregion
             }
             catch (IOException e)
@@ -286,7 +287,7 @@ namespace SimAGS.PfProcessor
         //                }
         //                else
         //                {                                   // load bus doesn't exist
-        //                    MessageBox.Show("Warning: load [" + loadModel.I + "_" + loadModel.ID + "] can't be loaded in PF case!");
+        //                    CustomMessageHandler.Show("Warning: load [" + loadModel.I + "_" + loadModel.ID + "] can't be loaded in PF case!");
         //                }
 
         //            }
@@ -300,7 +301,7 @@ namespace SimAGS.PfProcessor
         //                }
         //                else
         //                {
-        //                    MessageBox.Show("Warning: generator [" + genModel.I + "_" + genModel.ID + "] can't be loaded in PF case!");
+        //                    CustomMessageHandler.Show("Warning: generator [" + genModel.I + "_" + genModel.ID + "] can't be loaded in PF case!");
         //                }
 
         //            }
@@ -359,7 +360,7 @@ namespace SimAGS.PfProcessor
         //                }
         //                else
         //                {
-        //                    MessageBox.Show("Warning:SW Shunt [" + swshuntModel.I + "] can't be loaded in PF case!");
+        //                    CustomMessageHandler.Show("Warning:SW Shunt [" + swshuntModel.I + "] can't be loaded in PF case!");
         //                }
 
         //            }
@@ -413,19 +414,19 @@ namespace SimAGS.PfProcessor
         //        mainCase.nZone = zoneArrayList.size();
         //        mainCase.nOwner = ownerArrayList.size();
 
-        //        MessageBox.Show(">>>>>>>> Process.... Case data is loaded!");
+        //        CustomMessageHandler.Show(">>>>>>>> Process.... Case data is loaded!");
 
         //        /* 
-        //            MessageBox.Show("           bus = " + mainCase.nBus); 
-        //            MessageBox.Show("          load = " + mainCase.nLoad); 
-        //            MessageBox.Show("           gen = " + mainCase.nGen);
-        //            MessageBox.Show("        branch = " + mainCase.nBranch); 
-        //            MessageBox.Show("2W Transformer = " + mainCase.nTwoWindTransformer); 
-        //            MessageBox.Show("3W Transformer = " + mainCase.nThrWindTransformer);
-        //            MessageBox.Show("          area = " + mainCase.nArea); 
-        //            MessageBox.Show("      SW Shunt = " + mainCase.nSWShunt); 
-        //            MessageBox.Show("          zone = " + mainCase.nZone); 
-        //            MessageBox.Show("         owner = " + mainCase.nOwner); 
+        //            CustomMessageHandler.Show("           bus = " + mainCase.nBus); 
+        //            CustomMessageHandler.Show("          load = " + mainCase.nLoad); 
+        //            CustomMessageHandler.Show("           gen = " + mainCase.nGen);
+        //            CustomMessageHandler.Show("        branch = " + mainCase.nBranch); 
+        //            CustomMessageHandler.Show("2W Transformer = " + mainCase.nTwoWindTransformer); 
+        //            CustomMessageHandler.Show("3W Transformer = " + mainCase.nThrWindTransformer);
+        //            CustomMessageHandler.Show("          area = " + mainCase.nArea); 
+        //            CustomMessageHandler.Show("      SW Shunt = " + mainCase.nSWShunt); 
+        //            CustomMessageHandler.Show("          zone = " + mainCase.nZone); 
+        //            CustomMessageHandler.Show("         owner = " + mainCase.nOwner); 
         //         */
 
         //    }

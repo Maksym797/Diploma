@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using SimAGS.Components;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.WindModels
 {
@@ -131,7 +132,7 @@ namespace SimAGS.DynModels.WindModels
             ret[0] = busNum;
             ret[1] = TR;
             ret[2] = String.Format("%1.2f", INIWINDMW * 100);
-            MessageBox.Show("--->" + ret[1]);
+            CustomMessageHandler.Show("--->" + ret[1]);
             return ret;
         }
     }

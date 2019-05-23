@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using org.ojalgo.optimisation;
+using SimAGS.Handlers;
 
 namespace SimAGS.Components.ExtendOption
 {
@@ -61,16 +62,16 @@ namespace SimAGS.Components.ExtendOption
             if (newSWShunt > swshuntBusBMax)
             {
                 newSWShunt = swshuntBusBMax;
-                MessageBox.Show("---> SW Shunt at bus " + hostBus.I + " hits high limit");
+                CustomMessageHandler.Show("---> SW Shunt at bus " + hostBus.I + " hits high limit");
             }
             if (newSWShunt < swshuntBusBMin)
             {
                 newSWShunt = swshuntBusBMin;
-                MessageBox.Show("---> SW Shunt at bus " + hostBus.I + " hits low limit");
+                CustomMessageHandler.Show("---> SW Shunt at bus " + hostBus.I + " hits low limit");
             }
             hostBus.swshuntCalcB = newSWShunt;
             bYMatReBuild = true;
-            MessageBox.Show("----> SWShunt at bus " + hostBus.I + " changes from " + String.Format("%.2f", oldSWShunt) + " to " + String.Format("%.2f", newSWShunt));
+            CustomMessageHandler.Show("----> SWShunt at bus " + hostBus.I + " changes from " + String.Format("%.2f", oldSWShunt) + " to " + String.Format("%.2f", newSWShunt));
         }
 
         // set voltOptmVarIndx by pfVoltageHelper

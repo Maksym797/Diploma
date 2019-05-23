@@ -3,6 +3,7 @@ using SimAGS.SimUtil;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SimAGS.Handlers;
 
 namespace SimAGS.PfProcessor
 {
@@ -24,6 +25,12 @@ namespace SimAGS.PfProcessor
         public const double DefaultVmin = 0.2;             // minimum voltage for PQ bus 
         public const int DefaultVcontrolitre = 10;         // maximum iterations for out voltage control loop (to avoid control oscillation)
         public const double Rad2Deg = 180 / Math.PI;
+        // default system parameters (fixed)
+        public const double DEFAULT_BLOWUP = 1E5;           // terminate power flow calculation if difference is too large 
+        public const double DEFAULT_VMAX = 1.5;             // maximum voltage for PQ bus
+        public const double DEFAULT_VMIN = 0.2;             // minimum voltage for PQ bus 
+        public const int DEFAULT_VCONTROLITRE = 10;         // maximum iterations for out voltage control loop (to avoid control oscillation)
+
 
         // computation control variable
         public double setSBASE;                             // system base
@@ -50,7 +57,7 @@ namespace SimAGS.PfProcessor
         // extended object list
 
         // system matrix 
-        public YMatrix yMat;                                // system y matrix; 
+        public yMatrix yMat;                                // system y matrix; 
 
         // array storing all effective bus numbers 
         public double[,] AVsol;                        // Angle and Vmag 
@@ -64,7 +71,7 @@ namespace SimAGS.PfProcessor
         public bool bConverged = false;         // power flow out loop converged 
 
         // voltage regulation 
-        public PfVoltageHelper voltHelper;
+        public pfVoltageHelper voltHelper;
         public List<bus> loadBusList = new List<bus>();
         public List<bus> genBusList = new List<bus>();
         public int[] loadQPosArray;
@@ -92,5 +99,609 @@ namespace SimAGS.PfProcessor
         {
             new PFCaseLoad(this).exec(pfFile);
         }
+
+        public void ini()
+        {
+
+            // ---------------------- (1) Process abnormal data --------------------------------//
+            //process ZBR (pending) creating the mapping table [pending]
+
+            //sortBusArrayList = busArrayList;
+            //nYBus = sortBusArrayList.size(); 
+
+            int loadBusRank = 0;            // the ranking of loads in all load buses 
+            int genBusRrank = 0;            // the ranking of generators in all generator buses
+            sortBusArrayList = new List<bus>();
+            for (int i = 0; i < busArrayList.size(); i++)
+            {
+                bus busTemp = busArrayList.get(i);
+                busTemp.yMatIndx = i;
+                sortBusArrayList.add(busTemp);
+
+                if (busTemp.IDE == 1)
+                {                               // load bus
+                    busTemp.LLIndx = loadBusRank;
+                    loadBusList.add(busTemp);
+                    loadBusRank++;
+                }
+                else if (busTemp.IDE == 2 || busTemp.IDE == 3)
+                {   // generator buses 
+                    busTemp.GGIndx = genBusRrank;
+                    genBusList.add(busTemp);
+                    genBusRrank++;
+                }
+            }
+            nYBus = sortBusArrayList.size();
+
+            //--------------- (2) MOD: added to coordinate dynamic data loading --------------//
+            for (int i = 0; i < nYBus; i++)
+            {
+                sortBusArrayList.get(i).vangPos = i;
+                sortBusArrayList.get(i).vmagPos = i + nYBus;
+            }
+
+            // ------------------ (3) update branch terminal bus index ----------------- //
+            foreach (branch branchTemp in branchArrayList)
+            {
+                bus frBus = dataProcess.getBusAt(branchTemp.I, sortBusArrayList);
+                bus toBus = dataProcess.getBusAt(branchTemp.J, sortBusArrayList);
+                branchTemp.setFromBus(frBus);                       // update from bus index
+                branchTemp.setToBus(toBus);                         // update to bus index 
+
+                // update terminal buses 
+                frBus.addNeighborBus(toBus);
+                toBus.addNeighborBus(frBus);
+
+            }
+
+            foreach (twoWindTrans twoWindTransTemp in twoWindTransArrayList)
+            {
+                bus frBus = dataProcess.getBusAt(twoWindTransTemp.I, sortBusArrayList);
+                bus toBus = dataProcess.getBusAt(twoWindTransTemp.J, sortBusArrayList);
+                twoWindTransTemp.setFromBus(frBus);
+                twoWindTransTemp.setToBus(toBus);
+
+                // update terminal buses
+                frBus.addNeighborBus(toBus);
+                toBus.addNeighborBus(frBus);
+            }
+
+            //--------- (4) update the buses that are under voltage regulation -----------//
+            loadBusUnderVoltReg();
+
+            // ------------- (5) initialize the solArray = [Theta;V]' matrix ------------- // 
+            AVsol = new double[2 * nYBus, 1];
+            foreach (bus busTemp in sortBusArrayList)
+            {
+                AVsol.setQuick(busTemp.vangPos, 0, busTemp.ang);
+                AVsol.setQuick(busTemp.vmagPos, 0, busTemp.volt);
+            }
+            CustomMessageHandler.Show(">>>>>>>> Process.... Case initialization is completed!");
+        }
+        // --------------------------------------------------------------------------------//	
+        // ------------------------ create system admittance matrix -----------------------//
+        // --------------------------------------------------------------------------------//
+
+        public void buildYMatrix()
+        {
+            // create system admittance matrix 
+            yMat = new yMatrix(this, true);
+            CustomMessageHandler.Show(">>>>>>>> Process.... System admittance matrix is created!");
+        }
+
+
+        // --------------------------------------------------------------------------------//
+        // --------------------------- calculate power flow -------------------------------//
+        // --------------------------------------------------------------------------------//
+
+        public void solvePQ()
+        {
+
+            voltHelper = bEnableVoltRegLoop ? new pfVoltageHelper(this, setVoltRegLoopTol) : null;    // true -- fix coefficient matrix 
+            JMat = new double[2 * nYBus, 2 * nYBus];
+            bConverged = false;
+
+            for (int i = 0; i < DEFAULT_VCONTROLITRE; i++)
+            {
+                // inner power flow (includes PV->PQ conversion) then check regulation
+
+                if (calcPQLoop() == true)
+                {
+                    // voltage regulation loop
+                    if (voltHelper != null)
+                    {
+                        // check if all voltage regulation is done (-2->initial value; -1-> control exhausts ;0-> next round needed; 1-> succeed)
+                        voltHelper.voltReguAdjust();
+
+                        if (voltHelper.getStatus().equals(solType.exhausted))
+                        {
+                            System.out.println("============= Voltage regulation exhausts ===============");
+                            bConverged = false;
+                            break;
+                        }
+                        else if (voltHelper.getStatus().equals(solType.itrComplete))
+                        {
+                            System.out.println("============= Finished voltage control iteration: < " + i + " > ================\n");
+                            bConverged = false;
+                        }
+                        else if (voltHelper.getStatus().equals(solType.solved))
+                        {
+                            System.out.println("=============== Voltage regulation succeeds =============");
+                            bConverged = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        bConverged = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    bConverged = false;                 // power flow is diverged
+                    break;
+                }
+            }
+
+            // only effective after the entire loop is converged 
+            if (bConverged)
+            {
+                calcPQ();                               // determine final power injections 
+                updateResults();
+                //displayResults();
+            }
+            else
+            {
+                throw new simException("Error: Power flow is diverged!");
+            }
+        }
+
+
+        /*
+         * calculate power flow given fixed bus types
+         * assuming the generator terminal bus setting are already adjusted to avoid violation of MVar limit  
+         */
+        public boolean calcPQLoop()
+        {
+
+            sysPLoss = 0;
+            sysQLoss = 0;
+
+            boolean bPfSolved = false;
+
+            DoubleMatrix2D calcDif = new SparseDoubleMatrix2D(2 * nYBus, 1);
+            DoubleMatrix2D AVDev = new SparseDoubleMatrix2D(2 * nYBus, 1);
+
+            for (int i = 0; i < 5; i++)
+            {               // re-compute power flow when PV->PQ conversion is complete
+
+                bPfSolved = false;                                                      // inner-loop solvable flag
+
+                // power flow calculation internal loop 
+                for (int j = 0; j < setPFMaxItr; j++)
+                {
+                    calcPQ();                                                               // calculate the P and Q leaving from a given nodes based on network Y matrix, excluding ZIP load model 					
+                    setPQObj();                                                             // set P and Q objective for each bus (e.g, Gen and load) 
+                    calcDif = pqDif(PQobj, PQsol);                                          // PQ_set - PQ_calc												 
+
+                    // check if converged 
+                    double mismatch = matrixOpt.normInfinity(calcDif.viewColumn(0));        // get maximum value					
+                    System.out.println("\t Iteration Number: " + j + "\t mismatch = " + mismatch);
+
+                    if (mismatch < setPFTol)
+                    {
+                        bInLoopSolved = true;
+                        break;
+                    }
+                    else if (mismatch > DEFAULT_BLOWUP)
+                    {
+                        bInLoopSolved = false;
+                        System.out.println("ERROR: power flow blows up [maximum tolerance is reached]!");
+                        break;
+                    }
+                    else
+                    {
+                        // update the Jacobian and calculate power flow
+                        JMat = new SparseDoubleMatrix2D(2 * nYBus, 2 * nYBus);
+                        jacob.update(yMat, AVsol, JMat, sortBusArrayList, 0);               // Calculate Jacobian matrix 		
+                        AVDev = matrixOpt.solve(JMat, calcDif);                             // Solve JMat*delta_VA = delat_PQ = [PQ_calc - PQ_set] (don't contain negative sign)
+                        AVsol = dataProcess.matAdd(AVsol, AVDev, 1, 1);
+                        //System.out.println("Voltage sol = " + AVsol.getQuick(62, 0));
+                    }
+                }
+
+                //----------------- check generator Q limit  --------------//
+                if (!bInLoopSolved)
+                {                                                       // inner power flow diverged 
+                    bPfSolved = false;
+                    System.out.println("ERROR: POWER FLOW CANNOT CONVERGE");
+                    return bPfSolved;
+                }
+                else
+                {
+                    bConverged = false;
+                    // check if needs to reset regulating voltage 
+                    if (checkPV2PQ())
+                    {
+                        if (checkPQ2PV())
+                        {                       // PQ->PV conversion (if any)
+                            restGenVoltReg();
+                            bPfSolved = true;
+                            System.out.println("Power Flow Converged");
+                            return bPfSolved;
+                        }
+                        else
+                        {
+                            System.out.println("[debug] restGenVoltReg acts");
+                        }
+                    }
+                }
+            } // End of the voltage loop
+
+            return bPfSolved;
+        }
+
+
+        // check if PV bus hit Q limits; if true change bus type from PV to PQ 
+        public boolean checkPV2PQ()
+        {
+            boolean noViolateFound = true;
+
+            for (bus busTemp: genBusList)
+            {
+                busTemp.aggQGen = PQsol.getQuick(busTemp.vmagPos, 0) + busTemp.aggCPLoadQ + busTemp.aggCCLoadQ * AVsol.getQuick(busTemp.vmagPos, 0);
+
+                // calculate the upper and bottom margins 
+                busTemp.aggQUpperMargin = busTemp.aggQMax - busTemp.aggQGen;
+                busTemp.aggQBottomMargin = busTemp.aggQGen - busTemp.aggQMin;
+
+                if (busTemp.calcType == 2)
+                {
+                    if (busTemp.aggQUpperMargin < 0)
+                    {
+                        busTemp.calcType = 1;
+                        busTemp.aggQGen = busTemp.aggQMax;
+                        System.out.println("PV bus at " + busTemp.I + " PV -> PQ (hit Qmax limit)");
+                        noViolateFound = false;
+                    }
+                    else if (busTemp.aggQBottomMargin < 0)
+                    {
+                        busTemp.calcType = 1;
+                        busTemp.aggQGen = busTemp.aggQMin;
+                        System.out.println("PV bus at " + busTemp.I + " PV -> PQ (hit Qmin limit)");
+                        noViolateFound = false;
+                    }
+                }
+            }
+            return noViolateFound;
+        }
+
+
+        /*
+         * update the target voltage setting and switch back the bus type from load bus to generator bus if needed
+         */
+        public boolean checkPQ2PV()
+        {
+
+            boolean bNoConversion = true;
+
+            for (bus busTemp: genBusList)
+            {
+                double calcGenBusVolt = AVsol.getQuick(busTemp.vmagPos, 0);
+
+                // check if the regulating voltage can be restored after the Q is fixed 
+                if (busTemp.calcType == 1)
+                {
+
+                    if (calcGenBusVolt < busTemp.regBusVoltSet && busTemp.aggQUpperMargin == 0)
+                    {
+                        busTemp.genBusVoltSetCalc = busTemp.regBusVoltSet;
+                        System.out.println("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
+                        bNoConversion = false;
+                    }
+
+                    if (calcGenBusVolt > busTemp.regBusVoltSet && busTemp.aggQBottomMargin == 0)
+                    {
+                        busTemp.genBusVoltSetCalc = busTemp.regBusVoltSet;
+                        System.out.println("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
+                        bNoConversion = false;
+                    }
+                }
+            }
+            return bNoConversion;
+        }
+
+        /*
+         * rest all generators buses back to PV type if they are on limit  
+         */
+        public void restGenVoltReg()
+        {
+            for (bus busTemp: genBusList)
+            {
+                // check if the regulating voltage can be restored after the Q is fixed 
+                if (busTemp.calcType == 1)
+                {
+                    busTemp.calcType = 2;
+                    busTemp.genBusVoltSetCalc = AVsol.getQuick(busTemp.vmagPos, 0);
+                    System.out.println("Gen at " + busTemp.I + " regulating votlage is reset");
+                }
+            }
+        }
+
+
+        /*
+         *  check if the setting voltage is within the allowable regulation range 
+         *  if not, reset local voltage settings
+         *  [created on 04/29/13] to limit Q by changing the terminal voltage regulation voltage settings 
+         */
+        /*
+        public boolean checkPV2PQTemp(){
+            boolean bNoViolation = true;
+
+            for (bus busTemp: genBusList) {
+                busTemp.QGen = PQsol.getQuick(busTemp.vmagPos, 0) + busTemp.cPLoadQ + busTemp.cCLoadQ*AVsol.getQuick(busTemp.vmagPos,0);
+
+                // calculate the upper and bottom margins 
+                busTemp.qUpperMargin  = busTemp.qMax - busTemp.QGen; 
+                busTemp.qBottomMargin = busTemp.QGen - busTemp.qMin; 
+
+                // estimate the allowable local voltage regulation setting 
+                busTemp.estLocVSetMax = (busTemp.qMax - busTemp.QGen)/busTemp.VQSens + busTemp.genBusVoltSetCalc;
+                busTemp.estLocVSetMin = (busTemp.qMin - busTemp.QGen)/busTemp.VQSens + busTemp.genBusVoltSetCalc; 
+
+                if (-busTemp.qUpperMargin > DEFAULT_GENQTol || -busTemp.qBottomMargin > DEFAULT_GENQTol) {
+
+                    // System.out.println("QMax = " + busTemp.qMax + " QMin = " + busTemp.qMin + " Q = " + busTemp.QGen); 
+                    // check if the allowable range covers the original voltage setting 
+                    if (busTemp.estLocVSetMax < busTemp.regBusVoltSet) {
+                        busTemp.genBusVoltSetCalc = busTemp.estLocVSetMax;
+                        System.out.println("PV bus at " + busTemp.I + " hit Qmax limit " + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
+                        bNoViolation = false; 
+                    } else if (busTemp.estLocVSetMin > busTemp.regBusVoltSet) {
+                        System.out.println("PV bus at " + busTemp.I + " hit Qmin limit)" + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
+                        busTemp.genBusVoltSetCalc = busTemp.estLocVSetMin;
+                        bNoViolation = false; 
+                    } 
+                } else {
+                    if (busTemp.genBusVoltSetCalc!=busTemp.regBusVoltSet){
+                        busTemp.genBusVoltSetCalc = busTemp.regBusVoltSet;
+                        bNoViolation = false; 
+                    }
+                }	
+            }
+            return bNoViolation;
+        }
+        */
+
+
+
+        /*
+         * calculate bus PQ injection based on existing network solution 
+         */
+        public void calcPQ()
+        {
+
+            PQsol = new SparseDoubleMatrix2D(2 * nYBus, 1);
+            double pTemp, qTemp;
+            double Vi, Vj, Ai, Aj, Gij, Bij, sinAij, cosAij;
+
+            for (bus busTemp: sortBusArrayList)
+            {
+                Ai = AVsol.getQuick(busTemp.vangPos, 0);
+                Vi = AVsol.getQuick(busTemp.vmagPos, 0);
+                pTemp = Vi * Vi * yMat.yMatRe.getQuick(busTemp.yMatIndx, busTemp.yMatIndx);
+                qTemp = -Vi * Vi * yMat.yMatIm.getQuick(busTemp.yMatIndx, busTemp.yMatIndx);
+
+                // [3] append branch related jacobian matrix elements 
+                for (bus neigBus: busTemp.neighborBusList)
+                {
+                    Aj = AVsol.getQuick(neigBus.vangPos, 0);
+                    Vj = AVsol.getQuick(neigBus.vmagPos, 0);
+                    sinAij = Math.sin(Ai - Aj);
+                    cosAij = Math.cos(Ai - Aj);
+                    Gij = yMat.yMatRe.getQuick(busTemp.yMatIndx, neigBus.yMatIndx);
+                    Bij = yMat.yMatIm.getQuick(busTemp.yMatIndx, neigBus.yMatIndx);
+                    pTemp = pTemp + Vi * Vj * (Gij * cosAij + Bij * sinAij);
+                    qTemp = qTemp + Vi * Vj * (Gij * sinAij - Bij * cosAij);
+                }
+                PQsol.setQuick(busTemp.vangPos, 0, pTemp);
+                PQsol.setQuick(busTemp.vmagPos, 0, qTemp);
+            }
+
+            /*
+            // ### for (int i=0;i<nYBus;i++){
+            // ###	pTemp = 0.0;
+            // ###	qTemp = 0.0; 
+            // ###	Ai = AVsol.getQuick(i, 0);
+            // ### Vi = AVsol.getQuick(i+nYBus, 0);	
+
+            // ###	for (int j=0;j<nYBus;j++){				
+            // ###		Aj = AVsol.getQuick(j,0);
+            // ###		Vj = AVsol.getQuick(j+nYBus,0); 
+            // ###		Gij = yMat.yMatRe.getQuick(i,j);
+            // ###		Bij = yMat.yMatIm.getQuick(i,j); 
+            // ###		sinAij = Math.sin(Ai-Aj);
+            // ###		cosAij = Math.cos(Ai-Aj); 				
+            // ###		pTemp  = pTemp + Vi*Vj*(Gij*cosAij + Bij*sinAij); 
+            // ###		qTemp  = qTemp + Vi*Vj*(Gij*sinAij - Bij*cosAij);
+            // ###	}	
+
+            // ###	PQsol.setQuick(i, 0, pTemp); 
+            // ###	PQsol.setQuick(i+nYBus, 0, qTemp); 
+            // ###}
+            */
+        }
+
+
+        /*
+         * calculate P and Q object for each bus (additional power injection is taken into accounts)
+         */
+        public void setPQObj()
+        {
+            PQobj = new SparseDoubleMatrix2D(2 * nYBus, 1);
+            for (bus busTemp: sortBusArrayList)
+            {
+                busTemp.calcExtPQInj(AVsol.getQuick(busTemp.vmagPos, 0));
+                // set bus power injection setting 
+                PQobj.setQuick(busTemp.vangPos, 0, busTemp.extPInj);
+                PQobj.setQuick(busTemp.vmagPos, 0, busTemp.extQInj);
+            }
+        }
+
+
+        /*
+         *  calculate the power flow solution mismatch 
+         *  	for PQ bus: Pset- Pcalc; Qset - Qcalc;
+         *  	for PV bus: Pset- Pcalc; Vst  - Vcalc; 
+         */
+        public DoubleMatrix2D pqDif(DoubleMatrix2D A, DoubleMatrix2D B)
+        {
+            DoubleMatrix2D ret = new SparseDoubleMatrix2D(2 * nYBus, 1);
+
+            int row = A.rows();
+            if (A.columns() != 1)
+            {
+                System.out.println("[Error] matrix column number needs to be 1");
+                System.exit(0);
+            }
+            for (int i = 0; i < row; i++)
+            {
+                ret.setQuick(i, 0, A.getQuick(i, 0) - B.getQuick(i, 0));
+            }
+
+            for (int i = 0; i < nYBus; i++)
+            {
+                if (sortBusArrayList.get(i).calcType == 2)
+                {
+                    bus busTemp = sortBusArrayList.get(i);
+                    //ret.setQuick(i+nYBus, 0, 0.0);														// delta_Q --> using the adding large number method to update Jacobian
+                    ret.setQuick(i + nYBus, 0, busTemp.genBusVoltSetCalc - AVsol.get(busTemp.vmagPos, 0));  // delta_V --> Zero rows and columns and put 1 at the diagonal position
+
+                }
+                else if (sortBusArrayList.get(i).calcType == 3)
+                {
+                    ret.setQuick(i, 0, 0.0);            // delta_P
+                    ret.setQuick(i + nYBus, 0, 0.0);        // delta_Q
+                }
+            }
+            return ret;
+        }
+
+
+
+        // Update corresponding results after power flow is converged 
+        public void updateResults()
+        {
+
+            // update converged voltage to busArrayList element 
+            for (bus busTemp: sortBusArrayList)
+            {
+                busTemp.ang = AVsol.getQuick(busTemp.vangPos, 0);
+                busTemp.volt = AVsol.getQuick(busTemp.vmagPos, 0);
+
+                // update load
+                busTemp.aggTotalPLoad = busTemp.aggCPLoadP + busTemp.volt * busTemp.aggCCLoadP + busTemp.volt * busTemp.volt * busTemp.aggCYLoadP;
+                busTemp.aggTotalQLoad = busTemp.aggCPLoadQ + busTemp.volt * busTemp.aggCCLoadQ - busTemp.volt * busTemp.volt * busTemp.aggCYLoadQ;
+
+                busTemp.aggPGen = PQsol.getQuick(busTemp.vangPos, 0) + busTemp.aggTotalPLoad;
+                busTemp.aggQGen = PQsol.getQuick(busTemp.vmagPos, 0) + busTemp.aggTotalQLoad;
+
+                // split generator MW and MVar outputs
+                busTemp.updateResults();
+            }
+
+            // update branch calculated variables and system losses 
+            for (branch branchTemp : branchArrayList)
+            {
+                branchTemp.calPQFlow();
+                sysPLoss = sysPLoss + branchTemp.pLoss;
+                sysQLoss = sysQLoss + branchTemp.qLoss;
+            }
+
+            // update transformer power and update system losses 
+            for (twoWindTrans transTemp: twoWindTransArrayList)
+            {
+                transTemp.calPQFlow();
+                sysPLoss = sysPLoss + transTemp.pLoss;
+                sysQLoss = sysQLoss + transTemp.qLoss;
+            }
+        }
+
+
+        public boolean getPFConvergeStatus()
+        {
+            return bConverged;
+        }
+
+
+        // display results 
+        public void displayResults()
+        {
+
+            // display bus voltages 
+            for (int i = 0; i < sortBusArrayList.size(); i++)
+            {
+                String strTemp = "";
+                bus busTemp = sortBusArrayList.get(i);
+                strTemp = strTemp + "Bus " + String.format("%2d", busTemp.I)
+                        + "	\tVolt = " + String.format("%2.5f", busTemp.volt)
+                        + "	\tAng = " + String.format("%2.5f", busTemp.ang * Rad2Deg)
+                        + "	\tPLoad = " + String.format("%4.2f", busTemp.aggTotalPLoad * setSBASE)
+                        + "	\tQLoad = " + String.format("%4.2f", busTemp.aggTotalQLoad * setSBASE)
+                        + "	\tPGen  = " + String.format("%4.2f", busTemp.aggPGen * setSBASE)
+                        + "	\tQGen  = " + String.format("%4.2f", busTemp.aggQGen * setSBASE);
+                System.out.println(strTemp);
+            }
+
+            // display system power losses 
+            System.out.println("Sys Losses " + sysPLoss + " +j " + sysQLoss);
+        }
+
+
+        /*
+         * initial voltage regulating control 
+         */
+        public void loadBusUnderVoltReg()
+        {
+
+            // [1] setup regulated buses (generator)
+            for (bus busTemp: sortBusArrayList)
+            {
+                if (busTemp.bBusHasRegGen)
+                {
+                    bus regulatedBus = dataProcess.getBusAt(busTemp.genRegBusNum, sortBusArrayList);
+                    regulatedBus.bVoltRegulated = true;
+                    regulatedBus.VoltRegulatedSet = busTemp.regBusVoltSet;
+                }
+            }
+
+            // [2] setup regulated buses (switchable shunt)
+            for (bus busTemp: sortBusArrayList)
+            {
+                if (busTemp.bHasSwShunt)
+                {
+                    bus regulatedBus = dataProcess.getBusAt(busTemp.swshuntRegBusNum, sortBusArrayList);
+                    regulatedBus.bVoltRegulated = true;
+                    regulatedBus.VoltRegulatedSet = busTemp.regBusVoltSet;
+                }
+            }
+
+            // [3] setup the voltage regulating transformer 
+            for (twoWindTrans twoWindTransTemp: twoWindTransArrayList)
+            {
+                if (twoWindTransTemp.COD1 == 1)
+                {
+                    bus regulatedBus = dataProcess.getBusAt(twoWindTransTemp.CONT1, sortBusArrayList);
+                    regulatedBus.bVoltRegulated = true;
+                    regulatedBus.VoltRegulatedSet = twoWindTransTemp.VMI1;
+                }
+            }
+        }
+
+
+
+
+
     }
 }

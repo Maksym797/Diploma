@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SimAGS.Components;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.MonModels
 {
@@ -52,7 +53,7 @@ namespace SimAGS.DynModels.MonModels
             busTemp.busFreqCalc = this;
             busTemp.busFreq_Pos = busFreq_Pos;
 
-            MessageBox.Show("Freq Measure Model at " + busTemp.I + " is loaded!");
+            CustomMessageHandler.Show("Freq Measure Model at " + busTemp.I + " is loaded!");
         }
 
 
@@ -136,7 +137,7 @@ namespace SimAGS.DynModels.MonModels
             hStep = h;
             vtAng_n = yVector[vtAng_Pos, 0];
             busFreq_n = yVector[busFreq_Pos, 0];
-            //MessageBox.Show("hStep = " + hStep + " Freq_n = " + busFreq_n); 
+            //CustomMessageHandler.Show("hStep = " + hStep + " Freq_n = " + busFreq_n); 
         }
     }
 }

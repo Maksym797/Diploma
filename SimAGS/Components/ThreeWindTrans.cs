@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
@@ -264,13 +265,13 @@ namespace SimAGS.Components
                 }
                 else
                 {
-                    MessageBox.Show("### ERROR: trans R and X parameter conversion");
+                    CustomMessageHandler.Show("### ERROR: trans R and X parameter conversion");
                     Environment.Exit(1);
                 }
             }
             else
             {
-                MessageBox.Show("### ERROR: trans off-normal turning ratio");
+                CustomMessageHandler.Show("### ERROR: trans off-normal turning ratio");
                 Environment.Exit(1);
             }
 
@@ -328,8 +329,8 @@ namespace SimAGS.Components
                 pLoss = frBusP + toBusP;
                 qLoss = frBusQ + toBusQ;
 
-                //MessageBox.Show("Trans frP = " + frBusP + " frQ = " + frBusQ); 
-                //MessageBox.Show("Trans toP = " + toBusP + " toQ = " + toBusQ); 
+                //CustomMessageHandler.Show("Trans frP = " + frBusP + " frQ = " + frBusQ); 
+                //CustomMessageHandler.Show("Trans toP = " + toBusP + " toQ = " + toBusQ); 
             }
         }
 

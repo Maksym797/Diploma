@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using SimAGS.Handlers;
 
 namespace SimAGS
 {
@@ -9,6 +11,7 @@ namespace SimAGS
         public MainForm()
         {
             InitializeComponent();
+            CustomMessageHandler.ConfigureViewes(customConsole);
             TestInitializeDataTable();
         }
 
@@ -52,6 +55,10 @@ namespace SimAGS
             table.Rows.Add("03A", "Max");
 
             dataGridView1.DataSource = table;
+
+            //var list = new List<string> {"s", "s", "s", "s", "s", "s", "s"};
+            //
+            //CustomMessageHandler.Show(string.Join("\n",list));
         }
     }
 }

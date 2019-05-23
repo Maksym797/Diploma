@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="colt">
+      <HintPath>libs\colt.dll</HintPath>
+    </Reference>
     <Reference Include="IKVM.AWT.WinForms, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.AWT.WinForms.dll</HintPath>
     </Reference>
@@ -117,11 +120,18 @@
     <Reference Include="IKVM.Runtime.JNI, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
+    <Reference Include="jcommon-1.0.8">
+      <HintPath>libs\jcommon-1.0.8.dll</HintPath>
+    </Reference>
+    <Reference Include="jfreechart-1.0.4">
+      <HintPath>libs\jfreechart-1.0.4.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="ojalgo-33_0">
-      <HintPath>..\..\..\Users\Maksym_Misiuchenko\_Diploma\Jar2Dll\ikvmbin-7.2.4630.5\ikvm-7.2.4630.5\bin\ojalgo-33_0.dll</HintPath>
+    <Reference Include="ojalgo-33_0, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ojalgo-33_0.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -164,6 +174,7 @@
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
     <Compile Include="ExtetsionHandlers.cs" />
+    <Compile Include="Handlers\CustomMessageHandler.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +194,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimConfig.cs" />
     <Compile Include="SimUtil\Jacob.cs" />
+    <Compile Include="SimUtil\PQDecoupleJacob.cs" />
     <Compile Include="SimUtil\YMatrix.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

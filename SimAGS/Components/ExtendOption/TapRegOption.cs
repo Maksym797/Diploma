@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using org.ojalgo.optimisation;
+using SimAGS.Handlers;
 
 namespace SimAGS.Components.ExtendOption
 {
@@ -62,7 +63,7 @@ namespace SimAGS.Components.ExtendOption
             hostTrans.kRatio = newKRatio;
             hostTrans.calcTWPara();
             bYMatReBuild = true;
-            MessageBox.Show("----> Trans at (" + hostTrans.I + "," + hostTrans.J + ") tap changes from " + String.Format("%.4f", oldKRatio) + " to " + String.Format("%.4f", newKRatio));
+            CustomMessageHandler.Show("----> Trans at (" + hostTrans.I + "," + hostTrans.J + ") tap changes from " + String.Format("%.4f", oldKRatio) + " to " + String.Format("%.4f", newKRatio));
         }
 
         // set voltOptmVarIndx by pfVoltageHelper

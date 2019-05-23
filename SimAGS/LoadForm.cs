@@ -95,6 +95,7 @@ namespace SimAGS
                 powerFlowCaseFile = new JFile(powerFlowCaseFile_textBox.Text);
 
                 SubmitHandler();
+                Close();
             }
             catch
             {
@@ -122,7 +123,7 @@ namespace SimAGS
                 // load power flow data 
                 pfProc = new PFCase();
                 pfProc.LoadCaseData(powerFlowCaseFile);
-                //*pfProc.ini();
+                pfProc.ini();
                 //*
                 //*// build dynamic simulation object so that the data can be loaded
                 //*dynProc = new DynCase(pfProc);

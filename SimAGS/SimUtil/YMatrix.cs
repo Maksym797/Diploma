@@ -3,7 +3,7 @@ using SimAGS.PfProcessor;
 
 namespace SimAGS.SimUtil
 {
-    public class YMatrix
+    public class yMatrix
     {
         public int nYNode = 0; // number of nodes in Y matrix x
         public double[,] yMatRe; // real part of system admittance matrix 
@@ -11,7 +11,7 @@ namespace SimAGS.SimUtil
         public PFCase pfCaseMaseter = new PFCase();
 
         // busList --> array list storing sorted buses 
-        public YMatrix(PFCase pfCaseMain, bool bIncludeLoadY)
+        public yMatrix(PFCase pfCaseMain, bool bIncludeLoadY)
         {
             pfCaseMaseter = pfCaseMain;
 

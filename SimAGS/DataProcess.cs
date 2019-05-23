@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using java.util;
 using SimAGS.Components;
+using SimAGS.Handlers;
 
 namespace SimAGS
 {
@@ -34,7 +35,7 @@ namespace SimAGS
 
             if (colX1 != colX2)
             {
-                MessageBox.Show("ERROR: Matrix columns are not matched!");
+                CustomMessageHandler.Show("ERROR: Matrix columns are not matched!");
                 Environment.Exit(0);
             }
 
@@ -69,7 +70,7 @@ namespace SimAGS
 
             if (rowX1 != rowX2 || colX1 != colX2)
             {
-                MessageBox.Show(rowX1 + "VS" + rowX2 + "\n" + colX1 + "VS" + colX2 + "\nERROR: matrix length doesn't match!");
+                CustomMessageHandler.Show(rowX1 + "VS" + rowX2 + "\n" + colX1 + "VS" + colX2 + "\nERROR: matrix length doesn't match!");
                 Environment.Exit(0);
             }
 
@@ -96,28 +97,23 @@ namespace SimAGS
                 }
                 str = str + "\n";
             }
-            MessageBox.Show(str);
+            CustomMessageHandler.Show(str);
             Environment.Exit(0);
         }
 
+        public static String dataLimitCheck(String valStr, double inputVal, double lowLimit, String lowLimitVarName, bool lowLimitIncludeEq, double upLimit, String upLimitVarName, bool upLimitInclueEq, String delimitorStr)
+        {
 
-        //public static String dataLimitCheck(String valStr, double inputVal, double lowLimit, String lowLimitVarName, boolean lowLimitIncludeEq, double upLimit, String upLimitVarName, boolean upLimitInclueEq, String delimitorStr)
-        //{
-
-        //    //if (inputVal > upLimit || (inputVal == upLimit && !upLimitInclueEq))
-        //    //{
-        //    //    return String.format(" %8s = %10.3f exceeds up  limit = %10.3f %8s %8s", valStr, inputVal, upLimit, upLimitVarName, delimitorStr);
-        //    //}
-        //    //else if (inputVal < lowLimit || (inputVal == lowLimit && !lowLimitIncludeEq))
-        //    //{
-        //    //    return String.format(" %8s = %10.3f exceeds low limit = %10.3f %8s %8s", valStr, inputVal, lowLimit, lowLimitVarName, delimitorStr);
-        //    //}
-        //    //else
-        //    //{
-        //    //    return "";
-        //    //}
-        //    throw new NotImplementedException();
-        //}
+            if (inputVal > upLimit || (inputVal == upLimit && !upLimitInclueEq))
+            {
+                return String.Format(" %8s = %10.3f exceeds up  limit = %10.3f %8s %8s", valStr, inputVal, upLimit, upLimitVarName, delimitorStr);
+            }
+            if (inputVal < lowLimit || (inputVal == lowLimit && !lowLimitIncludeEq))
+            {
+                return String.Format(" %8s = %10.3f exceeds low limit = %10.3f %8s %8s", valStr, inputVal, lowLimit, lowLimitVarName, delimitorStr);
+            }
+            return "";
+        }
 
 
         ////------------------ miscellaneous functions -----------------------//

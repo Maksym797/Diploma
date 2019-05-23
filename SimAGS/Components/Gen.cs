@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using SimAGS.DynModels.ExcModels;
 using SimAGS.DynModels.GenModels;
 using SimAGS.DynModels.GovModels;
+using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
@@ -171,18 +172,18 @@ namespace SimAGS.Components
             if (hasGovModel == true)
             {
                 govDyn.setMWRef(PSetVal / SBASE);
-                MessageBox.Show("genertor govDyn setting is changed");
+                CustomMessageHandler.Show("genertor govDyn setting is changed");
             }
             else
             {
                 if (hasGenModel == true)
                 {
                     genDyn.setPmRef(PSetVal / SBASE);
-                    MessageBox.Show("genertor genDyn setting is changed");
+                    CustomMessageHandler.Show("genertor genDyn setting is changed");
                 }
                 else
                 {
-                    MessageBox.Show("### Error: generator at " + I + "_" + ID + " MW can't be changed as no GEN or GOV model is defined");
+                    CustomMessageHandler.Show("### Error: generator at " + I + "_" + ID + " MW can't be changed as no GEN or GOV model is defined");
                     Environment.Exit(0);
                 }
             }
@@ -203,7 +204,7 @@ namespace SimAGS.Components
                 }
                 else
                 {
-                    MessageBox.Show("### Error: generator at " + I + "_" + ID + " MW setting can't be loaded");
+                    CustomMessageHandler.Show("### Error: generator at " + I + "_" + ID + " MW setting can't be loaded");
                     Environment.Exit(0);
                 }
             }
