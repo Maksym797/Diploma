@@ -49,7 +49,7 @@ namespace SimAGS.Components.ExtendOption
         {
             foreach(var loadBus in loadBusArrayList)
             {
-                double bij = yMat.yMatIm[hostBus.yMatIndx, loadBus.yMatIndx];
+                double bij = yMat.yMatIm.getQuick(hostBus.yMatIndx, loadBus.yMatIndx);
                 if (bij != 0)
                 {
                     LGMat.setQuick(loadBus.LLIndx, voltOptmVarIndx, bij);                              // Matrix L	off-diagonal element

@@ -27,7 +27,7 @@ namespace SimAGS.Components.ExtendOption
         // build the coefficient matrix on the right-hand side of LLMat*delta_V = LG_gen*delta_Vg + LG_sw*delta_B + LG_trans*delta_k  
         public void buildLGMatWithRegCtr(DoubleMatrix2D LGMat)
         {
-            LGMat[hostBus.LLIndx, voltOptmVarIndx] = 1;
+            LGMat.setQuick(hostBus.LLIndx, voltOptmVarIndx, 1);
         }
 
 
@@ -36,18 +36,16 @@ namespace SimAGS.Components.ExtendOption
         {
             if (isToUpdate)
             {
-                optmInEquConConfMat[2 * voltOptmVarIndx, voltOptmVarIndx] = 1;          // upper limit 
-                optmInEquConConfMat[2 * voltOptmVarIndx + 1, voltOptmVarIndx]= -1;             // lower limit 
+                optmInEquConConfMat.setQuick(2 * voltOptmVarIndx, voltOptmVarIndx, 1);          // upper limit 
+                optmInEquConConfMat.setQuick(2 * voltOptmVarIndx + 1, voltOptmVarIndx, -1); 			// lower limit 
             }
         }
 
         // build the right-hand side of the inequality constraints 
         public void buildInequbMat(DoubleMatrix2D optmInEqubMat)
         {
-
-            optmInEqubMat[2 * voltOptmVarIndx, 0] = swshuntBusBMax - hostBus.swshuntCalcB;      // upper limit 
-            optmInEqubMat[2 * voltOptmVarIndx + 1, 0] = -(swshuntBusBMin - hostBus.swshuntCalcB);   // lower limit 
-
+            optmInEqubMat.setQuick(2 * voltOptmVarIndx, 0, swshuntBusBMax - hostBus.swshuntCalcB);      // upper limit 
+            optmInEqubMat.setQuick(2 * voltOptmVarIndx + 1, 0, -(swshuntBusBMin - hostBus.swshuntCalcB));   // lower limit 
         }
 
         // update regulating variables after each iteration 

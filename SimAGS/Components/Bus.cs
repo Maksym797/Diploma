@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using cern.colt.matrix;
 using SimAGS.Components.ExtendOption;
 using SimAGS.DynModels.DynLoadModels;
 using SimAGS.DynModels.MonModels;
@@ -334,8 +335,8 @@ namespace SimAGS.Components
         public void dynIni(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
             // initialize the network variable  
-            yVector[vangPos, 0] = ang;
-            yVector[vmagPos, 0] = volt;
+            yVector.setQuick(vangPos, 0, ang);
+            yVector.setQuick(vmagPos, 0, volt);
 
             // <1> regular dynamic model 
             foreach (var genTemp in busGens)
@@ -370,13 +371,13 @@ namespace SimAGS.Components
         // get voltage for dynamic simulation 
         public double getVolt(DoubleMatrix2D yVector)
         {
-            return yVector[vmagPos, 0];
+            return yVector.getQuick(vmagPos, 0);
         }
 
         // get angle for dynamic simulation 
         public double getAngle(DoubleMatrix2D yVector)
         {
-            return yVector[vangPos, 0];
+            return yVector.getQuick(vangPos, 0);
         }
 
         // get MW load 
@@ -404,9 +405,10 @@ namespace SimAGS.Components
         {
             if (this.IDE != 4)
             {                                                       //active bus 
-                                                                    // [1] bus self shunt
-                yMatRe[yMatIndx, yMatIndx]= GL + yMatRe[yMatIndx, yMatIndx];
-                yMatIm[yMatIndx, yMatIndx]= BL + yMatIm[yMatIndx, yMatIndx];
+                // [1] bus self shunt
+                yMatRe.setQuick(yMatIndx, yMatIndx, GL + yMatRe.getQuick(yMatIndx, yMatIndx));
+                yMatIm.setQuick(yMatIndx, yMatIndx, BL + yMatIm.getQuick(yMatIndx, yMatIndx));
+
 
                 // ### [2] add constant impedance load model 
                 // ### if (bHasLoad && bIncludeLoadInYMat){
@@ -421,7 +423,7 @@ namespace SimAGS.Components
                 // [2] add switchable shunts 
                 if (bHasSwShunt)
                 {
-                    yMatIm[yMatIndx, yMatIndx] = swshuntCalcB + yMatIm[yMatIndx, yMatIndx];
+                    yMatIm.set(yMatIndx, yMatIndx, swshuntCalcB + yMatIm.getQuick(yMatIndx, yMatIndx));
                 }
             }
         }

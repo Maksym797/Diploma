@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using cern.colt.matrix;
 using SimAGS.Components;
 using SimAGS.Handlers;
 
@@ -67,19 +68,19 @@ namespace SimAGS.DynModels.WindModels
         {
             SV1 = setMWInj;
             // update the state variable
-            xVector[SV1_Pos, 0] = SV1;
+            xVector.setQuick(SV1_Pos, 0, SV1);
         }
 
         // update variables at the beginning of each iteration 
         public void update_Var(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
-            SV1 = xVector[SV1_Pos, 0];
+            SV1 = xVector.getQuick(SV1_Pos, 0);
         }
 
         // calculate power injection 
         public void update_g(DoubleMatrix2D g)
         {
-            g[vtAng_Pos, 0] = g[vtAng_Pos, 0] + SV1;
+            g.setQuick(vtAng_Pos, 0, g.getQuick(vtAng_Pos, 0) + SV1);
         }
 
         // calculate gy = dg/dy
@@ -91,13 +92,13 @@ namespace SimAGS.DynModels.WindModels
         // calculate gx = dg/dx
         public void update_gx(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
-            jacMat[startRow + vtAng_Pos, startColumn + SV1_Pos] = -1;
+            jacMat.setQuick(startRow + vtAng_Pos, startColumn + SV1_Pos, -1);
         }
 
         // calculate f(x,y) 
         public void update_f(DoubleMatrix2D fVector)
         {
-            fVector[SV1_Pos, 0] = 1 / TR * (setMWInj - SV1);
+            fVector.setQuick(SV1_Pos, 0, 1 / TR * (setMWInj - SV1));
         }
 
         // calculate fy = df/dy
@@ -109,7 +110,7 @@ namespace SimAGS.DynModels.WindModels
         public void update_fx(DoubleMatrix2D jacMat, int startRow, int startColumn, double simTheta, double h)
         {
             double tStepCof = -simTheta * h;
-            jacMat[SV1_Pos + startRow, SV1_Pos + startColumn] = 1 / TR * (-1) * tStepCof;
+            jacMat.setQuick(SV1_Pos + startRow, SV1_Pos + startColumn, 1 / TR * (-1) * tStepCof);
         }
 
         // scale load for eventList

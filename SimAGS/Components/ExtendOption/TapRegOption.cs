@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using cern.colt.matrix;
 using org.ojalgo.optimisation;
 using SimAGS.Handlers;
 

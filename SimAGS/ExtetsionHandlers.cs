@@ -14,15 +14,15 @@ namespace SimAGS
     public static class ExtetsionHandlers
     {
         #region DoubleMatrix2D
-        public static void setQuick(this DoubleMatrix2D matr, int x, int y, double val)
-        {
-            matr[x, y] = val;
-        }
-
-        public static double getQuick(this DoubleMatrix2D matr, int x, int y)
-        {
-            return matr[x, y];
-        }
+        //public static void setQuick(this DoubleMatrix2D matr, int x, int y, double val)
+        //{
+        //    matr[x, y] = val;
+        //}
+        //
+        //public static double getQuick(this DoubleMatrix2D matr, int x, int y)
+        //{
+        //    return matr[x, y];
+        //}
         #endregion
 
         #region srting
@@ -90,6 +90,7 @@ namespace SimAGS
             return s[i];
         }
         #endregion
+
     }
 
     public class Integer

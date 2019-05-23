@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using cern.colt.matrix;
 using SimAGS.Components;
 using SimAGS.Handlers;
 
@@ -66,43 +67,43 @@ namespace SimAGS.DynModels.MonModels
             // initialize bus frequency 
             busFreq = 0;
             busFreq_n = busFreq;
-            yVector[busFreq_Pos, 0] = busFreq;
+            yVector.setQuick(busFreq_Pos, 0, busFreq);
         }
 
 
         // update variables at the beginning of each iteration 
         public void update_Var(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
-            busFreq = yVector[busFreq_Pos, 0];
-            vtAng = yVector[vtAng_Pos, 0];
+            busFreq = yVector.getQuick(busFreq_Pos, 0);
+            vtAng = yVector.getQuick(vtAng_Pos, 0);
             mBus.busFreq = busFreq;
         }
 
         // update -g(x,y)
         public void update_g(DoubleMatrix2D g)
         {
-            g[busFreq_Pos, 0] = -(vtAng - vtAng_n - w0 * hStep * busFreq);
+            g.setQuick(busFreq_Pos, 0, -(vtAng - vtAng_n - w0 * hStep * busFreq));
         }
 
         //update -g(x,y) at occurrence of event
         public void update_gT0(DoubleMatrix2D g)
         {
-            g[busFreq_Pos, 0] = -(busFreq - busFreq_n);
+            g.setQuick(busFreq_Pos, 0, -(busFreq - busFreq_n));
         }
 
 
         // calculate gy = dg/dy element of dg(x,y)/dy
         public void update_gy(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
-            jacMat[busFreq_Pos + startRow, busFreq_Pos + startColumn] = -w0 * hStep;
-            jacMat[busFreq_Pos + startRow, vtAng_Pos + startColumn] = 1;
+            jacMat.setQuick(busFreq_Pos + startRow, busFreq_Pos + startColumn, -w0 * hStep);
+            jacMat.setQuick(busFreq_Pos + startRow, vtAng_Pos + startColumn, 1);
         }
 
         // calculate gy at T0 to avoid sudden change in frequency 
         public void update_gyT0(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
             //jacMat.setQuick(busFreq_Pos + startRow, busFreq_Pos + startColumn, -w0*hStep);
-            jacMat[busFreq_Pos + startRow, busFreq_Pos + startColumn] = 1;
+            jacMat.setQuick(busFreq_Pos + startRow, busFreq_Pos + startColumn, 1);
         }
 
         // calculate gx = dg/dx 
@@ -135,8 +136,8 @@ namespace SimAGS.DynModels.MonModels
         public void update_BusFreqMeasurement(double h, DoubleMatrix2D yVector)
         {
             hStep = h;
-            vtAng_n = yVector[vtAng_Pos, 0];
-            busFreq_n = yVector[busFreq_Pos, 0];
+            vtAng_n = yVector.getQuick(vtAng_Pos, 0);
+            busFreq_n = yVector.getQuick(busFreq_Pos, 0);
             //CustomMessageHandler.Show("hStep = " + hStep + " Freq_n = " + busFreq_n); 
         }
     }

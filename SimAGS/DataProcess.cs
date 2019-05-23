@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using cern.colt.matrix;
+using cern.colt.matrix.impl;
 using java.util;
 using SimAGS.Components;
 using SimAGS.Handlers;
@@ -40,7 +41,7 @@ namespace SimAGS
                 Environment.Exit(0);
             }
 
-            DoubleMatrix2D ret = new double[rowX1 + rowX2, colX1];
+            DoubleMatrix2D ret = new SparseDoubleMatrix2D(rowX1 + rowX2, colX1);
 
             for (int i = 0; i < rowX1; i++)
             {
@@ -75,7 +76,7 @@ namespace SimAGS
                 Environment.Exit(0);
             }
 
-            DoubleMatrix2D ret = new double[rowX1, colX1];
+            DoubleMatrix2D ret = new SparseDoubleMatrix2D(rowX1, colX1);
             for (int i = 0; i < rowX1; i++)
             {
                 for (int j = 0; j < colX1; j++)
