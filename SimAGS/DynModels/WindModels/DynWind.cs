@@ -63,7 +63,7 @@ namespace SimAGS.DynModels.WindModels
         }
 
         // initialize the element in yVector and xVector 
-        public void ini(double[,] yVector, double[,] xVector)
+        public void ini(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
             SV1 = setMWInj;
             // update the state variable
@@ -71,42 +71,42 @@ namespace SimAGS.DynModels.WindModels
         }
 
         // update variables at the beginning of each iteration 
-        public void update_Var(double[,] yVector, double[,] xVector)
+        public void update_Var(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
             SV1 = xVector[SV1_Pos, 0];
         }
 
         // calculate power injection 
-        public void update_g(double[,] g)
+        public void update_g(DoubleMatrix2D g)
         {
             g[vtAng_Pos, 0] = g[vtAng_Pos, 0] + SV1;
         }
 
         // calculate gy = dg/dy
-        public void update_gy(double[,] jacMat, int startRow, int startColumn)
+        public void update_gy(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
 
         }
 
         // calculate gx = dg/dx
-        public void update_gx(double[,] jacMat, int startRow, int startColumn)
+        public void update_gx(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
             jacMat[startRow + vtAng_Pos, startColumn + SV1_Pos] = -1;
         }
 
         // calculate f(x,y) 
-        public void update_f(double[,] fVector)
+        public void update_f(DoubleMatrix2D fVector)
         {
             fVector[SV1_Pos, 0] = 1 / TR * (setMWInj - SV1);
         }
 
         // calculate fy = df/dy
-        public void update_fy(double[,] jacMat, int startRow, int startColumn, double simTheta, double h)
+        public void update_fy(DoubleMatrix2D jacMat, int startRow, int startColumn, double simTheta, double h)
         {
         }
 
         // calculate fx = df/dx 
-        public void update_fx(double[,] jacMat, int startRow, int startColumn, double simTheta, double h)
+        public void update_fx(DoubleMatrix2D jacMat, int startRow, int startColumn, double simTheta, double h)
         {
             double tStepCof = -simTheta * h;
             jacMat[SV1_Pos + startRow, SV1_Pos + startColumn] = 1 / TR * (-1) * tStepCof;

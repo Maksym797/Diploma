@@ -14,7 +14,7 @@ namespace SimAGS.DynModels.GenModels
         public const double LARGE_NUMBER = 1E5;
 
 
-        public void ini(double[,] yVector, double[,] xVector)
+        public void ini(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
 
         }
@@ -24,37 +24,37 @@ namespace SimAGS.DynModels.GenModels
 
         }
 
-        public void update_Var(double[,] x, double[,] y)
+        public void update_Var(DoubleMatrix2D x, DoubleMatrix2D y)
         {
 
         }
 
-        public void update_g(double[,] g)
+        public void update_g(DoubleMatrix2D g)
         {
 
         }
 
-        public void update_f(double[,] f)
+        public void update_f(DoubleMatrix2D f)
         {
 
         }
 
-        public void update_gx(double[,] jacMat, int startRow, int startColumn)
+        public void update_gx(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
 
         }
 
-        public void update_gy(double[,] jacMat, int startRow, int startColumn)
+        public void update_gy(DoubleMatrix2D jacMat, int startRow, int startColumn)
         {
 
         }
 
-        public void update_fx(double[,] jacMat, int starRow, int startColumn, double simTheta, double h)
+        public void update_fx(DoubleMatrix2D jacMat, int starRow, int startColumn, double simTheta, double h)
         {
 
         }
 
-        public void update_fy(double[,] jacMat, int starRow, int startColumn, double simTheta, double h)
+        public void update_fy(DoubleMatrix2D jacMat, int starRow, int startColumn, double simTheta, double h)
         {
 
         }

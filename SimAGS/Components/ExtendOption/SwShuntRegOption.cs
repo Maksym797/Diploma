@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using cern.colt.matrix;
 using org.ojalgo.optimisation;
 using SimAGS.Handlers;
+using System;
 
 namespace SimAGS.Components.ExtendOption
 {
@@ -25,14 +25,14 @@ namespace SimAGS.Components.ExtendOption
         }
 
         // build the coefficient matrix on the right-hand side of LLMat*delta_V = LG_gen*delta_Vg + LG_sw*delta_B + LG_trans*delta_k  
-        public void buildLGMatWithRegCtr(double[,] LGMat)
+        public void buildLGMatWithRegCtr(DoubleMatrix2D LGMat)
         {
             LGMat[hostBus.LLIndx, voltOptmVarIndx] = 1;
         }
 
 
         // build the inequality constraints coefficient matrix 
-        public void buildInequConCofMat(bool isToUpdate, double[,] optmInEquConConfMat)
+        public void buildInequConCofMat(bool isToUpdate, DoubleMatrix2D optmInEquConConfMat)
         {
             if (isToUpdate)
             {
@@ -42,7 +42,7 @@ namespace SimAGS.Components.ExtendOption
         }
 
         // build the right-hand side of the inequality constraints 
-        public void buildInequbMat(double[,] optmInEqubMat)
+        public void buildInequbMat(DoubleMatrix2D optmInEqubMat)
         {
 
             optmInEqubMat[2 * voltOptmVarIndx, 0] = swshuntBusBMax - hostBus.swshuntCalcB;      // upper limit 

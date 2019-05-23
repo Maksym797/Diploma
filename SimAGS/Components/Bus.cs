@@ -12,7 +12,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
-    public class bus : AbstractElement
+    public class bus : abstractPfElement
     {
         // data loaded from raw file 
         public int I = 0;       // bus number 
@@ -241,7 +241,7 @@ namespace SimAGS.Components
                 if (bBusHasRegGen)
                 {
                     CustomMessageHandler.Show("[definde in bus.java] bus " + I + " regulates " + genRegBusNum + " setVal = " + regBusVoltSet);
-                    voltExtOption = new GenRegOption(this);
+                    voltExtOption = new genRegOption(this);
                 }
 
                 // calculate the aggregated Q limt 
@@ -331,7 +331,7 @@ namespace SimAGS.Components
 
 
         // initialize all of the dynamic models attached to a given bus 
-        public void dynIni(double[,] yVector, double[,] xVector)
+        public void dynIni(DoubleMatrix2D yVector, DoubleMatrix2D xVector)
         {
             // initialize the network variable  
             yVector[vangPos, 0] = ang;
@@ -368,26 +368,26 @@ namespace SimAGS.Components
         }
 
         // get voltage for dynamic simulation 
-        public double getVolt(double[,] yVector)
+        public double getVolt(DoubleMatrix2D yVector)
         {
             return yVector[vmagPos, 0];
         }
 
         // get angle for dynamic simulation 
-        public double getAngle(double[,] yVector)
+        public double getAngle(DoubleMatrix2D yVector)
         {
             return yVector[vangPos, 0];
         }
 
         // get MW load 
-        public double getRealPLoad(double[,] yVector)
+        public double getRealPLoad(DoubleMatrix2D yVector)
         {
             //return yVector.getQuick(dynRealPLoad_Pos, 0); 
             return -9999;
         }
 
         // get MVAr load
-        public double getRealQLoad(double[,] yVector)
+        public double getRealQLoad(DoubleMatrix2D yVector)
         {
             //return yVector.getQuick(dynRealQLoad_Pos,0); 
             return -9999;
@@ -400,7 +400,7 @@ namespace SimAGS.Components
         }
 
         // update yMatrix 
-        public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+        public void updateYMat(DoubleMatrix2D yMatRe, DoubleMatrix2D yMatIm)
         {
             if (this.IDE != 4)
             {                                                       //active bus 

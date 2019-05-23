@@ -11,7 +11,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
-    public class gen : AbstractElement
+    public class gen : abstractPfElement
     {
         // data loaded from raw file 
         public int I = 0;       // bus number

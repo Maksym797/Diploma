@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using cern.colt.matrix;
 using java.util;
 using SimAGS.Components;
 using SimAGS.Handlers;
@@ -26,7 +27,7 @@ namespace SimAGS
         }
 
         //// combine two vector x = [x1;x2]
-        public static double[,] combVector(double[,] x1, double[,] x2)
+        public static DoubleMatrix2D combVector(DoubleMatrix2D x1, DoubleMatrix2D x2)
         {
             int rowX1 = x1.rows();
             int rowX2 = x2.rows();
@@ -39,7 +40,7 @@ namespace SimAGS
                 Environment.Exit(0);
             }
 
-            double[,] ret = new double[rowX1 + rowX2, colX1];
+            DoubleMatrix2D ret = new double[rowX1 + rowX2, colX1];
 
             for (int i = 0; i < rowX1; i++)
             {
@@ -61,7 +62,7 @@ namespace SimAGS
         }
 
         // matrix operation a*x1 + b*x2
-        public static double[,] matAdd(double[,] x1, double[,] x2, double a, double b)
+        public static DoubleMatrix2D matAdd(DoubleMatrix2D x1, DoubleMatrix2D x2, double a, double b)
         {
             int rowX1 = x1.rows();
             int rowX2 = x2.rows();
@@ -74,7 +75,7 @@ namespace SimAGS
                 Environment.Exit(0);
             }
 
-            double[,] ret = new double[rowX1, colX1];
+            DoubleMatrix2D ret = new double[rowX1, colX1];
             for (int i = 0; i < rowX1; i++)
             {
                 for (int j = 0; j < colX1; j++)
@@ -86,7 +87,7 @@ namespace SimAGS
         }
 
 
-        public static void dispMat(double[,] xMat)
+        public static void dispMat(DoubleMatrix2D xMat)
         {
             String str = "";
             for (int i = 0; i < xMat.rows(); i++)

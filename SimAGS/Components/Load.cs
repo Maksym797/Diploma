@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class load : AbstractElement
+    public class load : abstractPfElement
     {
 
         // raw data section

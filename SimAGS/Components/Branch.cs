@@ -4,7 +4,7 @@ using ikvm.extensions;
 
 namespace SimAGS.Components
 {
-    public class branch : AbstractElement
+    public class branch : abstractPfElement
     {
         // data loaded from raw file 
         public int I = 0;       // from bus number
@@ -185,7 +185,7 @@ namespace SimAGS.Components
         }
 
         // update Y Matrix 
-        public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+        public void updateYMat(DoubleMatrix2D yMatRe, DoubleMatrix2D yMatIm)
         {
             if (ST == 1)
             {       // for closed line only 

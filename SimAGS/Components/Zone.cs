@@ -7,7 +7,7 @@ using ikvm.extensions;
 
 namespace SimAGS.Components
 {
-    public class zone : AbstractElement
+    public class zone : abstractPfElement
     {
         public int I = 0;           // zone number
         public String ZONAME = "";          // zone name; 

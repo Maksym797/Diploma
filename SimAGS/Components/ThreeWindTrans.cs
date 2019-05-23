@@ -8,7 +8,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
-    public class threeWindTrans : AbstractElement
+    public class threeWindTrans : abstractPfElement
     {
         // raw data section <Line 1> 
         public int I = 0;       // 1st bus number
@@ -335,7 +335,7 @@ namespace SimAGS.Components
         }
 
         // update Y Matrix 
-        public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+        public void updateYMat(DoubleMatrix2D yMatRe, DoubleMatrix2D yMatIm)
         {
 
         }

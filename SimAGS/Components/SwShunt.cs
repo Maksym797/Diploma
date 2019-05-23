@@ -103,7 +103,7 @@ namespace SimAGS.Components
             // 
             calcBMin = Math.Min(B1 * N1, 0);
             calcBMax = Math.Max(B1 * N1 + B2 * N2 + B3 * N3 + B4 * N4 + B5 * N5 + B6 * N6 + B7 * N7 + B8 * N8, 0);
-            //System.out.println("calcB = " + calcB + " calcBMax" + calcBMax + " calcBMin " + calcBMin);
+            //CustomMessageHandler.Show("calcB = " + calcB + " calcBMax" + calcBMax + " calcBMin " + calcBMin);
         }
 
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class area : AbstractElement
+    public class area : abstractPfElement
     {
         // data loaded from raw file
         public int I = 0;           // area number

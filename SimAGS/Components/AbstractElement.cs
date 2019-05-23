@@ -3,12 +3,12 @@ using System;
 
 namespace SimAGS.Components
 {
-    public abstract class AbstractElement
+    public abstract class abstractPfElement
     {
         public const int SBASE = 100;
         public const double Deg2Rad = Math.PI / 180;
 
-        public BaseExtOption GetVoltExtOption()
+        public BaseExtOption getVoltExtOption()
         {
             return new BaseExtOption();
         }

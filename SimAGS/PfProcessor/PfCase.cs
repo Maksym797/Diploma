@@ -1,9 +1,11 @@
-﻿using SimAGS.Components;
+﻿using cern.colt.matrix;
+using cern.colt.matrix.impl;
+using cern.colt.matrix.linalg;
+using SimAGS.Components;
+using SimAGS.Handlers;
 using SimAGS.SimUtil;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using SimAGS.Handlers;
 
 namespace SimAGS.PfProcessor
 {
@@ -60,11 +62,11 @@ namespace SimAGS.PfProcessor
         public yMatrix yMat;                                // system y matrix; 
 
         // array storing all effective bus numbers 
-        public double[,] AVsol;                        // Angle and Vmag 
-        public double[,] PQsol;                        // P and Q 
-        public double[,] PQobj;                        // P and Q objective for PQ and PV bus (Q for PV and P&Q for SW are zeros)
-        public double[,] JMat;                         // System Jacobian matrix 
-        public Jacob jacobObj;                              // Jacobian matrix 
+        public DoubleMatrix2D AVsol;                        // Angle and Vmag 
+        public DoubleMatrix2D PQsol;                        // P and Q 
+        public DoubleMatrix2D PQobj;                        // P and Q objective for PQ and PV bus (Q for PV and P&Q for SW are zeros)
+        public DoubleMatrix2D JMat;                         // System Jacobian matrix 
+        public jacob jacobObj;                              // Jacobian matrix 
 
         // calculation related variables 
         public bool bInLoopSolved = false;          // power flow inner loop converged 
@@ -79,6 +81,9 @@ namespace SimAGS.PfProcessor
 
         // case verification 
         public bool bCaseCheck = true;
+        
+        // matrix operator object
+        public Algebra matrixOpt = new Algebra();
 
         #endregion
 
@@ -170,7 +175,7 @@ namespace SimAGS.PfProcessor
             loadBusUnderVoltReg();
 
             // ------------- (5) initialize the solArray = [Theta;V]' matrix ------------- // 
-            AVsol = new double[2 * nYBus, 1];
+            AVsol = new  SparseDoubleMatrix2D(2 * nYBus, 1);
             foreach (bus busTemp in sortBusArrayList)
             {
                 AVsol.setQuick(busTemp.vangPos, 0, busTemp.ang);
@@ -198,7 +203,7 @@ namespace SimAGS.PfProcessor
         {
 
             voltHelper = bEnableVoltRegLoop ? new pfVoltageHelper(this, setVoltRegLoopTol) : null;    // true -- fix coefficient matrix 
-            JMat = new double[2 * nYBus, 2 * nYBus];
+            JMat = JMat = new SparseDoubleMatrix2D(2 * nYBus, 2 * nYBus);
             bConverged = false;
 
             for (int i = 0; i < DEFAULT_VCONTROLITRE; i++)
@@ -213,20 +218,20 @@ namespace SimAGS.PfProcessor
                         // check if all voltage regulation is done (-2->initial value; -1-> control exhausts ;0-> next round needed; 1-> succeed)
                         voltHelper.voltReguAdjust();
 
-                        if (voltHelper.getStatus().equals(solType.exhausted))
+                        if (voltHelper.getStatus().Equals(pfVoltageHelper.solType.exhausted))
                         {
-                            System.out.println("============= Voltage regulation exhausts ===============");
+                            CustomMessageHandler.Show("============= Voltage regulation exhausts ===============");
                             bConverged = false;
                             break;
                         }
-                        else if (voltHelper.getStatus().equals(solType.itrComplete))
+                        else if (voltHelper.getStatus().Equals(pfVoltageHelper.solType.itrComplete))
                         {
-                            System.out.println("============= Finished voltage control iteration: < " + i + " > ================\n");
+                            CustomMessageHandler.Show("============= Finished voltage control iteration: < " + i + " > ================\n");
                             bConverged = false;
                         }
-                        else if (voltHelper.getStatus().equals(solType.solved))
+                        else if (voltHelper.getStatus().Equals(pfVoltageHelper.solType.solved))
                         {
-                            System.out.println("=============== Voltage regulation succeeds =============");
+                            CustomMessageHandler.Show("=============== Voltage regulation succeeds =============");
                             bConverged = true;
                             break;
                         }
@@ -262,13 +267,13 @@ namespace SimAGS.PfProcessor
          * calculate power flow given fixed bus types
          * assuming the generator terminal bus setting are already adjusted to avoid violation of MVar limit  
          */
-        public boolean calcPQLoop()
+        public bool calcPQLoop()
         {
 
             sysPLoss = 0;
             sysQLoss = 0;
 
-            boolean bPfSolved = false;
+            bool bPfSolved = false;
 
             DoubleMatrix2D calcDif = new SparseDoubleMatrix2D(2 * nYBus, 1);
             DoubleMatrix2D AVDev = new SparseDoubleMatrix2D(2 * nYBus, 1);
@@ -287,7 +292,7 @@ namespace SimAGS.PfProcessor
 
                     // check if converged 
                     double mismatch = matrixOpt.normInfinity(calcDif.viewColumn(0));        // get maximum value					
-                    System.out.println("\t Iteration Number: " + j + "\t mismatch = " + mismatch);
+                    CustomMessageHandler.Show("\t Iteration Number: " + j + "\t mismatch = " + mismatch);
 
                     if (mismatch < setPFTol)
                     {
@@ -297,7 +302,7 @@ namespace SimAGS.PfProcessor
                     else if (mismatch > DEFAULT_BLOWUP)
                     {
                         bInLoopSolved = false;
-                        System.out.println("ERROR: power flow blows up [maximum tolerance is reached]!");
+                        CustomMessageHandler.Show("ERROR: power flow blows up [maximum tolerance is reached]!");
                         break;
                     }
                     else
@@ -307,7 +312,7 @@ namespace SimAGS.PfProcessor
                         jacob.update(yMat, AVsol, JMat, sortBusArrayList, 0);               // Calculate Jacobian matrix 		
                         AVDev = matrixOpt.solve(JMat, calcDif);                             // Solve JMat*delta_VA = delat_PQ = [PQ_calc - PQ_set] (don't contain negative sign)
                         AVsol = dataProcess.matAdd(AVsol, AVDev, 1, 1);
-                        //System.out.println("Voltage sol = " + AVsol.getQuick(62, 0));
+                        //CustomMessageHandler.Show("Voltage sol = " + AVsol.getQuick(62, 0));
                     }
                 }
 
@@ -315,7 +320,7 @@ namespace SimAGS.PfProcessor
                 if (!bInLoopSolved)
                 {                                                       // inner power flow diverged 
                     bPfSolved = false;
-                    System.out.println("ERROR: POWER FLOW CANNOT CONVERGE");
+                    CustomMessageHandler.Show("ERROR: POWER FLOW CANNOT CONVERGE");
                     return bPfSolved;
                 }
                 else
@@ -328,12 +333,12 @@ namespace SimAGS.PfProcessor
                         {                       // PQ->PV conversion (if any)
                             restGenVoltReg();
                             bPfSolved = true;
-                            System.out.println("Power Flow Converged");
+                            CustomMessageHandler.Show("Power Flow Converged");
                             return bPfSolved;
                         }
                         else
                         {
-                            System.out.println("[debug] restGenVoltReg acts");
+                            CustomMessageHandler.Show("[debug] restGenVoltReg acts");
                         }
                     }
                 }
@@ -344,11 +349,11 @@ namespace SimAGS.PfProcessor
 
 
         // check if PV bus hit Q limits; if true change bus type from PV to PQ 
-        public boolean checkPV2PQ()
+        public bool checkPV2PQ()
         {
-            boolean noViolateFound = true;
+            bool noViolateFound = true;
 
-            for (bus busTemp: genBusList)
+            foreach (bus busTemp in genBusList)
             {
                 busTemp.aggQGen = PQsol.getQuick(busTemp.vmagPos, 0) + busTemp.aggCPLoadQ + busTemp.aggCCLoadQ * AVsol.getQuick(busTemp.vmagPos, 0);
 
@@ -362,14 +367,14 @@ namespace SimAGS.PfProcessor
                     {
                         busTemp.calcType = 1;
                         busTemp.aggQGen = busTemp.aggQMax;
-                        System.out.println("PV bus at " + busTemp.I + " PV -> PQ (hit Qmax limit)");
+                        CustomMessageHandler.Show("PV bus at " + busTemp.I + " PV -> PQ (hit Qmax limit)");
                         noViolateFound = false;
                     }
                     else if (busTemp.aggQBottomMargin < 0)
                     {
                         busTemp.calcType = 1;
                         busTemp.aggQGen = busTemp.aggQMin;
-                        System.out.println("PV bus at " + busTemp.I + " PV -> PQ (hit Qmin limit)");
+                        CustomMessageHandler.Show("PV bus at " + busTemp.I + " PV -> PQ (hit Qmin limit)");
                         noViolateFound = false;
                     }
                 }
@@ -381,12 +386,12 @@ namespace SimAGS.PfProcessor
         /*
          * update the target voltage setting and switch back the bus type from load bus to generator bus if needed
          */
-        public boolean checkPQ2PV()
+        public bool checkPQ2PV()
         {
 
-            boolean bNoConversion = true;
+            bool bNoConversion = true;
 
-            for (bus busTemp: genBusList)
+            foreach (bus busTemp in genBusList)
             {
                 double calcGenBusVolt = AVsol.getQuick(busTemp.vmagPos, 0);
 
@@ -397,14 +402,14 @@ namespace SimAGS.PfProcessor
                     if (calcGenBusVolt < busTemp.regBusVoltSet && busTemp.aggQUpperMargin == 0)
                     {
                         busTemp.genBusVoltSetCalc = busTemp.regBusVoltSet;
-                        System.out.println("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
+                        CustomMessageHandler.Show("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
                         bNoConversion = false;
                     }
 
                     if (calcGenBusVolt > busTemp.regBusVoltSet && busTemp.aggQBottomMargin == 0)
                     {
                         busTemp.genBusVoltSetCalc = busTemp.regBusVoltSet;
-                        System.out.println("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
+                        CustomMessageHandler.Show("[Info] Orignal gen at " + busTemp.I + " Qlimit is restored to the original regulating voltage!");
                         bNoConversion = false;
                     }
                 }
@@ -417,14 +422,14 @@ namespace SimAGS.PfProcessor
          */
         public void restGenVoltReg()
         {
-            for (bus busTemp: genBusList)
+            foreach (bus busTemp in genBusList)
             {
                 // check if the regulating voltage can be restored after the Q is fixed 
                 if (busTemp.calcType == 1)
                 {
                     busTemp.calcType = 2;
                     busTemp.genBusVoltSetCalc = AVsol.getQuick(busTemp.vmagPos, 0);
-                    System.out.println("Gen at " + busTemp.I + " regulating votlage is reset");
+                    CustomMessageHandler.Show("Gen at " + busTemp.I + " regulating votlage is reset");
                 }
             }
         }
@@ -452,14 +457,14 @@ namespace SimAGS.PfProcessor
 
                 if (-busTemp.qUpperMargin > DEFAULT_GENQTol || -busTemp.qBottomMargin > DEFAULT_GENQTol) {
 
-                    // System.out.println("QMax = " + busTemp.qMax + " QMin = " + busTemp.qMin + " Q = " + busTemp.QGen); 
+                    // CustomMessageHandler.Show("QMax = " + busTemp.qMax + " QMin = " + busTemp.qMin + " Q = " + busTemp.QGen); 
                     // check if the allowable range covers the original voltage setting 
                     if (busTemp.estLocVSetMax < busTemp.regBusVoltSet) {
                         busTemp.genBusVoltSetCalc = busTemp.estLocVSetMax;
-                        System.out.println("PV bus at " + busTemp.I + " hit Qmax limit " + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
+                        CustomMessageHandler.Show("PV bus at " + busTemp.I + " hit Qmax limit " + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
                         bNoViolation = false; 
                     } else if (busTemp.estLocVSetMin > busTemp.regBusVoltSet) {
-                        System.out.println("PV bus at " + busTemp.I + " hit Qmin limit)" + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
+                        CustomMessageHandler.Show("PV bus at " + busTemp.I + " hit Qmin limit)" + "genTerminalVoltSet --> " + busTemp.genBusVoltSetCalc);
                         busTemp.genBusVoltSetCalc = busTemp.estLocVSetMin;
                         bNoViolation = false; 
                     } 
@@ -486,7 +491,7 @@ namespace SimAGS.PfProcessor
             double pTemp, qTemp;
             double Vi, Vj, Ai, Aj, Gij, Bij, sinAij, cosAij;
 
-            for (bus busTemp: sortBusArrayList)
+            foreach (bus busTemp in sortBusArrayList)
             {
                 Ai = AVsol.getQuick(busTemp.vangPos, 0);
                 Vi = AVsol.getQuick(busTemp.vmagPos, 0);
@@ -494,12 +499,12 @@ namespace SimAGS.PfProcessor
                 qTemp = -Vi * Vi * yMat.yMatIm.getQuick(busTemp.yMatIndx, busTemp.yMatIndx);
 
                 // [3] append branch related jacobian matrix elements 
-                for (bus neigBus: busTemp.neighborBusList)
+                foreach (bus neigBus in busTemp.neighborBusList)
                 {
                     Aj = AVsol.getQuick(neigBus.vangPos, 0);
                     Vj = AVsol.getQuick(neigBus.vmagPos, 0);
-                    sinAij = Math.sin(Ai - Aj);
-                    cosAij = Math.cos(Ai - Aj);
+                    sinAij = Math.Sin(Ai - Aj);
+                    cosAij = Math.Cos(Ai - Aj);
                     Gij = yMat.yMatRe.getQuick(busTemp.yMatIndx, neigBus.yMatIndx);
                     Bij = yMat.yMatIm.getQuick(busTemp.yMatIndx, neigBus.yMatIndx);
                     pTemp = pTemp + Vi * Vj * (Gij * cosAij + Bij * sinAij);
@@ -540,7 +545,7 @@ namespace SimAGS.PfProcessor
         public void setPQObj()
         {
             PQobj = new SparseDoubleMatrix2D(2 * nYBus, 1);
-            for (bus busTemp: sortBusArrayList)
+            foreach (bus busTemp in sortBusArrayList)
             {
                 busTemp.calcExtPQInj(AVsol.getQuick(busTemp.vmagPos, 0));
                 // set bus power injection setting 
@@ -562,8 +567,8 @@ namespace SimAGS.PfProcessor
             int row = A.rows();
             if (A.columns() != 1)
             {
-                System.out.println("[Error] matrix column number needs to be 1");
-                System.exit(0);
+                CustomMessageHandler.Show("[Error] matrix column number needs to be 1");
+                Environment.Exit(0);
             }
             for (int i = 0; i < row; i++)
             {
@@ -595,7 +600,7 @@ namespace SimAGS.PfProcessor
         {
 
             // update converged voltage to busArrayList element 
-            for (bus busTemp: sortBusArrayList)
+            foreach(bus busTemp in sortBusArrayList)
             {
                 busTemp.ang = AVsol.getQuick(busTemp.vangPos, 0);
                 busTemp.volt = AVsol.getQuick(busTemp.vmagPos, 0);
@@ -612,7 +617,7 @@ namespace SimAGS.PfProcessor
             }
 
             // update branch calculated variables and system losses 
-            for (branch branchTemp : branchArrayList)
+            foreach (branch branchTemp in branchArrayList)
             {
                 branchTemp.calPQFlow();
                 sysPLoss = sysPLoss + branchTemp.pLoss;
@@ -620,7 +625,7 @@ namespace SimAGS.PfProcessor
             }
 
             // update transformer power and update system losses 
-            for (twoWindTrans transTemp: twoWindTransArrayList)
+            foreach (twoWindTrans transTemp in twoWindTransArrayList)
             {
                 transTemp.calPQFlow();
                 sysPLoss = sysPLoss + transTemp.pLoss;
@@ -629,7 +634,7 @@ namespace SimAGS.PfProcessor
         }
 
 
-        public boolean getPFConvergeStatus()
+        public bool getPFConvergeStatus()
         {
             return bConverged;
         }
@@ -644,18 +649,18 @@ namespace SimAGS.PfProcessor
             {
                 String strTemp = "";
                 bus busTemp = sortBusArrayList.get(i);
-                strTemp = strTemp + "Bus " + String.format("%2d", busTemp.I)
-                        + "	\tVolt = " + String.format("%2.5f", busTemp.volt)
-                        + "	\tAng = " + String.format("%2.5f", busTemp.ang * Rad2Deg)
-                        + "	\tPLoad = " + String.format("%4.2f", busTemp.aggTotalPLoad * setSBASE)
-                        + "	\tQLoad = " + String.format("%4.2f", busTemp.aggTotalQLoad * setSBASE)
-                        + "	\tPGen  = " + String.format("%4.2f", busTemp.aggPGen * setSBASE)
-                        + "	\tQGen  = " + String.format("%4.2f", busTemp.aggQGen * setSBASE);
-                System.out.println(strTemp);
+                strTemp = strTemp + "Bus " + String.Format("%2d", busTemp.I)
+                        + "	\tVolt = " + String.Format("%2.5f", busTemp.volt)
+                        + "	\tAng = " + String.Format("%2.5f", busTemp.ang * Rad2Deg)
+                        + "	\tPLoad = " + String.Format("%4.2f", busTemp.aggTotalPLoad * setSBASE)
+                        + "	\tQLoad = " + String.Format("%4.2f", busTemp.aggTotalQLoad * setSBASE)
+                        + "	\tPGen  = " + String.Format("%4.2f", busTemp.aggPGen * setSBASE)
+                        + "	\tQGen  = " + String.Format("%4.2f", busTemp.aggQGen * setSBASE);
+                CustomMessageHandler.Show(strTemp);
             }
 
             // display system power losses 
-            System.out.println("Sys Losses " + sysPLoss + " +j " + sysQLoss);
+            CustomMessageHandler.Show("Sys Losses " + sysPLoss + " +j " + sysQLoss);
         }
 
 
@@ -666,7 +671,7 @@ namespace SimAGS.PfProcessor
         {
 
             // [1] setup regulated buses (generator)
-            for (bus busTemp: sortBusArrayList)
+            foreach (bus busTemp in sortBusArrayList)
             {
                 if (busTemp.bBusHasRegGen)
                 {
@@ -677,7 +682,7 @@ namespace SimAGS.PfProcessor
             }
 
             // [2] setup regulated buses (switchable shunt)
-            for (bus busTemp: sortBusArrayList)
+            foreach (bus busTemp in sortBusArrayList)
             {
                 if (busTemp.bHasSwShunt)
                 {
@@ -688,7 +693,7 @@ namespace SimAGS.PfProcessor
             }
 
             // [3] setup the voltage regulating transformer 
-            for (twoWindTrans twoWindTransTemp: twoWindTransArrayList)
+            foreach (twoWindTrans twoWindTransTemp in twoWindTransArrayList)
             {
                 if (twoWindTransTemp.COD1 == 1)
                 {

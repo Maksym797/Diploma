@@ -28,7 +28,7 @@ namespace SimAGS.Components.ExtendOption
 
 
         // build the coefficient matrix on the right-hand side of LLMat*delta_V = LG_gen*delta_Vg + LG_sw*delta_B + LG_trans*delta_k  
-        public void buildLGMatWithRegCtr(double[,] LGMat)
+        public void buildLGMatWithRegCtr(DoubleMatrix2D LGMat)
         {
             double dfrBusQ_dk = -hostTrans.dcalcBII_dk - hostTrans.dcalcBIJ_dk;
             double dtoBusQ_dk = -hostTrans.dcalcBJJ_dk - hostTrans.dcalcBJI_dk;
@@ -39,7 +39,7 @@ namespace SimAGS.Components.ExtendOption
 
 
         // build the inequality constraints coefficient matrix 
-        public void buildInequConCofMat(double[,] optmInEquConConfMat)
+        public void buildInequConCofMat(DoubleMatrix2D optmInEquConConfMat)
         {
             optmInEquConConfMat.setQuick(2 * voltOptmVarIndx, voltOptmVarIndx, 1);          // upper limit 
             optmInEquConConfMat.setQuick(2 * voltOptmVarIndx + 1, voltOptmVarIndx, -1);             // lower limit 
@@ -47,7 +47,7 @@ namespace SimAGS.Components.ExtendOption
 
 
         // build the right-hand side of the inequality constraints 
-        public void buildInequbMat(double[,] optmInEqubMat)
+        public void buildInequbMat(DoubleMatrix2D optmInEqubMat)
         {
             optmInEqubMat.setQuick(2 * voltOptmVarIndx, 0, hostTrans.RMA1 - hostTrans.kRatio);  // upper limit 
             optmInEqubMat.setQuick(2 * voltOptmVarIndx + 1, 0, -(hostTrans.RMI1 - hostTrans.kRatio));   // lower limit 

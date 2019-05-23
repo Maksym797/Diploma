@@ -10,7 +10,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
-    public class twoWindTrans : AbstractElement
+    public class twoWindTrans : abstractPfElement
     {
         // raw data section <Line 1> s
         public int I = 0;       // 1st bus number
@@ -316,7 +316,7 @@ namespace SimAGS.Components
         }
 
         // update Y Matrix 
-        public void updateYMat(double[,] yMatRe, double[,] yMatIm)
+        public void updateYMat(DoubleMatrix2D yMatRe, DoubleMatrix2D yMatIm)
         {
             if (STAT == 1)
             {
