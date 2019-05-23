@@ -164,6 +164,9 @@
     <Compile Include="Components\TwoWindTrans.cs" />
     <Compile Include="Components\Zone.cs" />
     <Compile Include="DataProcess.cs" />
+    <Compile Include="DynModels\AgcModel\AGCDyn.cs" />
+    <Compile Include="DynModels\AgcModel\agcModel.cs" />
+    <Compile Include="DynModels\AgcModel\dAGCDyn.cs" />
     <Compile Include="DynModels\DynLoadModels\DynLoadModel.cs" />
     <Compile Include="DynModels\ExcModels\ExcModel.cs" />
     <Compile Include="DynModels\GenModels\GenModel.cs" />
@@ -174,7 +177,10 @@
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
     <Compile Include="ExtetsionHandlers.cs" />
+    <Compile Include="Handlers\CustomGlobalFormsStore.cs" />
     <Compile Include="Handlers\CustomMessageHandler.cs" />
+    <Compile Include="Handlers\CustomTableHandler.cs" />
+    <Compile Include="Handlers\CustomTreeViewHandler.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

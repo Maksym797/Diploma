@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using SimAGS.Components;
 
 namespace SimAGS
 {
@@ -91,6 +94,34 @@ namespace SimAGS
         }
         #endregion
 
+        #region TreeNode
+
+        public static bool equalsIgnoreCase(this TreeNode node, string name)
+        {
+            return node.Text.Equals(name, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        #endregion
+
+        #region DataRowCollection
+
+        public static void AddBus(this DataRowCollection rows, bus bus)
+        {
+            rows.Add(
+                bus.I,
+                bus.NAME,
+                bus.BASKV,
+                bus.IDE,
+                bus.GL, 
+                bus.BL, 
+                bus.AREA, 
+                bus.ZONE,
+                bus.VM,
+                bus.VA, 
+                bus.OWNER);
+        }
+
+        #endregion
     }
 
     public class Integer
@@ -112,7 +143,7 @@ namespace SimAGS
 
         public string readLine()
         {
-            var str = Position < Body.Length ? Body[Position] : null ;
+            var str = Position < Body.Length ? Body[Position] : null;
             Position++;
             return str;
         }
@@ -123,13 +154,17 @@ namespace SimAGS
         }
     }
 
-    public class simException: Exception
+    public class simException : Exception
     {
         public simException() : base()
         {
-            
+
         }
         public simException(string message) : base(message)
+        {
+
+        }
+        public simException(string message, Exception innerException) : base(message, innerException)
         {
 
         }

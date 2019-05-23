@@ -9,7 +9,7 @@ namespace SimAGS.Handlers
         protected static Action<string> _messageShower { get; private set; } = (m) => MessageBox.Show(m);
         private static TextBox _textBox { get; set; }
 
-        public static void ConfigureViewes(TextBox viewer)
+        public static void Config(TextBox viewer)
         {
             _textBox = viewer;
             _messageShower = (m) =>

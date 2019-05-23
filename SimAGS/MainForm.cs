@@ -11,8 +11,10 @@ namespace SimAGS
         public MainForm()
         {
             InitializeComponent();
-            CustomMessageHandler.ConfigureViewes(customConsole);
-            TestInitializeDataTable();
+            CustomMessageHandler.Config(customConsole);
+            CustomTreeViewHandler.Config(treeView1);
+            CustomTableHandler.Config(dataGridView1);
+            //TestInitializeDataTable();
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -59,6 +61,11 @@ namespace SimAGS
             //var list = new List<string> {"s", "s", "s", "s", "s", "s", "s"};
             //
             //CustomMessageHandler.Show(string.Join("\n",list));
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            CustomTableHandler.updateTableForCurrentTreeNode();
         }
     }
 }

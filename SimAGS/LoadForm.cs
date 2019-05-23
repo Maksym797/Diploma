@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using SimAGS.DynProcessor;
+using SimAGS.Handlers;
 using SimAGS.PfProcessor;
 
 namespace SimAGS
@@ -36,11 +37,23 @@ namespace SimAGS
         public double loadQ_FreqCoef;       // frequent component coefficient for MVar load
 
         // case data 
-        public PFCase pfProc;// = new PFCase();
-        public DynCase dynProc;// = new DynCase(pfProc);
+        public PFCase pfProc
+        {
+            get => CustomGlobalFormsStore.pfProc;
+            set => CustomGlobalFormsStore.pfProc = value;
+        }
+        public DynCase dynProc
+        {
+            get => CustomGlobalFormsStore.dynProc;
+            set => CustomGlobalFormsStore.dynProc = value;
+        }
 
         // global data for interface 
-        public JFile powerFlowCaseFile;
+        public JFile powerFlowCaseFile
+        {
+            get => CustomGlobalFormsStore.powerFlowCaseFile;
+            set => CustomGlobalFormsStore.powerFlowCaseFile = value;
+        }
         public JFile dynDataCaseFile;
         public JFile AGCDataCaseFile;
         public JFile windDataCaseFile;
@@ -130,10 +143,10 @@ namespace SimAGS
                 //*dynProc.loadCaseFile(dynDataCaseFile, AGCDataCaseFile, windDataCaseFile, contDataCaseFile, genSchdDataFile, loadSchdDataFie);   // load data and assign memories for variables; and create buffer to store simulation results
                 //*
                 //*//dynamically build model tree 
-                //*loadModelTree();
+                CustomTreeViewHandler.loadModelTree();
                 //*
                 //*// update current table if a new case is loaded 
-                //*updateTableForCurrentTreeNode();
+                //CustomTableHandler.updateTableForCurrentTreeNode();
 
             }
             catch (Exception e)
