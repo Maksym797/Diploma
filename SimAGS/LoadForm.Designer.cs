@@ -248,6 +248,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "LoadForm";
             this.Text = "Case loading";
+            this.Load += new System.EventHandler(this.LoadForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

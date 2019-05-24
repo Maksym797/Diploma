@@ -67,22 +67,23 @@ namespace SimAGS.Components
 
 
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I;
-            ret[1] = ID;
-            ret[2] = STATUS == 1 ? "Closed" : "OSS";
-            ret[3] = String.Format("%1.2f", PL * SBASE);
-            ret[4] = String.Format("%1.2f", QL * SBASE);
-            ret[5] = String.Format("%1.2f", IP * SBASE);
-            ret[6] = String.Format("%1.2f", IQ * SBASE);
-            ret[7] = String.Format("%1.2f", YP * SBASE);
-            ret[8] = String.Format("%1.2f", YQ * SBASE);
-            ret[9] = AREA;
-            ret[10] = ZONE;
-            ret[11] = OWNER;
-            return ret;
+            return new[]
+            {
+                $"{I}",
+                $"{ID}",
+                $"{(STATUS == 1 ? "Closed" : "OSS")}",
+                $"{PL * SBASE}",
+                $"{QL * SBASE}",
+                $"{IP * SBASE}",
+                $"{IQ * SBASE}",
+                $"{YP * SBASE}",
+                $"{YQ * SBASE}",
+                $"{AREA}",
+                $"{ZONE}",
+                $"{OWNER}"
+            };
         }
     }
 }

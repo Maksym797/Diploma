@@ -7,9 +7,8 @@ using ikvm.extensions;
 
 namespace SimAGS.Components
 {
-    public class owner
+    public class owner : abstractPfElement
     {
-
         public int I = 0;       // zone number
         public String OWNAME = "";      // zone name 
 
@@ -35,14 +34,13 @@ namespace SimAGS.Components
         }
 
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I.ToString();
-            ret[1] = OWNAME;
-            return ret;
+            return new[]
+            {
+                $"{I}",
+                $"{OWNAME}"
+            };
         }
-
-
     }
 }

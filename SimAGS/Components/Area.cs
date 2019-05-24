@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ikvm.extensions;
 
 namespace SimAGS.Components
 {
@@ -23,19 +24,31 @@ namespace SimAGS.Components
 
         public area(string line)
         {
-            //String[] dataEntry = dataProcess.getDataFields(line, ",");
-            //I = Integer.parseInt(dataEntry[0]);
-            //ISW = Integer.parseInt(dataEntry[1]);
-            //PDES = Double.parseDouble(dataEntry[2]);
-            //PTOL = Double.parseDouble(dataEntry[3]);
-            //if (dataEntry[4].startsWith("'"))
-            //{
-            //    ARNAME = dataEntry[4].substring(1, dataEntry[4].length() - 1).trim();
-            //}
-            //else
-            //{
-            //    ARNAME = dataEntry[4].trim();
-            //}
+            String[] dataEntry = dataProcess.getDataFields(line, ",");
+            I = Integer.parseInt(dataEntry[0]);
+            ISW = Integer.parseInt(dataEntry[1]);
+            PDES = Double.Parse(dataEntry[2]);
+            PTOL = Double.Parse(dataEntry[3]);
+            if (dataEntry[4].startsWith("'"))
+            {
+                ARNAME = dataEntry[4].substring(1, dataEntry[4].length() - 1).trim();
+            }
+            else
+            {
+                ARNAME = dataEntry[4].trim();
+            }
+        }
+
+        public override string[] AsArrayForRow()
+        {
+            return new[]
+            {
+                $"{I}",
+                $"{ISW}",
+                $"{PDES}",
+                $"{PTOL}",
+                $"{ARNAME}"
+            };
         }
     }
 }

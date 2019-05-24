@@ -343,36 +343,35 @@ namespace SimAGS.Components
 
 
         // export data for tabular showing 
-        public Object[] setTableTwoWTrans()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[TwoWtableColNum];
-            ret[0] = I;
-            ret[1] = J;
-            ret[2] = CKT;
-            ret[3] = STAT == 1 ? "Closed" : "Open";
-            ret[4] =  String.Format("%1.4f", R1_2);
-            ret[5] =  String.Format("%1.4f", X1_2);
-            ret[6] =  String.Format("%1.4f", MAG1);
-            ret[7] =  String.Format("%1.2f", MAG2);
-            ret[8] =  String.Format("%1.2f", SBASE1_2);
-            ret[9] =  String.Format("%1.2f", WINDV1);
-            ret[10] = String.Format("%1.2f", ANG1);
-            ret[11] = String.Format("%1.2f", WINDV2);
-            ret[12] = String.Format("%1.2f", ANG2);
-            ret[13] = String.Format("%1.2f", RATA1);
-            ret[14] = String.Format("%1.2f", RATB1);
-            ret[15] = String.Format("%1.2f", RATC1);
-
-            return ret;
+            return new[]
+            {
+                $"{I}",
+                $"{J}",
+                $"{CKT}",
+                $"{(STAT == 1 ? "Closed" : "Open")}",
+                $"{R1_2}",
+                $"{X1_2}",
+                $"{MAG1}",
+                $"{MAG2}",
+                $"{SBASE1_2}",
+                $"{WINDV1}",
+                $"{ANG1}",
+                $"{WINDV2}",
+                $"{ANG2}",
+                $"{RATA1}",
+                $"{RATB1}",
+                $"{RATC1}",
+            };
         }
 
         // 3-winding transformer
         public Object[] setTableThrWind()
         {
             Object[] ret = new Object[ThrWtableColNum];
-
-            return ret;
+            throw new NotImplementedException();
+            //return ret;
         }
-
     }
 }

@@ -29,6 +29,12 @@ namespace SimAGS.Handlers
             return new CustomMessageHandler(message);
         }
 
+        public static CustomMessageHandler println(string message)
+        {
+            _messageShower(message);
+            return new CustomMessageHandler(message);
+        }
+
         #region methods-chaining
 
         public CustomMessageHandler SetColor()

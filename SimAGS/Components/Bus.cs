@@ -260,7 +260,7 @@ namespace SimAGS.Components
                 }
 
                 // calculate the MW and MVar share based on the ratio of individual Qmax to total Qmax
-                foreach(var genTemp in busGens)
+                foreach (var genTemp in busGens)
                 {
                     if (calcType == 2 || calcType == 3)
                     {
@@ -395,6 +395,7 @@ namespace SimAGS.Components
         }
 
         // return bus extended option for voltage regulation
+
         public BaseExtOption getVoltExtOption()
         {
             return voltExtOption;
@@ -441,21 +442,22 @@ namespace SimAGS.Components
 
 
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I;
-            ret[1] = NAME;
-            ret[2] = IDE;
-            ret[3] = String.Format("%1.2f", BASKV);
-            ret[4] = String.Format("%1.4f", volt);
-            ret[5] = String.Format("%1.2f", ang / Deg2Rad);
-            ret[6] = String.Format("%1.2f", GL * SBASE);
-            ret[7] = String.Format("%1.2f", BL * SBASE);
-            ret[8] = AREA;
-            ret[9] = ZONE;
-            ret[10] = OWNER;
-            return ret;
+            return new []
+            {
+                $"{I}",
+                $"{NAME}",
+                $"{IDE}",
+                $"{BASKV}",
+                $"{volt}",
+                $"{ang / Deg2Rad}",
+                $"{GL * SBASE}",
+                $"{BL * SBASE}",
+                $"{AREA}",
+                $"{ZONE}",
+                $"{OWNER}"
+            };
         }
 
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimAGS.Components
 {
-    public class swshunt
+    public class swshunt : abstractPfElement
     {
         public int I = 0;       // bus number
         public int MODSW = 0;       // control mode
@@ -106,38 +106,37 @@ namespace SimAGS.Components
             //CustomMessageHandler.Show("calcB = " + calcB + " calcBMax" + calcBMax + " calcBMin " + calcBMin);
         }
 
-
-
-
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I;
-            ret[1] = MODSW;
-            ret[2] = VSWHI;
-            ret[3] = VSWLO;
-            ret[4] = SWREM;
-            ret[5] = RMPCT * 100;
-            ret[6] = RMIDNT;
-            ret[7] = BINIT * SBASE;
-            ret[8] = N1;
-            ret[9] = B1 * SBASE;
-            ret[10] = N2;
-            ret[11] = B2 * SBASE;
-            ret[12] = N3;
-            ret[13] = B3 * SBASE;
-            ret[14] = N4;
-            ret[15] = B4 * SBASE;
-            ret[16] = N5;
-            ret[17] = B5 * SBASE;
-            ret[18] = N6;
-            ret[19] = B6 * SBASE;
-            ret[20] = N7;
-            ret[21] = B7 * SBASE;
-            ret[22] = N8;
-            ret[23] = B8 * SBASE;
-            return ret;
+            return new[]
+            {
+                $"{I}",
+                $"{MODSW}",
+                $"{VSWHI}",
+                $"{VSWLO}",
+                $"{SWREM}",
+                $"{RMPCT * 100}",
+                $"{RMIDNT}",
+                $"{BINIT * SBASE}",
+                $"{N1}",
+                $"{B1 * SBASE}",
+                $"{N2}",
+                $"{B2 * SBASE}",
+                $"{N3}",
+                $"{B3 * SBASE}",
+                $"{N4}",
+                $"{B4 * SBASE}",
+                $"{N5}",
+                $"{B5 * SBASE}",
+                $"{N6}",
+                $"{B6 * SBASE}",
+                $"{N7}",
+                $"{B7 * SBASE}",
+                $"{N8}",
+                $"{B8 * SBASE}",
+            };
         }
+
     }
 }

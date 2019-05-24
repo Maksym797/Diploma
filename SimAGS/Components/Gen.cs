@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -217,24 +218,24 @@ namespace SimAGS.Components
             InService = false;
         }
 
-
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I;
-            ret[1] = ID;
-            ret[2] = STAT == 1 ? "Closed" : "OSS";
-            ret[3] = String.Format("%1.2f", calcPgen * SBASE);
-            ret[4] = String.Format("%1.2f", calcQgen * SBASE);
-            ret[5] = String.Format("%1.4f", VS);
-            ret[6] = String.Format("%6d", IREG);
-            ret[7] = String.Format("%1.2f", QB * SBASE);
-            ret[8] = String.Format("%1.2f", QT * SBASE);
-            ret[9] = String.Format("%1.2f", PB * SBASE);
-            ret[10] = String.Format("%1.2f", PT * SBASE);
-            ret[11] = String.Format("%1.2f", MBASE);
-            return ret;
+            return new []
+            {
+                I.ToString(),
+                ID,
+                STAT == 1 ? "Closed" : "OSS",
+                $"{calcPgen * SBASE}",
+                $"{calcQgen * SBASE}",
+                $"{VS}",
+                $"{IREG}",
+                $"{QB * SBASE}",
+                $"{QT * SBASE}",
+                $"{PB * SBASE}",
+                $"{PT * SBASE}",
+                $"{MBASE}",
+            };
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using SimAGS.Components.ExtendOption;
 using System;
+using System.Collections.Generic;
 
 namespace SimAGS.Components
 {
@@ -7,6 +8,8 @@ namespace SimAGS.Components
     {
         public const int SBASE = 100;
         public const double Deg2Rad = Math.PI / 180;
+
+        public abstract string[] AsArrayForRow();
 
         public BaseExtOption getVoltExtOption()
         {

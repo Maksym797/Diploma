@@ -119,7 +119,7 @@ namespace SimAGS.Components
                     }
                 }
             }
-            
+
             calcPara();
         }
 
@@ -148,7 +148,7 @@ namespace SimAGS.Components
             frBusA = frBus.ang;
             toBusV = toBus.volt;
             toBusA = toBus.ang;
-            
+
             if (ST == 1)
             {
                 // calculate PQ flow 
@@ -156,14 +156,14 @@ namespace SimAGS.Components
                 double cosAij = Math.Cos(frBusA - toBusA);
                 frBusP = frBusV * frBusV * calcGII + frBusV * toBusV * (calcGIJ * cosAij + calcBIJ * sinAij);
                 frBusQ = -frBusV * frBusV * calcBII + frBusV * toBusV * (calcGIJ * sinAij - calcBIJ * cosAij);
-            
+
                 toBusP = toBusV * toBusV * calcGJJ + toBusV * frBusV * (calcGJI * cosAij - calcBJI * sinAij);
                 toBusQ = -toBusV * toBusV * calcBJJ + toBusV * frBusV * (-calcGJI * sinAij - calcBJI * cosAij);
-            
+
                 // calculate PQ loss
                 pLoss = frBusP + toBusP;
                 qLoss = frBusQ + toBusQ;
-            
+
                 // calculate overloading at normal condition 
                 overLoadRateA = measureEnd == 0 ? Math.Sqrt(frBusP * frBusP + frBusQ * frBusQ) / RATEA * 100 : Math.Sqrt(toBusP * toBusP + toBusQ * toBusQ) / RATEA * 100;
             }
@@ -192,13 +192,13 @@ namespace SimAGS.Components
             {       // for closed line only 
                 int iPos = frBus.yMatIndx;
                 int jPos = toBus.yMatIndx;
-                
+
                 // off-diagonal element 
                 yMatRe.setQuick(iPos, jPos, calcGIJ + yMatRe.getQuick(iPos, jPos));
                 yMatIm.setQuick(iPos, jPos, calcBIJ + yMatIm.getQuick(iPos, jPos));
                 yMatRe.setQuick(jPos, iPos, calcGJI + yMatRe.getQuick(jPos, iPos));
                 yMatIm.setQuick(jPos, iPos, calcBJI + yMatIm.getQuick(jPos, iPos));
-                
+
                 // diagonal element
                 yMatRe.setQuick(iPos, iPos, calcGII + yMatRe.getQuick(iPos, iPos));
                 yMatIm.setQuick(iPos, iPos, calcBII + yMatIm.getQuick(iPos, iPos));
@@ -213,22 +213,28 @@ namespace SimAGS.Components
         public Object[] setTable()
         {
             Object[] ret = new Object[tableColNum];
-            ret[0] = I;
-            ret[1] = J;
-            ret[2] = CKT;
-            ret[3] = ST == 1 ? "Closed" : "Open";
-            ret[4] = String.Format("%1.4f", R);
-            ret[5] = String.Format("%1.4f", X);
-            ret[6] = String.Format("%1.4f", B);
-            ret[7] = measureEnd == 0 ? String.Format("%1.2f", frBusP * SBASE) : String.Format("%1.2f", toBusP * SBASE);
-            ret[8] = measureEnd == 1 ? String.Format("%1.2f", frBusQ * SBASE) : String.Format("%1.2f", toBusQ * SBASE);
-            ret[9] = String.Format("%1.2f", RATEA * SBASE);
-            ret[10] = String.Format("%1.2f", RATEB * SBASE);
-            ret[11] = String.Format("%1.2f", RATEC * SBASE);
-            ret[12] = String.Format("%5.2f", overLoadRateA);
             return ret;
         }
 
 
+        public override string[] AsArrayForRow()
+        {
+            return new[]
+            {
+                $"{I}",
+                $"{J}",
+                $"{CKT}",
+                $"{(ST == 1 ? "Closed" : "Open")}",
+                $"{R}",
+                $"{X}",
+                $"{B}",
+                $"{(measureEnd == 0 ? frBusP * SBASE : toBusP * SBASE)}",
+                $"{(measureEnd == 1 ? frBusQ * SBASE : toBusQ * SBASE)}",
+                $"{RATEA * SBASE}",
+                $"{RATEB * SBASE}",
+                $"{RATEC * SBASE}",
+                $"{overLoadRateA}",
+            };
+        }
     }
 }

@@ -163,5 +163,11 @@ namespace SimAGS
                 textBox.Text = openFileDialog1.FileName;
             }
         }
+
+        private void LoadForm_Load(object sender, EventArgs e)
+        {
+            //TODO remove
+            Submit_Click(sender, e);
+        }
     }
 }

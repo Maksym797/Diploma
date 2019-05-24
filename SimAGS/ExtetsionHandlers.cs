@@ -105,22 +105,10 @@ namespace SimAGS
 
         #region DataRowCollection
 
-        public static void AddBus(this DataRowCollection rows, bus bus)
+        public static void AddElem(this DataRowCollection rows, abstractPfElement elem)
         {
-            rows.Add(
-                bus.I,
-                bus.NAME,
-                bus.BASKV,
-                bus.IDE,
-                bus.GL, 
-                bus.BL, 
-                bus.AREA, 
-                bus.ZONE,
-                bus.VM,
-                bus.VA, 
-                bus.OWNER);
+            rows.Add(elem.AsArrayForRow());
         }
-
         #endregion
     }
 

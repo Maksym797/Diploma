@@ -34,12 +34,13 @@ namespace SimAGS.Components
         }
 
         // export data for tabular showing 
-        public Object[] setTable()
+        public override string[] AsArrayForRow()
         {
-            Object[] ret = new Object[tableColNum];
-            ret[0] = I.ToString();
-            ret[1] = ZONAME;
-            return ret;
+            return new[]
+            {
+                I.ToString(),
+                ZONAME
+            };
         }
     }
 }
