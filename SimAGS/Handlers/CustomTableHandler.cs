@@ -15,7 +15,7 @@ namespace SimAGS.Handlers
     public class CustomTableHandler
     {
         private static TreeNode currentTreeNode => CustomTreeViewHandler.GetCurrentNode();
-        private static PFCase pfProc => CustomGlobalFormsStore.pfProc;
+        private static PFCase pfProc => CGS.pfProc;
 
         private static DataGridView _dataGridView { get; set; }
 

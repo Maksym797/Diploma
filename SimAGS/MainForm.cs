@@ -16,32 +16,40 @@ namespace SimAGS
             CustomTableHandler.Config(dataGridView1);
             
             //TODO REMOVE
-            CallLoadForm();
+            //CallLoadForm();
+            CallSettingForm();
         }
+
+        private void CallSettingForm()
+        {
+            new SettingForm().Show();
+            //settingForm.Close();
+        }
+
         public double setSBASE
         {
-            get => CustomGlobalFormsStore.setSBASE;
-            set => CustomGlobalFormsStore.setSBASE = value;
+            get => CGS.setSBASE;
+            set => CGS.setSBASE = value;
         }             // system base 
         public double setPFTol
         {
-            get => CustomGlobalFormsStore.setPFTol;
-            set => CustomGlobalFormsStore.setPFTol = value;
+            get => CGS.setPFTol;
+            set => CGS.setPFTol = value;
         }                   // pf tolerance 
         public int setPFMaxItr
         {
-            get => CustomGlobalFormsStore.setPFMaxItr;
-            set => CustomGlobalFormsStore.setPFMaxItr = value;
+            get => CGS.setPFMaxItr;
+            set => CGS.setPFMaxItr = value;
         }                   // maximum iteration number
         public bool bEnableVoltRegLoop
         {
-            get => CustomGlobalFormsStore.bEnableVoltRegLoop;
-            set => CustomGlobalFormsStore.bEnableVoltRegLoop = value;
+            get => CGS.bEnableVoltRegLoop;
+            set => CGS.bEnableVoltRegLoop = value;
         }      // enable voltage regulation loop 
         public double setVoltRegLoopTol
         {
-            get => CustomGlobalFormsStore.setSBASE;
-            set => CustomGlobalFormsStore.setSBASE = value;
+            get => CGS.setSBASE;
+            set => CGS.setSBASE = value;
         }          // voltage regulation loop tolerance 
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,9 +78,9 @@ namespace SimAGS
 
             try
             {
-                CustomGlobalFormsStore.pfProc.loadComputePara(setSBASE, setPFTol, setPFMaxItr, bEnableVoltRegLoop, setVoltRegLoopTol);
-                CustomGlobalFormsStore.pfProc.buildYMatrix();          // build Y matrix 
-                CustomGlobalFormsStore.pfProc.solvePQ();               // calculate power flow 
+                CGS.pfProc.loadComputePara(setSBASE, setPFTol, setPFMaxItr, bEnableVoltRegLoop, setVoltRegLoopTol);
+                CGS.pfProc.buildYMatrix();          // build Y matrix 
+                CGS.pfProc.solvePQ();               // calculate power flow 
 
                 CustomMessageHandler.println("Power flow calculation is completed after " + String.Format("%1.5f", (DateTime.Now - startTime).Milliseconds / 1E3) + " seconds");
 

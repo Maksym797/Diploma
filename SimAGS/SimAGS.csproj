@@ -36,6 +36,9 @@
     <Reference Include="colt">
       <HintPath>libs\colt.dll</HintPath>
     </Reference>
+    <Reference Include="DeepCloner, Version=0.10.0.0, Culture=neutral, PublicKeyToken=dc0b95cf99bf4e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeepCloner.0.10.2\lib\net40\DeepCloner.dll</HintPath>
+    </Reference>
     <Reference Include="IKVM.AWT.WinForms, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.AWT.WinForms.dll</HintPath>
     </Reference>
@@ -164,6 +167,8 @@
     <Compile Include="Components\TwoWindTrans.cs" />
     <Compile Include="Components\Zone.cs" />
     <Compile Include="DataProcess.cs" />
+    <Compile Include="DistEvent\abstractDistEvent.cs" />
+    <Compile Include="DistEvent\distEventList.cs" />
     <Compile Include="DynModels\AgcModel\AGCDyn.cs" />
     <Compile Include="DynModels\AgcModel\agcModel.cs" />
     <Compile Include="DynModels\AgcModel\dAGCDyn.cs" />
@@ -204,15 +209,10 @@
     <Compile Include="SettingForm.Designer.cs">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingPanel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingPanel.Designer.cs">
-      <DependentUpon>SettingPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="SimConfig.cs" />
     <Compile Include="SimUtil\Jacob.cs" />
     <Compile Include="SimUtil\PQDecoupleJacob.cs" />
+    <Compile Include="SimUtil\simBuffer.cs" />
     <Compile Include="SimUtil\YMatrix.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

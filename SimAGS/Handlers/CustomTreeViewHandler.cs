@@ -37,18 +37,18 @@ namespace SimAGS.Handlers
             //TreeNode AGCNode = new TreeNode("AGC model");                   // parent node for AGC model 
             //TreeNode lastParentNode = null;
 
-            if (CustomGlobalFormsStore.powerFlowCaseFile != null)
+            if (CGS.powerFlowCaseFile != null)
             {
-                if (CustomGlobalFormsStore.pfProc.nBus != 0) Cases.Add(new TreeNode("BUS"));
-                if (CustomGlobalFormsStore.pfProc.nGen != 0) Cases.Add(new TreeNode("GENERATOR"));
-                if (CustomGlobalFormsStore.pfProc.nLoad != 0) Cases.Add(new TreeNode("LOAD"));
-                if (CustomGlobalFormsStore.pfProc.nBranch != 0) Cases.Add(new TreeNode("BRANCH"));
-                if (CustomGlobalFormsStore.pfProc.nTwoWindXfrm != 0) Cases.Add(new TreeNode("2W TRANSFORMER"));
-                if (CustomGlobalFormsStore.pfProc.nThrWindXfrm != 0) Cases.Add(new TreeNode("3W TRANSFORMER"));
-                if (CustomGlobalFormsStore.pfProc.nSWShunt != 0) Cases.Add(new TreeNode("SW SHUNT"));
-                if (CustomGlobalFormsStore.pfProc.nArea != 0) Cases.Add(new TreeNode("AREA"));
-                if (CustomGlobalFormsStore.pfProc.nZone != 0) Cases.Add(new TreeNode("ZONE"));
-                if (CustomGlobalFormsStore.pfProc.nOwner != 0) Cases.Add(new TreeNode("OWNER"));
+                if (CGS.pfProc.nBus != 0) Cases.Add(new TreeNode("BUS"));
+                if (CGS.pfProc.nGen != 0) Cases.Add(new TreeNode("GENERATOR"));
+                if (CGS.pfProc.nLoad != 0) Cases.Add(new TreeNode("LOAD"));
+                if (CGS.pfProc.nBranch != 0) Cases.Add(new TreeNode("BRANCH"));
+                if (CGS.pfProc.nTwoWindXfrm != 0) Cases.Add(new TreeNode("2W TRANSFORMER"));
+                if (CGS.pfProc.nThrWindXfrm != 0) Cases.Add(new TreeNode("3W TRANSFORMER"));
+                if (CGS.pfProc.nSWShunt != 0) Cases.Add(new TreeNode("SW SHUNT"));
+                if (CGS.pfProc.nArea != 0) Cases.Add(new TreeNode("AREA"));
+                if (CGS.pfProc.nZone != 0) Cases.Add(new TreeNode("ZONE"));
+                if (CGS.pfProc.nOwner != 0) Cases.Add(new TreeNode("OWNER"));
             }
 
             //if (dynDataCaseFile != null)

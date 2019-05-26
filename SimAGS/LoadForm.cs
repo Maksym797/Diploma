@@ -11,28 +11,28 @@ namespace SimAGS
     {
         // general setting of power flow computation 
         public double setSBASE{
-            get => CustomGlobalFormsStore.setSBASE;
-            set => CustomGlobalFormsStore.setSBASE = value;
+            get => CGS.setSBASE;
+            set => CGS.setSBASE = value;
         }             // system base 
         public double setPFTol
         {
-            get => CustomGlobalFormsStore.setPFTol;
-            set => CustomGlobalFormsStore.setPFTol = value;
+            get => CGS.setPFTol;
+            set => CGS.setPFTol = value;
         }                   // pf tolerance 
         public int setPFMaxItr
         {
-            get => CustomGlobalFormsStore.setPFMaxItr;
-            set => CustomGlobalFormsStore.setPFMaxItr = value;
+            get => CGS.setPFMaxItr;
+            set => CGS.setPFMaxItr = value;
         }                   // maximum iteration number
         public bool bEnableVoltRegLoop
         {
-            get => CustomGlobalFormsStore.bEnableVoltRegLoop;
-            set => CustomGlobalFormsStore.bEnableVoltRegLoop = value;
+            get => CGS.bEnableVoltRegLoop;
+            set => CGS.bEnableVoltRegLoop = value;
         }      // enable voltage regulation loop 
         public double setVoltRegLoopTol
         {
-            get => CustomGlobalFormsStore.setSBASE;
-            set => CustomGlobalFormsStore.setSBASE = value;
+            get => CGS.setSBASE;
+            set => CGS.setSBASE = value;
         }          // voltage regulation loop tolerance 
 
         // general setting of dynamic simulation 
@@ -58,20 +58,20 @@ namespace SimAGS
         // case data 
         public PFCase pfProc
         {
-            get => CustomGlobalFormsStore.pfProc;
-            set => CustomGlobalFormsStore.pfProc = value;
+            get => CGS.pfProc;
+            set => CGS.pfProc = value;
         }
         public DynCase dynProc
         {
-            get => CustomGlobalFormsStore.dynProc;
-            set => CustomGlobalFormsStore.dynProc = value;
+            get => CGS.dynProc;
+            set => CGS.dynProc = value;
         }
 
         // global data for interface 
         public JFile powerFlowCaseFile
         {
-            get => CustomGlobalFormsStore.powerFlowCaseFile;
-            set => CustomGlobalFormsStore.powerFlowCaseFile = value;
+            get => CGS.powerFlowCaseFile;
+            set => CGS.powerFlowCaseFile = value;
         }
         public JFile dynDataCaseFile;
         public JFile AGCDataCaseFile;
@@ -158,7 +158,7 @@ namespace SimAGS
                 pfProc.ini();
                 //*
                 //*// build dynamic simulation object so that the data can be loaded
-                //*dynProc = new DynCase(pfProc);
+                dynProc = new DynCase(pfProc);
                 //*dynProc.loadCaseFile(dynDataCaseFile, AGCDataCaseFile, windDataCaseFile, contDataCaseFile, genSchdDataFile, loadSchdDataFie);   // load data and assign memories for variables; and create buffer to store simulation results
                 //*
                 //*//dynamically build model tree 

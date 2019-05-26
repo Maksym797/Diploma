@@ -1,5 +1,8 @@
-﻿using cern.colt.matrix;
+﻿using System.Collections.Generic;
+using cern.colt.matrix;
+using cern.colt.matrix.impl;
 using SimAGS.Components;
+using SimAGS.Handlers;
 using SimAGS.PfProcessor;
 
 namespace SimAGS.SimUtil
@@ -18,39 +21,39 @@ namespace SimAGS.SimUtil
 
             if ((nYNode = pfCaseMaseter.sortBusArrayList.Count) != 0)
             {
-                //  yMatRe = new SparseDoubleMatrix2D(nYNode, nYNode);
-                //  yMatIm = new SparseDoubleMatrix2D(nYNode, nYNode);
+                  yMatRe = new SparseDoubleMatrix2D(nYNode, nYNode);
+                  yMatIm = new SparseDoubleMatrix2D(nYNode, nYNode);
 
-                //  //--------------------- add bus admittance -----------------------//
-                //  for (bus busTemp: pfCaseMaseter.sortBusArrayList)
-                //  {
-                //      busTemp.updateYMat(yMatRe, yMatIm);
-                //  }
+                  //--------------------- add bus admittance -----------------------//
+                  foreach (bus busTemp in pfCaseMaseter.sortBusArrayList)
+                  {
+                      busTemp.updateYMat(yMatRe, yMatIm);
+                  }
 
-                //  //--------------------- add branch admittance -------------------//
-                //  for (branch branchTemp: pfCaseMaseter.branchArrayList)
-                //  {
-                //      branchTemp.updateYMat(yMatRe, yMatIm);
-                //  }
+                //--------------------- add branch admittance -------------------//
+                foreach (branch branchTemp in pfCaseMaseter.branchArrayList)
+                  {
+                      branchTemp.updateYMat(yMatRe, yMatIm);
+                  }
 
-                //  //------------------- add transformer admittance -----------------//
-                //  for (twoWindTrans transTemp : pfCaseMaseter.twoWindTransArrayList)
-                //  {
-                //      transTemp.updateYMat(yMatRe, yMatIm);
-                //  }
+                  //------------------- add transformer admittance -----------------//
+                  foreach (twoWindTrans transTemp in pfCaseMaseter.twoWindTransArrayList)
+                  {
+                      transTemp.updateYMat(yMatRe, yMatIm);
+                  }
 
-                //  //------------------- display Y matrix element ------------------//
-                //  /*
-                //  String strTemp = ""; 
-                //  for (int i=0;i<nYNode;i++){
-                //      for (int j=0;j<nYNode;j++){
-                //          if (yMatRe.getQuick(i,j)!=0 || yMatIm.getQuick(i,j)!=0){
-                //              strTemp = "("+ nodeList.get(i) + "," + nodeList.get(j)+")\t = " + String.Format("%1$.4f", yMatRe.getQuick(i,j)) + "+j" + String.Format("%1$.4f", yMatIm.getQuick(i,j));
-                //              CustomMessageHandler.Show(strTemp);
-                //          }
-                //      }
-                //  }
-                //  */
+                  //------------------- display Y matrix element ------------------//
+                  /*
+                  String strTemp = ""; 
+                  for (int i=0;i<nYNode;i++){
+                      for (int j=0;j<nYNode;j++){
+                          if (yMatRe.getQuick(i,j)!=0 || yMatIm.getQuick(i,j)!=0){
+                              strTemp = "("+ nodeList.get(i) + "," + nodeList.get(j)+")\t = " + String.Format("%1$.4f", yMatRe.getQuick(i,j)) + "+j" + String.Format("%1$.4f", yMatIm.getQuick(i,j));
+                              CustomMessageHandler.Show(strTemp);
+                          }
+                      }
+                  }
+                  */
             }
         }
 
@@ -69,16 +72,16 @@ namespace SimAGS.SimUtil
         }
 
         // convert load to constant-impedance load 
-        //public void removeCYLoad(ArrayList<bus> busList){
-        //	for (bus busTemp: busList) {
-        //		if (busTemp.bHasLoad == true) {
-        //			yMatRe.setQuick(busTemp.yMatIndx,busTemp.yMatIndx,yMatRe.getQuick(busTemp.yMatIndx,busTemp.yMatIndx) - busTemp.aggCYLoadP);		
-        //			yMatIm.setQuick(busTemp.yMatIndx,busTemp.yMatIndx,yMatIm.getQuick(busTemp.yMatIndx,busTemp.yMatIndx) - busTemp.aggCYLoadQ);
-        //			// all adjustments to yMat and network jacobian matrix will be done through DYNLOAD 
-        //			CustomMessageHandler.Show("ConstY load at bus " + busTemp.I + " is removed from Ymat"); 
-        //		}
-        //	}
-        //}
+        public void removeCYLoad(List<bus> busList){
+            foreach (bus busTemp in busList) {
+        		if (busTemp.bHasLoad == true) {
+        			yMatRe.setQuick(busTemp.yMatIndx,busTemp.yMatIndx,yMatRe.getQuick(busTemp.yMatIndx,busTemp.yMatIndx) - busTemp.aggCYLoadP);		
+        			yMatIm.setQuick(busTemp.yMatIndx,busTemp.yMatIndx,yMatIm.getQuick(busTemp.yMatIndx,busTemp.yMatIndx) - busTemp.aggCYLoadQ);
+        			// all adjustments to yMat and network jacobian matrix will be done through DYNLOAD 
+        			CustomMessageHandler.Show("ConstY load at bus " + busTemp.I + " is removed from Ymat"); 
+        		}
+        	}
+        }
 
 
         //remove the branch from YMat

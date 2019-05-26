@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using java.util;
 
 namespace SimAGS
 {
@@ -81,6 +83,17 @@ namespace SimAGS
         {
             s.Add(v);
         }
+        public static void add<T>(this IList<T> s, int i, T v)
+        {
+            //TODO Use i
+            s.Add(v);
+        }
+        public static T removeFirst<T>(this IList<T> s)
+        {
+            T el = s[0];
+            s.RemoveAt(0);
+            return el;
+        }
         public static int size(this IList s)
         {
             return s.Count;
@@ -89,13 +102,17 @@ namespace SimAGS
         {
             return s[i];
         }
+        public static bool isEmpty<T>(this IList<T> s)
+        {
+            return !s.Any();
+        }
         #endregion
 
         #region TreeNode
 
         public static bool equalsIgnoreCase(this TreeNode node, string name)
         {
-            return node.Text.Equals(name, StringComparison.CurrentCultureIgnoreCase);
+            return node?.Text.Equals(name, StringComparison.CurrentCultureIgnoreCase) ?? false;
         }
 
         #endregion
@@ -152,6 +169,18 @@ namespace SimAGS
         public simException(string message, Exception innerException) : base(message, innerException)
         {
 
+        }
+    }
+
+    public class _String 
+    {
+        public static string valueOf(object obj)
+        {
+            return obj?.ToString() ?? "null";
+        }
+        public static String format(String format, params Object[] args)
+        {
+            return new Formatter().format(format, args).toString();
         }
     }
 }
