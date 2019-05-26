@@ -13,5 +13,10 @@ namespace SimAGS.Handlers
         public static JFile powerFlowCaseFile { get; set; }
         public static PFCase pfProc { get; set; } = new PFCase();
         public static DynCase dynProc { get; set; } = new DynCase();//pfProc); todo 
+        public static double setSBASE { get; set; }
+        public static double setPFTol { get; set; }
+        public static int setPFMaxItr { get; set; }
+        public static bool bEnableVoltRegLoop { get; set; }
+        public static double setVoltRegLoopTol { get; set; }
     }
 }

@@ -10,11 +10,30 @@ namespace SimAGS
     public partial class LoadForm : Form
     {
         // general setting of power flow computation 
-        public double setSBASE;             // system base 
-        public double setPFTol;             // pf tolerance 
-        public int setPFMaxItr;             // maximum iteration number
-        public bool bEnableVoltRegLoop;  // enable voltage regulation loop 
-        public double setVoltRegLoopTol;    // voltage regulation loop tolerance 
+        public double setSBASE{
+            get => CustomGlobalFormsStore.setSBASE;
+            set => CustomGlobalFormsStore.setSBASE = value;
+        }             // system base 
+        public double setPFTol
+        {
+            get => CustomGlobalFormsStore.setPFTol;
+            set => CustomGlobalFormsStore.setPFTol = value;
+        }                   // pf tolerance 
+        public int setPFMaxItr
+        {
+            get => CustomGlobalFormsStore.setPFMaxItr;
+            set => CustomGlobalFormsStore.setPFMaxItr = value;
+        }                   // maximum iteration number
+        public bool bEnableVoltRegLoop
+        {
+            get => CustomGlobalFormsStore.bEnableVoltRegLoop;
+            set => CustomGlobalFormsStore.bEnableVoltRegLoop = value;
+        }      // enable voltage regulation loop 
+        public double setVoltRegLoopTol
+        {
+            get => CustomGlobalFormsStore.setSBASE;
+            set => CustomGlobalFormsStore.setSBASE = value;
+        }          // voltage regulation loop tolerance 
 
         // general setting of dynamic simulation 
         public double setEndTime;           // ending time of simulation

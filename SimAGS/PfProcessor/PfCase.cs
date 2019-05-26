@@ -704,9 +704,13 @@ namespace SimAGS.PfProcessor
             }
         }
 
-
-
-
-
+        public void loadComputePara(double setSBASE, double setPFTol, int setPFMaxItr, bool bEnableVoltRegLoop, double setVoltRegLoopTol)
+        {
+            this.setSBASE = setSBASE;
+            this.setPFTol = setPFTol;
+            this.setPFMaxItr = setPFMaxItr;
+            this.bEnableVoltRegLoop = bEnableVoltRegLoop;
+            this.setVoltRegLoopTol = setVoltRegLoopTol;
+        }
     }
 }

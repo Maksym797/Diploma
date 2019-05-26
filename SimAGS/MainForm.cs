@@ -14,58 +14,80 @@ namespace SimAGS
             CustomMessageHandler.Config(customConsole);
             CustomTreeViewHandler.Config(treeView1);
             CustomTableHandler.Config(dataGridView1);
-            //TestInitializeDataTable();
+            
+            //TODO REMOVE
+            CallLoadForm();
         }
+        public double setSBASE
+        {
+            get => CustomGlobalFormsStore.setSBASE;
+            set => CustomGlobalFormsStore.setSBASE = value;
+        }             // system base 
+        public double setPFTol
+        {
+            get => CustomGlobalFormsStore.setPFTol;
+            set => CustomGlobalFormsStore.setPFTol = value;
+        }                   // pf tolerance 
+        public int setPFMaxItr
+        {
+            get => CustomGlobalFormsStore.setPFMaxItr;
+            set => CustomGlobalFormsStore.setPFMaxItr = value;
+        }                   // maximum iteration number
+        public bool bEnableVoltRegLoop
+        {
+            get => CustomGlobalFormsStore.bEnableVoltRegLoop;
+            set => CustomGlobalFormsStore.bEnableVoltRegLoop = value;
+        }      // enable voltage regulation loop 
+        public double setVoltRegLoopTol
+        {
+            get => CustomGlobalFormsStore.setSBASE;
+            set => CustomGlobalFormsStore.setSBASE = value;
+        }          // voltage regulation loop tolerance 
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new LoadForm().Show();
-        }
-
-        private void TestInitializeDataTable()
-        {
-            var source = new BindingSource();
-
-            var table = new DataTable();
-
-            table.Columns.Add("ID");
-            table.Columns.Add("Name");
-
-            table.Rows.Add("01", "Saman");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("02", "Max");
-            table.Rows.Add("03A", "Max");
-
-            dataGridView1.DataSource = table;
-
-            //var list = new List<string> {"s", "s", "s", "s", "s", "s", "s"};
-            //
-            //CustomMessageHandler.Show(string.Join("\n",list));
+            CallLoadForm();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             CustomTableHandler.updateTableForCurrentTreeNode();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            runPFItemActionPerformed();
+        }
+
+        public void CallLoadForm()
+        {
+            new LoadForm().Show();
+        }
+
+        public void runPFItemActionPerformed()
+        {
+            var startTime = DateTime.Now;
+
+            try
+            {
+                CustomGlobalFormsStore.pfProc.loadComputePara(setSBASE, setPFTol, setPFMaxItr, bEnableVoltRegLoop, setVoltRegLoopTol);
+                CustomGlobalFormsStore.pfProc.buildYMatrix();          // build Y matrix 
+                CustomGlobalFormsStore.pfProc.solvePQ();               // calculate power flow 
+
+                CustomMessageHandler.println("Power flow calculation is completed after " + String.Format("%1.5f", (DateTime.Now - startTime).Milliseconds / 1E3) + " seconds");
+
+                // update table element 
+                CustomTableHandler.updateTableForCurrentTreeNode();
+            }
+            catch (simException e)
+            {
+                //JOptionPane.showMessageDialog(new JFrame(), e.toString(), "Dialog", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new LoadForm().Show();
         }
     }
 }
