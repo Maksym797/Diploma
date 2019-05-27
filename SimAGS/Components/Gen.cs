@@ -62,7 +62,7 @@ namespace SimAGS.Components
         public int vangPos = 0;                     // terminal voltage angle position 
 
         // generator dynamic model [dynamic simulation] 
-        public GenModel genDyn;                             // generator dynamic model  
+        public genModel genDyn;                             // generator dynamic model  
         public bool hasGenModel = false;
         public int omega_Pos = 0;
         public int pmech_Pos = 0;                   // output of governor that feeds to generator

@@ -34,6 +34,6 @@ namespace SimAGS.Handlers
 
         public static JFile powerFlowCaseFile { get; set; }
         public static PFCase pfProc { get; set; } = new PFCase();
-        public static DynCase dynProc { get; set; } = new DynCase();//pfProc); todo 
+        public static DynCase dynProc { get; set; } = new DynCase(pfProc);//pfProc); todo 
     }
 }

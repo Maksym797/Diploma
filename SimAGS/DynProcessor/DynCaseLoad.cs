@@ -8,6 +8,8 @@ using java.io;
 using SimAGS.Components;
 using SimAGS.DistEvent;
 using SimAGS.DynModels.AgcModel;
+using SimAGS.DynModels.GenModels;
+using SimAGS.DynModels.MonModels;
 using SimAGS.Handlers;
 
 namespace SimAGS.DynProcessor
@@ -67,7 +69,8 @@ namespace SimAGS.DynProcessor
 
 
         // load dynamic data, AGC data, wind data, and cont data 
-        public void exec(File DynDataFile, File AGCDataFile, File windDataFile, File contDataFile, File genSchdDataFile, File loadScdDataFile)
+        public void exec(File DynDataFile, File AGCDataFile, File windDataFile, File contDataFile, File genSchdDataFile,
+            File loadScdDataFile)
         {
             if (DynDataFile != null) loadDynFile(DynDataFile);
             if (AGCDataFile != null) loadAGCFile(AGCDataFile);
@@ -95,7 +98,7 @@ namespace SimAGS.DynProcessor
 
 
         // ------------------------ load generator dynamic data -----------------------//
-        public void loadDynFile(File dynDataFile)//throws simException
+        public void loadDynFile(File dynDataFile) //throws simException
         {
             String dataLine = "";
             try
@@ -106,7 +109,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("//") && !dataLine.isEmpty())
-                    {       // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -219,7 +223,8 @@ namespace SimAGS.DynProcessor
                 }
                 else
                 {
-                    CustomMessageHandler.println("[Warning] FREQ Measurement model at bus " + busNum + " is skipped because it is already created by other models");
+                    CustomMessageHandler.println("[Warning] FREQ Measurement model at bus " + busNum +
+                                                 " is skipped because it is already created by other models");
                 }
             }
 
@@ -242,7 +247,9 @@ namespace SimAGS.DynProcessor
                     }
                     else
                     {
-                        CustomMessageHandler.println("[Warning] MW Flow Measurement model at branch [" + frBusNum + "," + toBusNum + "," + branID + " ] is skipped as it is already created!");
+                        CustomMessageHandler.println("[Warning] MW Flow Measurement model at branch [" + frBusNum +
+                                                     "," + toBusNum + "," + branID +
+                                                     " ] is skipped as it is already created!");
                     }
 
                 }
@@ -251,7 +258,9 @@ namespace SimAGS.DynProcessor
 
         // ----------------------- load conversion for dynamic simulation ---------------//
 
-        public void dynLoadCov(bool bEnableLoadConv, bool bEnableLoaFreq, double loadConvZP_Pct, double loadConvIP_Pct, double loadConvPP_Pct, double loadConvZQ_Pct, double loadConvIQ_Pct, double loadConvPQ_Pct, double loadP_FreqCoef, double loadQ_FreqCoef)
+        public void dynLoadCov(bool bEnableLoadConv, bool bEnableLoaFreq, double loadConvZP_Pct, double loadConvIP_Pct,
+            double loadConvPP_Pct, double loadConvZQ_Pct, double loadConvIQ_Pct, double loadConvPQ_Pct,
+            double loadP_FreqCoef, double loadQ_FreqCoef)
         {
             foreach (bus busTemp in busList)
             {
@@ -262,7 +271,8 @@ namespace SimAGS.DynProcessor
                         // check if the bus frequency monitor is applied 
                         if (!busTemp.bHasFreqMeasure)
                         {
-                            CustomMessageHandler.println("[Info]: bus freq measurement moduel is added at " + busTemp.I + " to model freq-dependent load");
+                            CustomMessageHandler.println("[Info]: bus freq measurement moduel is added at " +
+                                                         busTemp.I + " to model freq-dependent load");
                             BUSFREQ loadedModel = new BUSFREQ(findBusAt(busTemp.I), numAlge, numState);
                             numAlge = loadedModel.last_AlgeVar_Pos;
                             numState = loadedModel.last_StateVar_Pos;
@@ -272,7 +282,8 @@ namespace SimAGS.DynProcessor
 
                     // create dynamic load will be assigned to load bus 
                     DynLoadZIPFreq dynLoadTemp = new DynLoadZIPFreq(busTemp, numAlge, numState);
-                    dynLoadTemp.setLoadZIPComposite(bEnableLoadConv, loadConvZP_Pct, loadConvIP_Pct, loadConvPP_Pct, loadConvZQ_Pct, loadConvIQ_Pct, loadConvPQ_Pct);       // ZIP component share (%)
+                    dynLoadTemp.setLoadZIPComposite(bEnableLoadConv, loadConvZP_Pct, loadConvIP_Pct, loadConvPP_Pct,
+                        loadConvZQ_Pct, loadConvIQ_Pct, loadConvPQ_Pct); // ZIP component share (%)
                     dynLoadTemp.setLoadFreqCompsite(bEnableLoaFreq, loadP_FreqCoef, loadQ_FreqCoef);
                     numAlge = dynLoadTemp.last_AlgeVar_Pos;
                     numState = dynLoadTemp.last_StateVar_Pos;
@@ -285,10 +296,10 @@ namespace SimAGS.DynProcessor
         /*
          * ------------------------- Load AGC dynamic data -------------------------------//
          */
-        public void loadAGCFile(File AGCDataFile)//throws simException
+        public void loadAGCFile(File AGCDataFile) //throws simException
         {
 
-            bool bDiscreteAGC = true;                    // load model as discreteAGC
+            bool bDiscreteAGC = true; // load model as discreteAGC
             String dataLine = "";
             int sectionNum = -999;
             agcModel AGCTemp = null;
@@ -301,7 +312,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("/") && !dataLine.isEmpty())
-                    {               // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -314,7 +326,8 @@ namespace SimAGS.DynProcessor
                         }
 
                         if (dataLine.startsWith("0"))
-                        {                                       // beginning of new data section 
+                        {
+                            // beginning of new data section 
                             sectionNum++;
 
                         }
@@ -324,12 +337,13 @@ namespace SimAGS.DynProcessor
                             // read in data 
                             String[] token = dataProcess.getDataFields(dataLine, ",");
                             if (sectionNum == 0)
-                            {                                           // create AGC object 			    			
+                            {
+                                // create AGC object 			    			
                                 if (bDiscreteAGC)
                                 {
                                     AGCTemp = new dAGCDyn(token, numAlge, numState);
-                                    numAlge = ((dAGCDyn)AGCTemp).last_AlgeVar_Pos;
-                                    numState = ((dAGCDyn)AGCTemp).last_StateVar_Pos;
+                                    numAlge = ((dAGCDyn) AGCTemp).last_AlgeVar_Pos;
+                                    numState = ((dAGCDyn) AGCTemp).last_StateVar_Pos;
                                     AGCList.add(AGCTemp);
                                     eventList.addEvent(new actAGC(4, AGCTemp));
                                     nAGC++;
@@ -337,8 +351,8 @@ namespace SimAGS.DynProcessor
                                 else
                                 {
                                     AGCTemp = new AGCDyn(token, numAlge, numState);
-                                    numAlge = ((AGCDyn)AGCTemp).last_AlgeVar_Pos;
-                                    numState = ((AGCDyn)AGCTemp).last_StateVar_Pos;
+                                    numAlge = ((AGCDyn) AGCTemp).last_AlgeVar_Pos;
+                                    numState = ((AGCDyn) AGCTemp).last_StateVar_Pos;
                                     AGCList.add(AGCTemp);
                                     eventList.addEvent(new actAGC(4, AGCTemp));
                                     nAGC++;
@@ -346,7 +360,8 @@ namespace SimAGS.DynProcessor
 
                             }
                             else if (sectionNum == 1)
-                            {                                   // add bus frequency measurement 
+                            {
+                                // add bus frequency measurement 
                                 int busNum = Integer.parseInt(token[0]);
                                 double freqWeigt = Double.parseDouble(token[1]);
                                 // check if the bus has frequency measurement 
@@ -364,13 +379,15 @@ namespace SimAGS.DynProcessor
                                 }
                                 else
                                 {
-                                    CustomMessageHandler.println("[Error] AGC includes bus at " + busNum + " is incorrect");
+                                    CustomMessageHandler.println(
+                                        "[Error] AGC includes bus at " + busNum + " is incorrect");
                                 }
 
 
                             }
                             else if (sectionNum == 2)
-                            {                                   // Line Data Section is Ignored
+                            {
+                                // Line Data Section is Ignored
                                 int frNum = Integer.parseInt(token[0]);
                                 int toNum = Integer.parseInt(token[1]);
                                 String id = token[2].substring(1, token[2].lastIndexOf("'"));
@@ -390,12 +407,15 @@ namespace SimAGS.DynProcessor
                                 }
                                 else
                                 {
-                                    CustomMessageHandler.println("[Error] AGC include branch [" + frNum + "," + toNum + "," + id + "] is incorrect");
+                                    CustomMessageHandler.println(
+                                        "[Error] AGC include branch [" + frNum + "," + toNum + "," + id +
+                                        "] is incorrect");
                                 }
 
                             }
                             else if (sectionNum == 3)
-                            {                                   // add generator on AGC control 
+                            {
+                                // add generator on AGC control 
                                 int busNum = Integer.parseInt(token[0]);
                                 String id = token[1].substring(1, token[1].lastIndexOf("'"));
                                 double AGCWeight = Double.parseDouble(token[2]);
@@ -404,8 +424,8 @@ namespace SimAGS.DynProcessor
                             }
                             else
                             {
-                                sectionNum = -999;                                          // search for next AGC area definition 	
-                                                                                            // reserved for future development
+                                sectionNum = -999; // search for next AGC area definition 	
+                                // reserved for future development
                             }
                         }
                     }
@@ -421,14 +441,14 @@ namespace SimAGS.DynProcessor
 
 
         //---------------------- Load hourly generator schedule data ----------------// 
-        public void loadGenHourlySchd(File genHourlySchdFile)//throws simException
+        public void loadGenHourlySchd(File genHourlySchdFile) //throws simException
         {
 
             double tStart = 0.0;
             double tDataInterval = 0.0;
             double tCurrent = 0.0;
             String[]
-            token;
+                token;
             List<Integer> genNumList = new List<Integer>();
             List<String> genIDList = new List<String>();
             double genPeSet = 0.0;
@@ -444,7 +464,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("/") && !dataLine.isEmpty())
-                    {                       // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -458,15 +479,17 @@ namespace SimAGS.DynProcessor
                         {
 
                             if (secNum == 1)
-                            {                                       // general setting 
+                            {
+                                // general setting 
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 tStart = Double.parseDouble(token[0]);
                                 tDataInterval = Double.parseDouble(token[1]);
-                                tCurrent = tStart;                                  // initialize starting time instant 
+                                tCurrent = tStart; // initialize starting time instant 
 
                             }
                             else if (secNum == 2)
-                            {                               // generator info 
+                            {
+                                // generator info 
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 genNumList.add(Integer.parseInt(token[0]));
                                 genIDList.add(token[1]);
@@ -479,14 +502,16 @@ namespace SimAGS.DynProcessor
                                 for (int i = 0; i < genDataTotalNum; i++)
                                 {
                                     genPeSet = Double.parseDouble(token[i]);
-                                    eventList.addEvent(new setGenMW(tCurrent, genNumList.get(i), genIDList.get(i), genPeSet));
+                                    eventList.addEvent(new setGenMW(tCurrent, genNumList.get(i), genIDList.get(i),
+                                        genPeSet));
                                 }
                                 tCurrent += tDataInterval;
                             }
                         }
                     }
                 }
-                CustomMessageHandler.println("Total of " + genDataTotalNum + " generator hourly schedule data are loaded!");
+                CustomMessageHandler.println("Total of " + genDataTotalNum +
+                                             " generator hourly schedule data are loaded!");
             }
             catch (IOException e)
             {
@@ -495,7 +520,7 @@ namespace SimAGS.DynProcessor
         }
 
         // -------------------------- Load load hourly schedule data ----------------// 
-        public void loadLoadHourlySchd(File loadHourlySchdFile)//throws simException
+        public void loadLoadHourlySchd(File loadHourlySchdFile) //throws simException
         {
             double tStart = 0.0;
             double tDataInterval = 0.0;
@@ -505,7 +530,7 @@ namespace SimAGS.DynProcessor
             double loadSchdMWSet = 0.0;
 
             String[] token;
-            int secNum = 0;             // 0--> time info; 1--> generator data  
+            int secNum = 0; // 0--> time info; 1--> generator data  
             int loadDataTotalNum = 0;
 
 
@@ -517,7 +542,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("/") && !dataLine.isEmpty())
-                    {                       // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -530,7 +556,8 @@ namespace SimAGS.DynProcessor
                         else
                         {
                             if (secNum == 1)
-                            {                                       // time info 
+                            {
+                                // time info 
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 tStart = Double.parseDouble(token[0]);
                                 tDataInterval = Double.parseDouble(token[1]);
@@ -538,14 +565,16 @@ namespace SimAGS.DynProcessor
 
                             }
                             else if (secNum == 2)
-                            {                               // load buses 
+                            {
+                                // load buses 
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 schdBusList.add(Integer.valueOf(token[0]));
                                 loadDataTotalNum++;
 
                             }
                             else if (secNum == 3)
-                            {                               // sample data 
+                            {
+                                // sample data 
                                 token = dataProcess.getDataFields(dataLine, " ");
                                 for (int i = 0; i < loadDataTotalNum; i++)
                                 {
@@ -567,13 +596,13 @@ namespace SimAGS.DynProcessor
 
 
         //---------------------------- Load hourly Wind Data --------------------------------//
-        public void loadWindFile(File windDataFile)//throws simException
+        public void loadWindFile(File windDataFile) //throws simException
         {
 
             double tStart = 0.0;
             double tWindDataInterval = 0.0;
             double tCurrent = 0.0;
-            double iniWPInj = 0.0;          // initial power injection 
+            double iniWPInj = 0.0; // initial power injection 
 
             //int busNum = 0; 
             int secNum = 0;
@@ -590,7 +619,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("/") && !dataLine.isEmpty())
-                    {                       // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -603,14 +633,16 @@ namespace SimAGS.DynProcessor
                         else
                         {
                             if (secNum == 1)
-                            {                           // General wind data setting 
+                            {
+                                // General wind data setting 
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 tStart = Double.parseDouble(token[0]);
                                 tWindDataInterval = Double.parseDouble(token[1]);
                                 tCurrent = tStart;
                             }
                             else if (secNum == 2)
-                            {                   // load wind bus and dynamic time constant
+                            {
+                                // load wind bus and dynamic time constant
                                 token = dataProcess.getDataFields(dataLine, ",");
                                 injBus = findBusAt(Integer.valueOf(token[0]));
                                 if (injBus != null && injBus.IDE == 1)
@@ -621,7 +653,8 @@ namespace SimAGS.DynProcessor
                                     numState = loadedModel.last_StateVar_Pos;
                                     nWindDyn++;
                                     iniWPInj = Double.parseDouble(token[2]);
-                                    CustomMessageHandler.println("At t0, PW = " + iniWPInj + " MW is added at Bus " + injBus.I);
+                                    CustomMessageHandler.println(
+                                        "At t0, PW = " + iniWPInj + " MW is added at Bus " + injBus.I);
                                 }
                                 else
                                 {
@@ -629,11 +662,13 @@ namespace SimAGS.DynProcessor
                                 }
                             }
                             else if (secNum == 3)
-                            {                           // load wind data, windInj in MW (tread wind power injection at discrete event at specified time instants)
+                            {
+                                // load wind data, windInj in MW (tread wind power injection at discrete event at specified time instants)
                                 token = dataProcess.getDataFields(dataLine, " ");
                                 for (int i = 0; i < token.length; i++)
                                 {
-                                    eventList.addEvent(new dispatchWind(tCurrent, windBusList.get(i).I, Double.valueOf(token[i]) / 100));
+                                    eventList.addEvent(new dispatchWind(tCurrent, windBusList.get(i).I,
+                                        Double.valueOf(token[i]) / 100));
                                     tCurrent += tWindDataInterval;
                                     numSampleWindData++;
                                 }
@@ -651,7 +686,7 @@ namespace SimAGS.DynProcessor
 
 
         //--------------------------- Load Contingency Data---------------------------------//
-        public void loadContFile(File contDataFile)//throws simException
+        public void loadContFile(File contDataFile) //throws simException
         {
 
             String dataLine = "";
@@ -664,7 +699,8 @@ namespace SimAGS.DynProcessor
                 {
                     dataLine = dataLine.trim();
                     if (!dataLine.startsWith("/") && !dataLine.isEmpty())
-                    {                       // not comments lines 
+                    {
+                        // not comments lines 
                         if (dataLine.contains("/"))
                         {
                             dataLine = dataLine.substring(0, dataLine.indexOf("/")).trim();
@@ -675,7 +711,8 @@ namespace SimAGS.DynProcessor
                         {
                             tripGen genTripEvent = new tripGen(dataLine);
                             if (findGenAt(genTripEvent.genBusNum, genTripEvent.genID) != null)
-                            {       // check if generator exists
+                            {
+                                // check if generator exists
                                 eventList.addEvent(genTripEvent);
                                 nEvent++;
                             }
@@ -701,7 +738,10 @@ namespace SimAGS.DynProcessor
                             // convert busFaultEvent 
                             eventList.addEvent(busFaultEvent.applyFault());
                             eventList.addEvent(busFaultEvent.clearFault());
-                            foreach (tripBranch tripBranchTemp in busFaultEvent.tripBranchEventList) { eventList.addEvent(tripBranchTemp); }
+                            foreach (tripBranch tripBranchTemp in busFaultEvent.tripBranchEventList)
+                            {
+                                eventList.addEvent(tripBranchTemp);
+                            }
                             nEvent++;
                         }
                         else if (dataLine.contains("load") && dataLine.contains("scale"))
@@ -721,7 +761,8 @@ namespace SimAGS.DynProcessor
                 }
 
                 din.close();
-                CustomMessageHandler.println("Total number of event time is " + eventList.eventList.size() + " number of events " + nEvent);
+                CustomMessageHandler.println("Total number of event time is " + eventList.eventList.size() +
+                                             " number of events " + nEvent);
 
             }
             catch (IOException e)
@@ -784,3 +825,4 @@ namespace SimAGS.DynProcessor
 
 
     }
+}

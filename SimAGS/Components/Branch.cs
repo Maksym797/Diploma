@@ -70,7 +70,7 @@ namespace SimAGS.Components
 
         // for branch flow measurement (dynamic simulation) 
         public bool bHasMWFlowMeaseure = false;
-        public BranFlow MWFlowMon = null;
+        public BRANFLOW MWFlowMon = null;
         public int MWFlow_Pos = 0;
 
         // presenting data purpose 

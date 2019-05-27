@@ -168,13 +168,16 @@
     <Compile Include="Components\Zone.cs" />
     <Compile Include="DataProcess.cs" />
     <Compile Include="DistEvent\abstractDistEvent.cs" />
+    <Compile Include="DistEvent\actAGC.cs" />
     <Compile Include="DistEvent\distEventList.cs" />
     <Compile Include="DynModels\AgcModel\AGCDyn.cs" />
     <Compile Include="DynModels\AgcModel\agcModel.cs" />
     <Compile Include="DynModels\AgcModel\dAGCDyn.cs" />
     <Compile Include="DynModels\DynLoadModels\DynLoadModel.cs" />
     <Compile Include="DynModels\ExcModels\ExcModel.cs" />
+    <Compile Include="DynModels\GenModels\GENCLS.cs" />
     <Compile Include="DynModels\GenModels\GenModel.cs" />
+    <Compile Include="DynModels\GenModels\GENROU.cs" />
     <Compile Include="DynModels\GovModels\GovModel.cs" />
     <Compile Include="DynModels\MonModels\BranFlow.cs" />
     <Compile Include="DynModels\MonModels\BusFreq.cs" />
@@ -186,6 +189,7 @@
     <Compile Include="Handlers\CustomMessageHandler.cs" />
     <Compile Include="Handlers\CustomTableHandler.cs" />
     <Compile Include="Handlers\CustomTreeViewHandler.cs" />
+    <Compile Include="Handlers\IHasTableView.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

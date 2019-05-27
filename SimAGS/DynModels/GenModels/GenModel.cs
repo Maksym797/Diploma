@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cern.colt.matrix;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.GenModels
 {
-    public class GenModel
+    public abstract class genModel: IHasTableView
     {
-
         public String modelType = "";
         public double SBASE = 100;
         public const double LARGE_NUMBER = 1E5;
@@ -147,10 +147,16 @@ namespace SimAGS.DynModels.GenModels
             return true;
         }
 
-        public Object[] setTable()
-        {
-            return new Object[] { };
-        }
+        //public Object[] setTable()
+        //{
+        //    return new Object[] { };
+        //}
+
+        public abstract string[] AsArrayForRow();
+        public abstract string[] GetHeaders();
+        //{
+        //    return new string[] { };
+        //}
     }
 
 }
