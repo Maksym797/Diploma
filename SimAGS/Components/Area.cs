@@ -19,7 +19,7 @@ namespace SimAGS.Components
         public static int DATALENGTH = 5;   // default data line 
 
         // data for tabular display 
-        public static String[] header = { "Number", "SlackBus", "DesiredMW", "InterChangeTol", "Name" };
+        public override String[] header {get; set;} = { "Number", "SlackBus", "DesiredMW", "InterChangeTol", "Name" };
         public static int tableColNum = DATALENGTH;
 
         public area(string line)

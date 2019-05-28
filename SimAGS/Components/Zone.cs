@@ -15,7 +15,7 @@ namespace SimAGS.Components
         public static int DATALENGTH = 2;   // default data line 
 
         // presenting data purpose 
-        public static String[] header = { "Number", "Name" };
+        public override String[] header {get; set;} = { "Number", "Name" };
         public static int tableColNum = DATALENGTH;
 
         // Read data from string line 

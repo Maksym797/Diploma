@@ -114,7 +114,7 @@ namespace SimAGS.Components
 
         // presenting data purpose 
         // 2 winding transformer
-        public static String[] header = { "FrBus", "ToBus", "ID", "Status", "R", "X", "MagG", "MagB", "WindMVA", "Wind1 Ratio", "Wind1 Ang", "Wind2 Ratio", "Wind2 Ang", "RateA", "RateB", "RateC" };
+        public override String[] header {get; set;} = { "FrBus", "ToBus", "ID", "Status", "R", "X", "MagG", "MagB", "WindMVA", "Wind1 Ratio", "Wind1 Ang", "Wind2 Ratio", "Wind2 Ang", "RateA", "RateB", "RateC" };
         public static int tableColNum = 16;
 
 

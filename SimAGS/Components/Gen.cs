@@ -85,7 +85,7 @@ namespace SimAGS.Components
         public bool InService = false;               // used for tripping generators during dynamic simulation
 
         // for tabular display 
-        public static String[] header = { "Number", "ID", "Status", "gen MW", "gen MVar", "SetVolt", "RegBus", "Min MVar", "Max MVar", "Min MW", "Max MW", "MVABase" };
+        public override String[] header {get; set;} = { "Number", "ID", "Status", "gen MW", "gen MVar", "SetVolt", "RegBus", "Min MVar", "Max MVar", "Min MW", "Max MW", "MVABase" };
         public static int tableColNum = 12;
 
 

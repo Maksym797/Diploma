@@ -74,7 +74,7 @@ namespace SimAGS.Components
         public int MWFlow_Pos = 0;
 
         // presenting data purpose 
-        public static String[] header = { "From bus", "To bus", "ID", "Status", "R", "X", "B", "MW", "MVar", "Lim A", "Lim B", "Lim C", "OverLoad[%]" };
+        public override String[] header {get; set;} = { "From bus", "To bus", "ID", "Status", "R", "X", "B", "MW", "MVar", "Lim A", "Lim B", "Lim C", "OverLoad[%]" };
         public static int tableColNum = 13;
 
         // Read data from string line 

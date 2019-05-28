@@ -131,7 +131,7 @@ namespace SimAGS.Components
 
 
         // presenting data purpose 
-        public static String[] header = { "Number", "Name", "Type", "Norm kV", "PU Volt", "Angle", "G", "B", "area", "zone", "owner" };
+        public override String[] header {get; set;} = { "Number", "Name", "Type", "Norm kV", "PU Volt", "Angle", "G", "B", "area", "zone", "owner" };
         public static int tableColNum = 11;
 
         // Read data from string line 

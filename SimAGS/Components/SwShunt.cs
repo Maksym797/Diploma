@@ -41,7 +41,7 @@ namespace SimAGS.Components
 
 
         // for table display
-        public static String[] header = {"Number", "CtrlMode", "VswHI", "VswLO", "SWREM", "RMPCT", "RMIDNT", "B0" , "N1", "B1",
+        public override String[] header {get; set;} = {"Number", "CtrlMode", "VswHI", "VswLO", "SWREM", "RMPCT", "RMIDNT", "B0" , "N1", "B1",
         "N2", "B2", "N3", "B3", "N4", "B4", "N5","B5","N6", "B6","N7","B7","N8","B8"};
         public static int tableColNum = 24; // default data line 
 

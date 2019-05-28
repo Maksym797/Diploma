@@ -343,6 +343,8 @@ namespace SimAGS.Components
 
 
         // export data for tabular showing 
+        public override string[] header { get; set; } = { "FrBus", "ToBus", "ID", "Status", "R", "X", "MagG", "MagB", "WindMVA", "Wind1 Ratio", "Wind1 Ang", "Wind2 Ratio", "Wind2 Ang", "RateA", "RateB", "RateC" };
+
         public override string[] AsArrayForRow()
         {
             return new[]

@@ -5,15 +5,10 @@ using SimAGS.Handlers;
 
 namespace SimAGS.Components
 {
-    public abstract class abstractPfElement : IHasTableView
+    public abstract class abstractPfElement : AbstractTableViewing
     {
         public const int SBASE = 100;
         public const double Deg2Rad = Math.PI / 180;
-
-        public abstract static string[] he { get; set; }
-
-        public abstract string[] AsArrayForRow();
-        public abstract string[] GetHeaders();
 
         public BaseExtOption getVoltExtOption()
         {

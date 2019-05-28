@@ -8,7 +8,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.GenModels
 {
-    public abstract class genModel: IHasTableView
+    public abstract class genModel: AbstractTableViewing
     {
         public String modelType = "";
         public double SBASE = 100;
@@ -150,12 +150,6 @@ namespace SimAGS.DynModels.GenModels
         //public Object[] setTable()
         //{
         //    return new Object[] { };
-        //}
-
-        public abstract string[] AsArrayForRow();
-        public abstract string[] GetHeaders();
-        //{
-        //    return new string[] { };
         //}
     }
 

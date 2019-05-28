@@ -99,8 +99,10 @@ namespace SimAGS.DynModels.AgcModel
         public distEventList eventList;
 
         // for presenting data purpose 
-        public static String[] header =
+        public override String[] header {get; set;} =
             {"AGC Area", "Freq Cof", "MW Cof", "KP", "TI", "iMAX", "Freq Bus", "Tie Line", "AGC Gen"};
+
+       
 
         public static int tableColNum = 9;
 
@@ -521,6 +523,47 @@ namespace SimAGS.DynModels.AgcModel
 
             return ret;
         }
+        public override string[] AsArrayForRow()
+        {
+            var ret = new List<string>
+            {
+                $"{AGCAreaNum}",
+                $"{_String.format("%1.4f", freqCof * 100 / 60)}",
+                $"{_String.format("%1.4f", MWCof * 100)}",
+                $"{_String.format("%1.4f", kp)}",
+                $"{_String.format("%1.4f", ti)}",
+                $"{_String.format("%1.4f", iMax)}",
+            };
 
+            // bus for frequency measurement 
+            String tableElement = "";
+            foreach (bus busTemp in busForFreqList)
+            {
+                tableElement = tableElement + busTemp.I + "[" + _String.format("%1.2f", busTemp.areaFreqWeight) + "]";
+                tableElement = tableElement + ",";
+            }
+            ret[6] = tableElement.substring(0, tableElement.length() - 1);
+
+            // tie line 
+            tableElement = "";
+            foreach (branch branTemp in tieLineList)
+            {
+                tableElement = tableElement + branTemp.I + "_" + branTemp.J + "_" + branTemp.CKT;
+                tableElement = tableElement + ",";
+            }
+            ret[7] = tableElement.substring(0, tableElement.length() - 1);
+
+            // AGC generator 
+            tableElement = "";
+            foreach (gen genTemp in genOnAGCList)
+            {
+                tableElement = tableElement + genTemp.I + "_" + genTemp.ID + "[" +
+                               _String.format("%1.2f", genTemp.AGCSMWhare) + "]";
+                tableElement = tableElement + ",";
+            }
+            ret[8] = tableElement.substring(0, tableElement.length() - 1);
+
+            return ret.ToArray();
+        }
     }
 }

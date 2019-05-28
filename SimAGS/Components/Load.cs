@@ -33,7 +33,7 @@ namespace SimAGS.Components
         public double calcBII = 0.0;        //  
 
         // presenting data purpose 
-        public static String[] header = { "Number", "ID", "Status", "PL", "QL", "IP", "IQ", "YP", "YQ", "area", "zone", "owner" };
+        public override String[] header {get; set;} = { "Number", "ID", "Status", "PL", "QL", "IP", "IQ", "YP", "YQ", "area", "zone", "owner" };
         public static int tableColNum = 12;
 
 

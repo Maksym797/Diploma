@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using cern.colt.matrix;
 using SimAGS.Components;
@@ -6,7 +7,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.WindModels
 {
-    public class DynWind
+    public class DynWind : abstractPfElement
     {
         // default parameters position in input token 
         public const int Default_TR = 1;
@@ -36,7 +37,8 @@ namespace SimAGS.DynModels.WindModels
         public int vtAng_Pos = 0;               // bus angle index (MW balance equation index) 
 
         // presenting data purpose 
-        public static String[] header = { "Number", "TR", "INI_MW" };   // wind farm bus 
+        public override String[] header {get; set;} = { "Number", "TR", "INI_MW" };   // wind farm bus 
+
         public static int tableColNum = 3;
 
 
@@ -136,5 +138,15 @@ namespace SimAGS.DynModels.WindModels
             CustomMessageHandler.Show("--->" + ret[1]);
             return ret;
         }
+        public override string[] AsArrayForRow()
+        {
+            var ret = new List<string> { };
+            ret[0] = busNum.ToString();
+            ret[1] = TR.ToString();
+            ret[2] = _String.format("%1.2f", INIWINDMW * 100);
+            CustomMessageHandler.Show("--->" + ret[1]);
+            return ret.ToArray();
+        }
+
     }
 }

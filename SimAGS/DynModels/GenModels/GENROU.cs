@@ -140,7 +140,7 @@ namespace SimAGS.DynModels.GenModels
         public String sanityCheckStr = "";
 
         // presenting data purpose 
-        public static String[] header = { "Number", "ID", "Td0'", "Td0''", "Tq0'", "Tq0''", "H", "D", "Xd", "Xq", "Xd'", "Xq'", "Xd''", "Xl", "S10", "S12" };
+        public override String[] header {get; set;} = { "Number", "ID", "Td0'", "Td0''", "Tq0'", "Tq0''", "H", "D", "Xd", "Xq", "Xd'", "Xq'", "Xd''", "Xl", "S10", "S12" };
         public static int tableColNum = 16;
 
         // constructor calculate variables after power flow 
@@ -610,12 +610,7 @@ namespace SimAGS.DynModels.GenModels
                 $"{_String.format("%1.4f", S12)}",
             };
         }
-
-        public override string[] GetHeaders()
-        {
-            return header;
-        }
-
+        
         // export data for tabular showing 
         //public Object[] setTable()
         //{

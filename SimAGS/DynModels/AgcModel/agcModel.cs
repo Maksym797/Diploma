@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using cern.colt.matrix;
 using SimAGS.Components;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.AgcModel
 {
-    public class agcModel
+    public abstract class agcModel : AbstractTableViewing
     {
         public String modelType = "";
         public double SBASE = 100;

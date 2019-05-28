@@ -78,7 +78,7 @@ namespace SimAGS.DynModels.GenModels
 
 
         // presenting data purpose 
-        public static String[] header = { "Number", "ID", "H", "D" };
+        public override String[] header {get; set;} = { "Number", "ID", "H", "D" };
         public static int tableColNum = 4;
 
         // constructor calculate variables after power flow 
@@ -369,11 +369,6 @@ namespace SimAGS.DynModels.GenModels
                 $"{_String.format("%1.2f", H * SBASE / MBase)}",
                 $"{_String.format("%1.2f", D * SBASE / MBase)}"
             };
-        }
-
-        public override string[] GetHeaders()
-        {
-            return header;
         }
 
         // export data for tabular showing 

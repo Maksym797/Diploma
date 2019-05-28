@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using java.util;
+using SimAGS.Handlers;
 
 namespace SimAGS
 {
@@ -119,7 +120,7 @@ namespace SimAGS
 
         #region DataRowCollection
 
-        public static void AddElem(this DataRowCollection rows, abstractPfElement elem)
+        public static void AddElem(this DataRowCollection rows, AbstractTableViewing elem)
         {
             rows.Add(elem.AsArrayForRow());
         }

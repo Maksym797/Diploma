@@ -56,17 +56,17 @@ namespace SimAGS.Handlers
             else if (currentTreeNode.equalsIgnoreCase("SW SHUNT"))
             {
                 displaySWShuntData(pfProc);
-            
+
             }
             else if (currentTreeNode.equalsIgnoreCase("AREA"))
             {
                 displayAreaData(pfProc);
-            
+
             }
             else if (currentTreeNode.equalsIgnoreCase("ZONE"))
             {
                 displayZoneData(pfProc);
-            
+
             }
             else if (currentTreeNode.equalsIgnoreCase("OWNER"))
             {
@@ -78,99 +78,73 @@ namespace SimAGS.Handlers
 
         private static void displayOwnerData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            owner.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            pfCase.ownerArrayList.ForEach(e => _table.Rows.AddElem(e));
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.ownerArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displayZoneData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            zone.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            pfCase.zoneArrayList.ForEach(e => _table.Rows.AddElem(e));
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.zoneArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displayAreaData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            area.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            pfCase.areaArrayList.ForEach(e => _table.Rows.AddElem(e));
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.areaArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displaySWShuntData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            swshunt.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            pfCase.sortBusArrayList.ForEach(bt => bt.busSwShunts.ForEach(e => _table.Rows.AddElem(e)));
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.sortBusArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displayTwoWindTransData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            twoWindTrans.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            pfCase.twoWindTransArrayList.ForEach(e => _table.Rows.AddElem(e));
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.twoWindTransArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displayBranchData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            branch.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            foreach (var elem in pfCase.branchArrayList)
-            {
-                _table.Rows.AddElem(elem);
-            }
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.branchArrayList.Cast<AbstractTableViewing>().ToList());
         }
 
         private static void displayLoadData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            load.header.ToList().ForEach(e => _table.Columns.Add(e));
-
-            foreach (var busTemp in pfCase.sortBusArrayList)
-            {
-                foreach (var load in busTemp.busLoads)
-                {
-                    _table.Rows.AddElem(load);
-                }
-            }
-            _dataGridView.DataSource = _table;
+            SetTableViewFor(pfCase.sortBusArrayList.Select(busTemp => busTemp.busLoads.Cast<AbstractTableViewing>().ToList()).ToList());
         }
 
         private static void displayGenData(PFCase pfCase)
         {
-            var _table = new DataTable();
-            gen.header.ToList().ForEach(e => _table.Columns.Add(e));
+            SetTableViewFor(pfCase.sortBusArrayList.Select(busTemp => busTemp.busGens.Cast<AbstractTableViewing>().ToList()).ToList());
+        }
 
-            foreach (var busTemp in pfCase.sortBusArrayList)
+        private static void displayBusData(PFCase pfCase)
+        {
+            SetTableViewFor(pfCase.busArrayList.Cast<AbstractTableViewing>().ToList());
+        }
+
+        private static void SetTableViewFor(IList<List<AbstractTableViewing>> source)
+        {
+            var _table = new DataTable();
+            source.FirstOrDefault(e => e.Any())?.FirstOrDefault()?.GetHeaders().ToList().ForEach(e => _table.Columns.Add(e));
+
+            foreach (var elems in source)
             {
-                foreach (var gen in busTemp.busGens)
+                foreach (var elem in elems)
                 {
-                    _table.Rows.AddElem(gen);
+                    _table.Rows.AddElem(elem);
+
                 }
             }
             _dataGridView.DataSource = _table;
         }
 
-        private static void displayBusData(PFCase pfCase)
+        private static void SetTableViewFor(IList<AbstractTableViewing> source)
         {
             var _table = new DataTable();
-            bus.header.ToList().ForEach(e => _table.Columns.Add(e));
+            source.FirstOrDefault()?.GetHeaders().ToList().ForEach(e => _table.Columns.Add(e));
 
-            foreach (var bus in pfCase.busArrayList)
+            foreach (var elem in source)
             {
-                _table.Rows.AddElem(bus);
+                _table.Rows.AddElem(elem);
             }
             _dataGridView.DataSource = _table;
         }

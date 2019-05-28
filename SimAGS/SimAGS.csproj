@@ -185,6 +185,7 @@
     <Compile Include="DynProcessor\DynCase.cs" />
     <Compile Include="DynProcessor\DynCaseLoad.cs" />
     <Compile Include="ExtetsionHandlers.cs" />
+    <Compile Include="Handlers\AbstractTableViewing.cs" />
     <Compile Include="Handlers\CustomGlobalFormsStore.cs" />
     <Compile Include="Handlers\CustomMessageHandler.cs" />
     <Compile Include="Handlers\CustomTableHandler.cs" />
