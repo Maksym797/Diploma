@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using java.io;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace SimAGS.Handlers
         public static double loadQ_FreqCoef {get;set;} = 0.0;		// frequent component coefficient for MVar load
 
 
-        public static JFile powerFlowCaseFile { get; set; }
+        public static File powerFlowCaseFile { get; set; }
         public static PFCase pfProc { get; set; } = new PFCase();
         public static DynCase dynProc { get; set; } = new DynCase(pfProc);//pfProc); todo 
     }

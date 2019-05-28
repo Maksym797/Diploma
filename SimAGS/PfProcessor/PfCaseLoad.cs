@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using java.io;
 using SimAGS.Components;
 using SimAGS.Handlers;
+using System;
+using System.Collections.Generic;
 
 namespace SimAGS.PfProcessor
 {
@@ -50,7 +46,7 @@ namespace SimAGS.PfProcessor
 
         // load power flow data from raw file 
 
-        public void exec(JFile din)
+        public void exec(File pfFile)
         {
             bus busTemp;
             String dataLine = "";
@@ -59,7 +55,7 @@ namespace SimAGS.PfProcessor
 
             try
             {
-                //BufferedReader din = new BufferkedReader(new FileReader(pfFile.getAbsolutePath()));
+                BufferedReader din = new BufferedReader(new FileReader(pfFile.getAbsolutePath()));
 
                 // Case information (Line 1-3) 
                 for (int i = 0; i < 3; i++)

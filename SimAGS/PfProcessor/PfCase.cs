@@ -6,6 +6,7 @@ using SimAGS.Handlers;
 using SimAGS.SimUtil;
 using System;
 using System.Collections.Generic;
+using java.io;
 
 namespace SimAGS.PfProcessor
 {
@@ -100,7 +101,7 @@ namespace SimAGS.PfProcessor
             sortBusArrayList = new List<bus>();
         }
 
-        public void LoadCaseData(JFile pfFile)
+        public void LoadCaseData(File pfFile)
         {
             new PFCaseLoad(this).exec(pfFile);
         }

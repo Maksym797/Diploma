@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using java.io;
 using System.Windows.Forms;
 using SimAGS.DynProcessor;
 using SimAGS.Handlers;
@@ -68,17 +68,18 @@ namespace SimAGS
         }
 
         // global data for interface 
-        public JFile powerFlowCaseFile
+        public File powerFlowCaseFile
+        //public JFile powerFlowCaseFile
         {
             get => CGS.powerFlowCaseFile;
             set => CGS.powerFlowCaseFile = value;
         }
-        public JFile dynDataCaseFile;
-        public JFile AGCDataCaseFile;
-        public JFile windDataCaseFile;
-        public JFile contDataCaseFile;
-        public JFile genSchdDataFile;
-        public JFile loadSchdDataFie;
+        public File dynDataCaseFile;
+        public File AGCDataCaseFile;
+        public File windDataCaseFile;
+        public File contDataCaseFile;
+        public File genSchdDataFile;
+        public File loadSchdDataFie;
 
         // frame elements
         //*private JPanel contentPanel;
@@ -124,7 +125,8 @@ namespace SimAGS
         {
             try
             {
-                powerFlowCaseFile = new JFile(powerFlowCaseFile_textBox.Text);
+                powerFlowCaseFile = new File(powerFlowCaseFile_textBox.Text);
+                //powerFlowCaseFile = new File(powerFlowCaseFile_textBox.Text);
 
                 SubmitHandler();
                 Close();
@@ -159,7 +161,7 @@ namespace SimAGS
                 //*
                 //*// build dynamic simulation object so that the data can be loaded
                 dynProc = new DynCase(pfProc);
-                //*dynProc.loadCaseFile(dynDataCaseFile, AGCDataCaseFile, windDataCaseFile, contDataCaseFile, genSchdDataFile, loadSchdDataFie);   // load data and assign memories for variables; and create buffer to store simulation results
+                dynProc.loadCaseFile(dynDataCaseFile, AGCDataCaseFile, windDataCaseFile, contDataCaseFile, genSchdDataFile, loadSchdDataFie);   // load data and assign memories for variables; and create buffer to store simulation results
                 //*
                 //*//dynamically build model tree 
                 CustomTreeViewHandler.loadModelTree();

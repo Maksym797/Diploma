@@ -95,8 +95,6 @@ namespace SimAGS.DynProcessor
             mainDynCase.nEvent = nEvent;
         }
 
-
-
         // ------------------------ load generator dynamic data -----------------------//
         public void loadDynFile(File dynDataFile) //throws simException
         {

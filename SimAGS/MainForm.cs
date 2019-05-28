@@ -26,6 +26,8 @@ namespace SimAGS
             //settingForm.Close();
         }
 
+        #region props
+
         public double setSBASE
         {
             get => CGS.setSBASE;
@@ -51,6 +53,8 @@ namespace SimAGS
             get => CGS.setSBASE;
             set => CGS.setSBASE = value;
         }          // voltage regulation loop tolerance 
+
+        #endregion
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
