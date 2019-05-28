@@ -10,7 +10,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.MonModels
 {
-    public class BusFreq
+    public class BUSFREQ
     {
         public const double w0 = 2 * 60 * Math.PI;          // default value 				
 
@@ -37,7 +37,7 @@ namespace SimAGS.DynModels.MonModels
 
 
         // constructor calculate variables after power flow 
-        public BusFreq(bus busTemp, int numAlge, int numState)
+        public BUSFREQ(bus busTemp, int numAlge, int numState)
         {
             mBus = busTemp;
             vtAng_Pos = busTemp.vangPos;
@@ -51,7 +51,7 @@ namespace SimAGS.DynModels.MonModels
 
             // update bus status 
             busTemp.bHasFreqMeasure = true;
-            busTemp.busFreqCalc = this;
+            busTemp.BusfreqCalc = this;
             busTemp.busFreq_Pos = busFreq_Pos;
 
             CustomMessageHandler.Show("Freq Measure Model at " + busTemp.I + " is loaded!");

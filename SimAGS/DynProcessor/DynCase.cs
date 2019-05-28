@@ -554,11 +554,11 @@ namespace SimAGS.DynProcessor
                 {
                     if (simTheta != 1)
                     {
-                        busTemp.busFreqCalc.update_g(ret);
+                        busTemp.BusfreqCalc.update_g(ret);
                     }
                     else
                     {
-                        busTemp.busFreqCalc.update_gT0(ret);
+                        busTemp.BusfreqCalc.update_gT0(ret);
                     }
                 }
 
@@ -639,11 +639,11 @@ namespace SimAGS.DynProcessor
                 {
                     if (simTheta != 1)
                     {
-                        busTemp.busFreqCalc.update_gy(ret, 0, 0);
+                        busTemp.BusfreqCalc.update_gy(ret, 0, 0);
                     }
                     else
                     {
-                        busTemp.busFreqCalc.update_gyT0(ret, 0, 0);
+                        busTemp.BusfreqCalc.update_gyT0(ret, 0, 0);
                     }
                 }
 
@@ -696,7 +696,7 @@ namespace SimAGS.DynProcessor
             {
                 if (busTemp.bHasFreqMeasure)
                 {
-                    busTemp.busFreqCalc.update_BusFreqMeasurement(h, yVector_n);
+                    busTemp.BusfreqCalc.update_BusFreqMeasurement(h, yVector_n);
                 }
             }
         }
@@ -722,7 +722,7 @@ namespace SimAGS.DynProcessor
                 // update bus frequency 
                 if (busTemp.bHasFreqMeasure)
                 {
-                    busTemp.busFreqCalc.update_Var(yVector, xVector);
+                    busTemp.BusfreqCalc.update_Var(yVector, xVector);
                 }
 
                 // update dynamic loupdate_dg();ad (frequency dependent) 
@@ -801,7 +801,7 @@ namespace SimAGS.DynProcessor
         //public void resetBusFreqIniAng(){
         //	for (bus busTemp in busList){
         //		if (busTemp.bHasFreqMeasure){
-        //			busTemp.busFreqCalc.updateThetaZero(yVector);			// update frequency theta_0
+        //			busTemp.BusfreqCalc.updateThetaZero(yVector);			// update frequency theta_0
         //		}
         //	}
         //}

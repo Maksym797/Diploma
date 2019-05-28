@@ -127,9 +127,14 @@ namespace SimAGS
         #endregion
     }
 
-    public class Integer
+    public class Integer 
     {
         public static int parseInt(string s)
+        {
+            return int.Parse(s);
+        }
+
+        public static int valueOf(string s)
         {
             return int.Parse(s);
         }

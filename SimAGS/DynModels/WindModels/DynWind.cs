@@ -7,7 +7,7 @@ using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.WindModels
 {
-    public class DynWind : abstractPfElement
+    public class DYNWIND : abstractPfElement
     {
         // default parameters position in input token 
         public const int Default_TR = 1;
@@ -42,7 +42,7 @@ namespace SimAGS.DynModels.WindModels
         public static int tableColNum = 3;
 
 
-        public DynWind(bus busTemp, String[] token, int numAlge, int numState)
+        public DYNWIND(bus busTemp, String[] token, int numAlge, int numState)
         {
             mBus = busTemp;
             busNum = mBus.I;

@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ikvm.extensions;
+﻿using ikvm.extensions;
 using java.io;
 using SimAGS.Components;
 using SimAGS.DistEvent;
 using SimAGS.DynModels.AgcModel;
+using SimAGS.DynModels.DynLoadModels;
+using SimAGS.DynModels.ExcModels;
 using SimAGS.DynModels.GenModels;
+using SimAGS.DynModels.GovModels;
 using SimAGS.DynModels.MonModels;
+using SimAGS.DynModels.WindModels;
 using SimAGS.Handlers;
+using System;
+using System.Collections.Generic;
 
 namespace SimAGS.DynProcessor
 {
@@ -44,7 +45,6 @@ namespace SimAGS.DynProcessor
         //constructor 
         public DynCaseLoad(DynCase inputCase)
         {
-
             numState = 0;
             numAlge = 2 * inputCase.pfCase.nYBus;
             nGENCLS = 0;
@@ -159,74 +159,74 @@ namespace SimAGS.DynProcessor
             }
 
             // exciter models 
-            // if (type.equalsIgnoreCase("ESDC1A"))
-            // {
-            //     ESDC1A loadedModel = new ESDC1A(findGenAt(busNum, token[2]), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nESDC1A++;
-            // }
-            // 
-            // if (type.equalsIgnoreCase("ESAC4A"))
-            // {
-            //     ESAC4A loadedModel = new ESAC4A(findGenAt(busNum, token[2]), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nESAC4A++;
-            // }
-            // 
-            // // ~~~~~~~~~~~~~~~~~~~~~~~~~ governor models ~~~~~~~~~~~~~~~~~~~~~~~~//  
-            // if (type.equalsIgnoreCase("TGOV1"))
-            // {
-            //     TGOV1 loadedModel = new TGOV1(findGenAt(busNum, token[2]), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nTGOV1++;
-            // }
-            // 
-            // if (type.equalsIgnoreCase("HYGOV"))
-            // {
-            //     HYGOV loadedModel = new HYGOV(findGenAt(busNum, token[2]), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nHYGOV++;
-            // }
-            // 
-            // 
-            // if (type.equalsIgnoreCase("IEEEG2"))
-            // {
-            //     IEEEG2 loadedModel = new IEEEG2(findGenAt(busNum, token[2]), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nIEEEG2++;
-            // }
-            // 
-            // 
-            // // ~~~~~~~~~~~~~~~~~~~~~ dynamic data load data ~~~~~~~~~~~~~~~~~~~~~~~// 
-            // if (type.equalsIgnoreCase("DYNLOADUDM"))
-            // {
-            //     DynLoadUDM loadedModel = new DynLoadUDM(findBusAt(busNum), token, numAlge, numState);
-            //     numAlge = loadedModel.last_AlgeVar_Pos;
-            //     numState = loadedModel.last_StateVar_Pos;
-            //     nDynLoadUDM++;
-            // }
-            // 
-            // // ~~~~~~~~~~~~~~~~~ bus frequency measurement data ~~~~~~~~~~~~~~~~~~~~//
-            // if (type.equalsIgnoreCase("FREQBUS"))
-            // {
-            //     if (findBusAt(busNum).bHasFreqMeasure == false)
-            //     {
-            //         BUSFREQ loadedModel = new BUSFREQ(findBusAt(busNum), numAlge, numState);
-            //         numAlge = loadedModel.last_AlgeVar_Pos;
-            //         numState = loadedModel.last_StateVar_Pos;
-            //         nFreqBus++;
-            //     }
-            //     else
-            //     {
-            //         CustomMessageHandler.println("[Warning] FREQ Measurement model at bus " + busNum +
-            //                                      " is skipped because it is already created by other models");
-            //     }
-            // }
+            if (type.equalsIgnoreCase("ESDC1A"))
+            {
+                ESDC1A loadedModel = new ESDC1A(findGenAt(busNum, token[2]), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nESDC1A++;
+            }
+            
+            if (type.equalsIgnoreCase("ESAC4A"))
+            {
+                ESAC4A loadedModel = new ESAC4A(findGenAt(busNum, token[2]), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nESAC4A++;
+            }
+            
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~ governor models ~~~~~~~~~~~~~~~~~~~~~~~~//  
+            if (type.equalsIgnoreCase("TGOV1"))
+            {
+                TGOV1 loadedModel = new TGOV1(findGenAt(busNum, token[2]), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nTGOV1++;
+            }
+            
+            if (type.equalsIgnoreCase("HYGOV"))
+            {
+                HYGOV loadedModel = new HYGOV(findGenAt(busNum, token[2]), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nHYGOV++;
+            }
+            
+            
+            if (type.equalsIgnoreCase("IEEEG2"))
+            {
+                IEEEG2 loadedModel = new IEEEG2(findGenAt(busNum, token[2]), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nIEEEG2++;
+            }
+            
+            
+            // ~~~~~~~~~~~~~~~~~~~~~ dynamic data load data ~~~~~~~~~~~~~~~~~~~~~~~// 
+            if (type.equalsIgnoreCase("DYNLOADUDM"))
+            {
+                DynLoadUDM loadedModel = new DynLoadUDM(findBusAt(busNum), token, numAlge, numState);
+                numAlge = loadedModel.last_AlgeVar_Pos;
+                numState = loadedModel.last_StateVar_Pos;
+                nDynLoadUDM++;
+            }
+            
+            // ~~~~~~~~~~~~~~~~~ bus frequency measurement data ~~~~~~~~~~~~~~~~~~~~//
+            if (type.equalsIgnoreCase("FREQBUS"))
+            {
+                if (findBusAt(busNum).bHasFreqMeasure == false)
+                {
+                    BUSFREQ loadedModel = new BUSFREQ(findBusAt(busNum), numAlge, numState);
+                    numAlge = loadedModel.last_AlgeVar_Pos;
+                    numState = loadedModel.last_StateVar_Pos;
+                    nFreqBus++;
+                }
+                else
+                {
+                    CustomMessageHandler.println("[Warning] FREQ Measurement model at bus " + busNum +
+                                                 " is skipped because it is already created by other models");
+                }
+            }
 
             // ~~~~~~~~~~~~~~~~~ branch MW flow measurement data ~~~~~~~~~~~~~~~~~~~//
             if (type.equalsIgnoreCase("BRANMON"))
@@ -262,33 +262,33 @@ namespace SimAGS.DynProcessor
             double loadConvPP_Pct, double loadConvZQ_Pct, double loadConvIQ_Pct, double loadConvPQ_Pct,
             double loadP_FreqCoef, double loadQ_FreqCoef)
         {
-            // foreach (bus busTemp in busList)
-            // {
-            //     if (busTemp.bHasLoad)
-            //     {
-            //         if (bEnableLoaFreq == true)
-            //         {
-            //             // check if the bus frequency monitor is applied 
-            //             if (!busTemp.bHasFreqMeasure)
-            //             {
-            //                 CustomMessageHandler.println("[Info]: bus freq measurement moduel is added at " +
-            //                                              busTemp.I + " to model freq-dependent load");
-            //                 BUSFREQ loadedModel = new BUSFREQ(findBusAt(busTemp.I), numAlge, numState);
-            //                 numAlge = loadedModel.last_AlgeVar_Pos;
-            //                 numState = loadedModel.last_StateVar_Pos;
-            //                 nFreqBus++;
-            //             }
-            //         }
-            // 
-            //         // create dynamic load will be assigned to load bus 
-            //         DynLoadZIPFreq dynLoadTemp = new DynLoadZIPFreq(busTemp, numAlge, numState);
-            //         dynLoadTemp.setLoadZIPComposite(bEnableLoadConv, loadConvZP_Pct, loadConvIP_Pct, loadConvPP_Pct,
-            //             loadConvZQ_Pct, loadConvIQ_Pct, loadConvPQ_Pct); // ZIP component share (%)
-            //         dynLoadTemp.setLoadFreqCompsite(bEnableLoaFreq, loadP_FreqCoef, loadQ_FreqCoef);
-            //         numAlge = dynLoadTemp.last_AlgeVar_Pos;
-            //         numState = dynLoadTemp.last_StateVar_Pos;
-            //     }
-            // }
+            foreach (bus busTemp in busList)
+            {
+                if (busTemp.bHasLoad)
+                {
+                    if (bEnableLoaFreq == true)
+                    {
+                        // check if the bus frequency monitor is applied 
+                        if (!busTemp.bHasFreqMeasure)
+                        {
+                            CustomMessageHandler.println("[Info]: bus freq measurement moduel is added at " +
+                                                         busTemp.I + " to model freq-dependent load");
+                            BUSFREQ loadedModel = new BUSFREQ(findBusAt(busTemp.I), numAlge, numState);
+                            numAlge = loadedModel.last_AlgeVar_Pos;
+                            numState = loadedModel.last_StateVar_Pos;
+                            nFreqBus++;
+                        }
+                    }
+            
+                    // create dynamic load will be assigned to load bus 
+                    DynLoadZIPFreq dynLoadTemp = new DynLoadZIPFreq(busTemp, numAlge, numState);
+                    dynLoadTemp.setLoadZIPComposite(bEnableLoadConv, loadConvZP_Pct, loadConvIP_Pct, loadConvPP_Pct,
+                        loadConvZQ_Pct, loadConvIQ_Pct, loadConvPQ_Pct); // ZIP component share (%)
+                    dynLoadTemp.setLoadFreqCompsite(bEnableLoaFreq, loadP_FreqCoef, loadQ_FreqCoef);
+                    numAlge = dynLoadTemp.last_AlgeVar_Pos;
+                    numState = dynLoadTemp.last_StateVar_Pos;
+                }
+            }
         }
 
 
@@ -350,12 +350,12 @@ namespace SimAGS.DynProcessor
                                 }
                                 else
                                 {
-                                    // AGCTemp = new AGCDyn(token, numAlge, numState);
-                                    // numAlge = ((AGCDyn) AGCTemp).last_AlgeVar_Pos;
-                                    // numState = ((AGCDyn) AGCTemp).last_StateVar_Pos;
-                                    // AGCList.add(AGCTemp);
-                                    // eventList.addEvent(new actAGC(4, AGCTemp));
-                                    // nAGC++;
+                                     AGCTemp = new AGCDyn(token, numAlge, numState);
+                                     numAlge = ((AGCDyn) AGCTemp).last_AlgeVar_Pos;
+                                     numState = ((AGCDyn) AGCTemp).last_StateVar_Pos;
+                                     AGCList.add(AGCTemp);
+                                     eventList.addEvent(new actAGC(4, AGCTemp));
+                                     nAGC++;
                                 }
 
                             }
@@ -370,9 +370,9 @@ namespace SimAGS.DynProcessor
                                 {
                                     if (!busTemp.bHasFreqMeasure)
                                     {
-                                        // todo BUSFREQ loadedModel = new BUSFREQ(busTemp, numAlge, numState);
-                                        // todo numAlge = loadedModel.last_AlgeVar_Pos;
-                                        // todo numState = loadedModel.last_StateVar_Pos;
+                                        BUSFREQ loadedModel = new BUSFREQ(busTemp, numAlge, numState);
+                                        numAlge = loadedModel.last_AlgeVar_Pos;
+                                        numState = loadedModel.last_StateVar_Pos;
                                         nFreqBus++;
                                     }
                                     AGCTemp.addBusForFreq(findBusAt(busNum), freqWeigt);
@@ -502,8 +502,8 @@ namespace SimAGS.DynProcessor
                                 for (int i = 0; i < genDataTotalNum; i++)
                                 {
                                     genPeSet = Double.Parse(token[i]);
-                                    // todo eventList.addEvent(new setGenMW(tCurrent, genNumList.get(i), genIDList.get(i),
-                                    // todo     genPeSet));
+                                    eventList.addEvent(new setGenMW(tCurrent, genNumList.get(i), genIDList.get(i),
+                                        genPeSet));
                                 }
                                 tCurrent += tDataInterval;
                             }
@@ -526,7 +526,7 @@ namespace SimAGS.DynProcessor
             double tDataInterval = 0.0;
             double tCurrent = 0.0;
 
-            List<Integer> schdBusList = new List<Integer>();
+            List<int> schdBusList = new List<int>();
             double loadSchdMWSet = 0.0;
 
             String[] token;
@@ -568,7 +568,7 @@ namespace SimAGS.DynProcessor
                             {
                                 // load buses 
                                 token = dataProcess.getDataFields(dataLine, ",");
-                                // todo schdBusList.add(Integer.valueOf(token[0]));
+                                schdBusList.add(Integer.valueOf(token[0]));
                                 loadDataTotalNum++;
 
                             }
@@ -579,7 +579,7 @@ namespace SimAGS.DynProcessor
                                 for (int i = 0; i < loadDataTotalNum; i++)
                                 {
                                     loadSchdMWSet = Double.Parse(token[i]);
-                                    // todo eventList.addEvent(new schdLoad(tCurrent, schdBusList.get(i), loadSchdMWSet));
+                                    eventList.addEvent(new schdLoad(tCurrent, schdBusList.get(i), loadSchdMWSet));
                                 }
                                 tCurrent += tDataInterval;
                             }
@@ -644,13 +644,13 @@ namespace SimAGS.DynProcessor
                             {
                                 // load wind bus and dynamic time constant
                                 token = dataProcess.getDataFields(dataLine, ",");
-                                // todo injBus = findBusAt(Integer.valueOf(token[0]));
+                                injBus = findBusAt(Integer.valueOf(token[0]));
                                 if (injBus != null && injBus.IDE == 1)
                                 {
                                     windBusList.add(injBus);
-                                    // todo DYNWIND loadedModel = new DYNWIND(injBus, token, numAlge, numState);
-                                    // todo numAlge = loadedModel.last_AlgeVar_Pos;
-                                    // todo numState = loadedModel.last_StateVar_Pos;
+                                    DYNWIND loadedModel = new DYNWIND(injBus, token, numAlge, numState);
+                                    numAlge = loadedModel.last_AlgeVar_Pos;
+                                    numState = loadedModel.last_StateVar_Pos;
                                     nWindDyn++;
                                     iniWPInj = Double.Parse(token[2]);
                                     CustomMessageHandler.println(
@@ -665,11 +665,11 @@ namespace SimAGS.DynProcessor
                             {
                                 // load wind data, windInj in MW (tread wind power injection at discrete event at specified time instants)
                                 token = dataProcess.getDataFields(dataLine, " ");
-                                // todo for (int i = 0; i < token.length; i++)
+                                for (int i = 0; i < token.length(); i++)
                                 {
-                                    // todo eventList.addEvent(new dispatchWind(tCurrent, windBusList.get(i).I,
-                                    // todo     Double.valueOf(token[i]) / 100));
-                                    // todo tCurrent += tWindDataInterval;
+                                    eventList.addEvent(new dispatchWind(tCurrent, windBusList.get(i).I,
+                                        Double.Parse(token[i]) / 100));
+                                    tCurrent += tWindDataInterval;
                                     numSampleWindData++;
                                 }
                             }
@@ -707,61 +707,61 @@ namespace SimAGS.DynProcessor
                         }
                         CustomMessageHandler.println("cont data [" + dataLine + "] is loaded");
 
-                        // todo if (dataLine.contains("trip") && dataLine.contains("generator"))
-                        // todo {
-                        // todo     tripGen genTripEvent = new tripGen(dataLine);
-                        // todo     if (findGenAt(genTripEvent.genBusNum, genTripEvent.genID) != null)
-                        // todo     {
-                        // todo         // check if generator exists
-                        // todo         eventList.addEvent(genTripEvent);
-                        // todo         nEvent++;
-                        // todo     }
-                        // todo }
-                        // todo else if (dataLine.contains("MW") && dataLine.contains("generator"))
-                        // todo {
-                        // todo     setGenMW setGenMWEvent = new setGenMW(dataLine);
-                        // todo     if (findGenAt(setGenMWEvent.genBusNum, setGenMWEvent.genID) != null)
-                        // todo     {
-                        // todo         eventList.addEvent(setGenMWEvent);
-                        // todo         nEvent++;
-                        // todo     }
-                        // todo }
-                        // todo else if (dataLine.contains("MW") && dataLine.contains("load") && dataLine.contains("add"))
-                        // todo {
-                        // todo     setAddLoadMW setLoadMWEvent = new setAddLoadMW(dataLine);
-                        // todo     eventList.addEvent(setLoadMWEvent);
-                        // todo     nEvent++;
-                        // todo }
-                        // todo else if (dataLine.contains("fault") && dataLine.contains("bus") && dataLine.contains("cleared"))
-                        // todo {
-                        // todo     busFault busFaultEvent = new busFault(dataLine);
-                        // todo     // convert busFaultEvent 
-                        // todo     eventList.addEvent(busFaultEvent.applyFault());
-                        // todo     eventList.addEvent(busFaultEvent.clearFault());
-                        // todo     foreach (tripBranch tripBranchTemp in busFaultEvent.tripBranchEventList)
-                        // todo     {
-                        // todo         eventList.addEvent(tripBranchTemp);
-                        // todo     }
-                        // todo     nEvent++;
-                        // todo }
-                        // todo else if (dataLine.contains("load") && dataLine.contains("scale"))
-                        // todo {
-                        // todo     schdLoad schdLoadEvent = new schdLoad(dataLine);
-                        // todo     eventList.addEvent(schdLoadEvent);
-                        // todo     nEvent++;
-                        // todo }
-                        // todo // transmission line tripping event
-                        // todo else if (dataLine.contains("trip branch"))
-                        // todo {
-                        // todo     tripBranch tripBranchEvent = new tripBranch(dataLine);
-                        // todo     eventList.addEvent(tripBranchEvent);
-                        // todo     nEvent++;
-                        // todo }
+                        if (dataLine.contains("trip") && dataLine.contains("generator"))
+                        {
+                            tripGen genTripEvent = new tripGen(dataLine);
+                            if (findGenAt(genTripEvent.genBusNum, genTripEvent.genID) != null)
+                            {
+                                // check if generator exists
+                                eventList.addEvent(genTripEvent);
+                                nEvent++;
+                            }
+                        }
+                        else if (dataLine.contains("MW") && dataLine.contains("generator"))
+                        {
+                            setGenMW setGenMWEvent = new setGenMW(dataLine);
+                            if (findGenAt(setGenMWEvent.genBusNum, setGenMWEvent.genID) != null)
+                            {
+                                eventList.addEvent(setGenMWEvent);
+                                nEvent++;
+                            }
+                        }
+                        else if (dataLine.contains("MW") && dataLine.contains("load") && dataLine.contains("add"))
+                        {
+                            setAddLoadMW setLoadMWEvent = new setAddLoadMW(dataLine);
+                            eventList.addEvent(setLoadMWEvent);
+                            nEvent++;
+                        }
+                        else if (dataLine.contains("fault") && dataLine.contains("bus") && dataLine.contains("cleared"))
+                        {
+                            busFault busFaultEvent = new busFault(dataLine);
+                            // convert busFaultEvent 
+                            eventList.addEvent(busFaultEvent.applyFault());
+                            eventList.addEvent(busFaultEvent.clearFault());
+                            foreach (tripBranch tripBranchTemp in busFaultEvent.tripBranchEventList)
+                            {
+                                eventList.addEvent(tripBranchTemp);
+                            }
+                            nEvent++;
+                        }
+                        else if (dataLine.contains("load") && dataLine.contains("scale"))
+                        {
+                            schdLoad schdLoadEvent = new schdLoad(dataLine);
+                            eventList.addEvent(schdLoadEvent);
+                            nEvent++;
+                        }
+                        // transmission line tripping event
+                        else if (dataLine.contains("trip branch"))
+                        {
+                            tripBranch tripBranchEvent = new tripBranch(dataLine);
+                            eventList.addEvent(tripBranchEvent);
+                            nEvent++;
+                        }
                     }
                 }
 
                 din.close();
-                CustomMessageHandler.println("Total number of event time is " + // todo  eventList.eventList.size() +
+                CustomMessageHandler.println("Total number of event time is " + eventList._eventList.size() +
                                              " number of events " + nEvent);
 
             }

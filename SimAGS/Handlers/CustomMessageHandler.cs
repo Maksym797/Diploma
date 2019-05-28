@@ -34,6 +34,11 @@ namespace SimAGS.Handlers
             _messageShower(message);
             return new CustomMessageHandler(message);
         }
+        public static CustomMessageHandler print(string message)
+        {
+            _messageShower(message);
+            return new CustomMessageHandler(message);
+        }
 
         #region methods-chaining
 

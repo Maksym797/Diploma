@@ -68,12 +68,12 @@ namespace SimAGS.Components
         public int pmech_Pos = 0;                   // output of governor that feeds to generator
 
         // generator excitation model [dynamic simulation]
-        public ExcModel excDyn;                             // exciter model 
+        public excModel excDyn;                             // exciter model 
         public bool hasExcModel = false;
         public int efd_Pos = 0;
 
         // generator governor model [dynamic simulation]
-        public GovModel govDyn;                             // governor model; 
+        public govModel govDyn;                             // governor model; 
         public bool hasGovModel = false;
 
         // generator for AGC control [dynamic simulation]

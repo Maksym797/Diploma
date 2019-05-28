@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cern.colt.matrix;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.ExcModels
 {
-    public class ExcModel
+    public abstract class excModel : AbstractTableViewing
     {
 
         public String modelType = "";
@@ -74,7 +75,4 @@ namespace SimAGS.DynModels.ExcModels
             return new Object[] { };
         }
     }
-
-
-
 }

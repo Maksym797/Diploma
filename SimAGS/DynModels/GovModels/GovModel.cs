@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cern.colt.matrix;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.GovModels
 {
-    public class GovModel
+    public abstract class govModel : AbstractTableViewing
     {
 
         public double SBASE = 100;

@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cern.colt.matrix;
+using SimAGS.Handlers;
 
 namespace SimAGS.DynModels.DynLoadModels
 {
-    public class DynLoadModel
+    public abstract class dynLoadModel : AbstractTableViewing
     {
 
         public String modelType = "";
-        public double SBase = 100;
+        public double SBASE = 100;
         public const double LARGE_NUMBER = 1E5;
 
 

@@ -106,11 +106,11 @@ namespace SimAGS.Components
 
         // for dynamic load [dynamic simulation]
         public bool bHasDynLoad = false;                         // has dynamic load 
-        public DynLoadModel dynLoad;                                // aggregated load models  
+        public dynLoadModel dynLoad;                                // aggregated load models  
 
 
         // for bus frequency [dynamic simulation]
-        public BusFreq busFreqCalc;                                 // store if the bus's frequency is measured (for forming jacobian matrix)
+        public BUSFREQ BusfreqCalc;                                 // store if the bus's frequency is measured (for forming jacobian matrix)
         public bool bHasFreqMeasure = false;
         public double busFreq = 0.0;                                // bus frequency deviation (in pu) 
         public int busFreq_Pos = 0;
@@ -119,7 +119,7 @@ namespace SimAGS.Components
         public double areaFreqWeight = 0.0;
 
         // for wind data injection modeling [dynamic simulation]
-        public DynWind windModel;
+        public DYNWIND windModel;
         public bool bWindMWEnable = false;
         public double windMWInj = 0.0;
 
@@ -347,7 +347,7 @@ namespace SimAGS.Components
             }
 
             // <2> initialize bus frequency 
-            if (bHasFreqMeasure) busFreqCalc.ini(yVector, xVector);
+            if (bHasFreqMeasure) BusfreqCalc.ini(yVector, xVector);
 
             // <3> initialize dynamic load 
             if (bHasLoad) dynLoad.ini(yVector, xVector);
