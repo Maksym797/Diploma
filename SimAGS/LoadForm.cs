@@ -35,6 +35,18 @@ namespace SimAGS
             set => CGS.setSBASE = value;
         }          // voltage regulation loop tolerance 
 
+        // case data 
+        public PFCase pfProc
+        {
+            get => CGS.pfProc;
+            set => CGS.pfProc = value;
+        }
+        public DynCase dynProc
+        {
+            get => CGS.dynProc;
+            set => CGS.dynProc = value;
+        }
+
         // general setting of dynamic simulation 
         public double setEndTime;           // ending time of simulation
         public double setDyntol;            // dynamic tolerance 
@@ -54,18 +66,6 @@ namespace SimAGS
         public double loadConvPQ_Pct;       // percentage of constant power MVar load
         public double loadP_FreqCoef;       // frequent component coefficient for MW load
         public double loadQ_FreqCoef;       // frequent component coefficient for MVar load
-
-        // case data 
-        public PFCase pfProc
-        {
-            get => CGS.pfProc;
-            set => CGS.pfProc = value;
-        }
-        public DynCase dynProc
-        {
-            get => CGS.dynProc;
-            set => CGS.dynProc = value;
-        }
 
         // global data for interface 
         public File powerFlowCaseFile
@@ -108,17 +108,17 @@ namespace SimAGS
 
         private void ags_button_Click(object sender, EventArgs e)
         {
-            OpenFileHandler(textBox3);
+            OpenFileHandler(windDataCaseFile_textBox);
         }
 
         private void wind_button_Click(object sender, EventArgs e)
         {
-            OpenFileHandler(textBox4);
+            OpenFileHandler(AGCDataCaseFile_textBox);
         }
 
         private void conf_button_Click(object sender, EventArgs e)
         {
-            OpenFileHandler(textBox5);
+            OpenFileHandler(contDataCaseFile_textBox);
         }
 
         private void Submit_Click(object sender, EventArgs e)
@@ -126,7 +126,12 @@ namespace SimAGS
             try
             {
                 powerFlowCaseFile = new File(powerFlowCaseFile_textBox.Text);
-                //powerFlowCaseFile = new File(powerFlowCaseFile_textBox.Text);
+                dynDataCaseFile = new File(dynDataCaseFile_textBox.Text);
+                AGCDataCaseFile = new File(AGCDataCaseFile_textBox.Text);
+                windDataCaseFile = new File(windDataCaseFile_textBox.Text);
+                contDataCaseFile = new File(contDataCaseFile_textBox.Text);
+                // todo genSchdDataFile = new File(_textBox.Text);
+                // todo loadSchdDataFie = new File(_textBox.Text);
 
                 SubmitHandler();
                 Close();
@@ -142,17 +147,13 @@ namespace SimAGS
             Close();
         }
 
-        //private void Validate()
-        //{
-        // TODO
-        //}
 
         private void SubmitHandler()
         {
             var config = SimConfig.GetConfig();
             try
             {
-                //*if (powerFlowCaseFile == null) throw new simException("Error: power flow file must be specified");
+                if (powerFlowCaseFile == null) throw new simException("Error: power flow file must be specified");
 
                 // load power flow data 
                 pfProc = new PFCase();
@@ -167,7 +168,7 @@ namespace SimAGS
                 CustomTreeViewHandler.loadModelTree();
                 //*
                 //*// update current table if a new case is loaded 
-                //CustomTableHandler.updateTableForCurrentTreeNode();
+                CustomTableHandler.updateTableForCurrentTreeNode();
 
             }
             catch (Exception e)

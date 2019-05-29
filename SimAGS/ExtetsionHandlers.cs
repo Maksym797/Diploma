@@ -34,6 +34,11 @@ namespace SimAGS
             return str.Trim();
         }
 
+        public static bool equalsIgnoreCase(this string str1, string str2)
+        {
+            return str1.Equals(str2,StringComparison.CurrentCultureIgnoreCase);
+        }
+
         public static bool startsWith(this string str, string val)
         {
             return str.StartsWith(val);

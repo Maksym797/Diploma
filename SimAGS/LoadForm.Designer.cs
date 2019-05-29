@@ -33,11 +33,11 @@
             this.powerFlowCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.dynDataCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.dyn_button = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.windDataCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.wind_button = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.AGCDataCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.ags_button = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.contDataCaseFile_textBox = new System.Windows.Forms.TextBox();
             this.conf_button = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -94,13 +94,13 @@
             this.dyn_button.UseVisualStyleBackColor = true;
             this.dyn_button.Click += new System.EventHandler(this.dyn_button_Click);
             // 
-            // textBox3
+            // windDataCaseFile_textBox
             // 
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox3.Location = new System.Drawing.Point(182, 188);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(312, 26);
-            this.textBox3.TabIndex = 7;
+            this.windDataCaseFile_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.windDataCaseFile_textBox.Location = new System.Drawing.Point(182, 188);
+            this.windDataCaseFile_textBox.Name = "windDataCaseFile_textBox";
+            this.windDataCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
+            this.windDataCaseFile_textBox.TabIndex = 7;
             // 
             // wind_button
             // 
@@ -113,13 +113,13 @@
             this.wind_button.UseVisualStyleBackColor = true;
             this.wind_button.Click += new System.EventHandler(this.wind_button_Click);
             // 
-            // textBox4
+            // AGCDataCaseFile_textBox
             // 
-            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox4.Location = new System.Drawing.Point(182, 139);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(312, 26);
-            this.textBox4.TabIndex = 5;
+            this.AGCDataCaseFile_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.AGCDataCaseFile_textBox.Location = new System.Drawing.Point(182, 139);
+            this.AGCDataCaseFile_textBox.Name = "AGCDataCaseFile_textBox";
+            this.AGCDataCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
+            this.AGCDataCaseFile_textBox.TabIndex = 5;
             // 
             // ags_button
             // 
@@ -132,13 +132,13 @@
             this.ags_button.UseVisualStyleBackColor = true;
             this.ags_button.Click += new System.EventHandler(this.ags_button_Click);
             // 
-            // textBox5
+            // contDataCaseFile_textBox
             // 
-            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox5.Location = new System.Drawing.Point(182, 236);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(312, 26);
-            this.textBox5.TabIndex = 9;
+            this.contDataCaseFile_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.contDataCaseFile_textBox.Location = new System.Drawing.Point(182, 236);
+            this.contDataCaseFile_textBox.Name = "contDataCaseFile_textBox";
+            this.contDataCaseFile_textBox.Size = new System.Drawing.Size(312, 26);
+            this.contDataCaseFile_textBox.TabIndex = 9;
             // 
             // conf_button
             // 
@@ -235,11 +235,11 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.contDataCaseFile_textBox);
             this.Controls.Add(this.conf_button);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.windDataCaseFile_textBox);
             this.Controls.Add(this.wind_button);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.AGCDataCaseFile_textBox);
             this.Controls.Add(this.ags_button);
             this.Controls.Add(this.dynDataCaseFile_textBox);
             this.Controls.Add(this.dyn_button);
@@ -261,11 +261,11 @@
         private System.Windows.Forms.TextBox powerFlowCaseFile_textBox;
         private System.Windows.Forms.TextBox dynDataCaseFile_textBox;
         private System.Windows.Forms.Button dyn_button;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox windDataCaseFile_textBox;
         private System.Windows.Forms.Button wind_button;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox AGCDataCaseFile_textBox;
         private System.Windows.Forms.Button ags_button;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox contDataCaseFile_textBox;
         private System.Windows.Forms.Button conf_button;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
