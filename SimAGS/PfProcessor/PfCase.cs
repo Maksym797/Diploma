@@ -650,13 +650,13 @@ namespace SimAGS.PfProcessor
             {
                 String strTemp = "";
                 bus busTemp = sortBusArrayList.get(i);
-                strTemp = strTemp + "Bus " + String.Format("%2d", busTemp.I)
-                        + "	\tVolt = " + String.Format("%2.5f", busTemp.volt)
-                        + "	\tAng = " + String.Format("%2.5f", busTemp.ang * Rad2Deg)
-                        + "	\tPLoad = " + String.Format("%4.2f", busTemp.aggTotalPLoad * setSBASE)
-                        + "	\tQLoad = " + String.Format("%4.2f", busTemp.aggTotalQLoad * setSBASE)
-                        + "	\tPGen  = " + String.Format("%4.2f", busTemp.aggPGen * setSBASE)
-                        + "	\tQGen  = " + String.Format("%4.2f", busTemp.aggQGen * setSBASE);
+                strTemp = strTemp + "Bus " + _String.format("%2d", busTemp.I)
+                        + "	\tVolt = " + _String.format("%2.5f", busTemp.volt)
+                        + "	\tAng = " + _String.format("%2.5f", busTemp.ang * Rad2Deg)
+                        + "	\tPLoad = " + _String.format("%4.2f", busTemp.aggTotalPLoad * setSBASE)
+                        + "	\tQLoad = " + _String.format("%4.2f", busTemp.aggTotalQLoad * setSBASE)
+                        + "	\tPGen  = " + _String.format("%4.2f", busTemp.aggPGen * setSBASE)
+                        + "	\tQGen  = " + _String.format("%4.2f", busTemp.aggQGen * setSBASE);
                 CustomMessageHandler.Show(strTemp);
             }
 

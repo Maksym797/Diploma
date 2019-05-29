@@ -10,7 +10,8 @@ namespace SimAGS
     public partial class LoadForm : Form
     {
         // general setting of power flow computation 
-        public double setSBASE{
+        public double setSBASE
+        {
             get => CGS.setSBASE;
             set => CGS.setSBASE = value;
         }             // system base 
@@ -125,11 +126,11 @@ namespace SimAGS
         {
             try
             {
-                powerFlowCaseFile = new File(powerFlowCaseFile_textBox.Text);
-                dynDataCaseFile = new File(dynDataCaseFile_textBox.Text);
-                AGCDataCaseFile = new File(AGCDataCaseFile_textBox.Text);
-                windDataCaseFile = new File(windDataCaseFile_textBox.Text);
-                contDataCaseFile = new File(contDataCaseFile_textBox.Text);
+                powerFlowCaseFile = string.IsNullOrEmpty(powerFlowCaseFile_textBox.Text) ? null : new File(powerFlowCaseFile_textBox.Text);
+                dynDataCaseFile = string.IsNullOrEmpty(dynDataCaseFile_textBox.Text) ? null : new File(dynDataCaseFile_textBox.Text);
+                AGCDataCaseFile = string.IsNullOrEmpty(AGCDataCaseFile_textBox.Text) ? null : new File(AGCDataCaseFile_textBox.Text);
+                windDataCaseFile = string.IsNullOrEmpty(windDataCaseFile_textBox.Text) ? null : new File(windDataCaseFile_textBox.Text);
+                contDataCaseFile = string.IsNullOrEmpty(contDataCaseFile_textBox.Text) ? null : new File(contDataCaseFile_textBox.Text);
                 // todo genSchdDataFile = new File(_textBox.Text);
                 // todo loadSchdDataFie = new File(_textBox.Text);
 

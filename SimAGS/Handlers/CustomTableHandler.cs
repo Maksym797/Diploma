@@ -23,52 +23,52 @@ namespace SimAGS.Handlers
 
         public static CustomTableHandler updateTableForCurrentTreeNode()
         {
-            if (currentTreeNode.equalsIgnoreCase("BUS"))
+            if (currentTreeNode._equalsIgnoreCase("BUS"))
             {
                 displayBusData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("GENERATOR"))
+            else if (currentTreeNode._equalsIgnoreCase("GENERATOR"))
             {
                 displayGenData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("LOAD"))
+            else if (currentTreeNode._equalsIgnoreCase("LOAD"))
             {
                 displayLoadData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("BRANCH"))
+            else if (currentTreeNode._equalsIgnoreCase("BRANCH"))
             {
                 displayBranchData(pfProc);
             }
-            else if (currentTreeNode.equalsIgnoreCase("2W TRANSFORMER"))
+            else if (currentTreeNode._equalsIgnoreCase("2W TRANSFORMER"))
             {
                 displayTwoWindTransData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("3W TRANSFORMER"))
+            else if (currentTreeNode._equalsIgnoreCase("3W TRANSFORMER"))
             {
                 //table.displayThrWindTransData(pfProc);
                 CustomMessageHandler.println("You select 3-transformer data")
                     .MessBox();
             }
-            else if (currentTreeNode.equalsIgnoreCase("SW SHUNT"))
+            else if (currentTreeNode._equalsIgnoreCase("SW SHUNT"))
             {
                 displaySWShuntData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("AREA"))
+            else if (currentTreeNode._equalsIgnoreCase("AREA"))
             {
                 displayAreaData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("ZONE"))
+            else if (currentTreeNode._equalsIgnoreCase("ZONE"))
             {
                 displayZoneData(pfProc);
 
             }
-            else if (currentTreeNode.equalsIgnoreCase("OWNER"))
+            else if (currentTreeNode._equalsIgnoreCase("OWNER"))
             {
                 displayOwnerData(pfProc);
             }

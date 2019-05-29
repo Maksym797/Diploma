@@ -48,7 +48,7 @@ namespace SimAGS.SimUtil
                   for (int i=0;i<nYNode;i++){
                       for (int j=0;j<nYNode;j++){
                           if (yMatRe.getQuick(i,j)!=0 || yMatIm.getQuick(i,j)!=0){
-                              strTemp = "("+ nodeList.get(i) + "," + nodeList.get(j)+")\t = " + String.Format("%1$.4f", yMatRe.getQuick(i,j)) + "+j" + String.Format("%1$.4f", yMatIm.getQuick(i,j));
+                              strTemp = "("+ nodeList.get(i) + "," + nodeList.get(j)+")\t = " + _String.format("%1$.4f", yMatRe.getQuick(i,j)) + "+j" + _String.format("%1$.4f", yMatIm.getQuick(i,j));
                               CustomMessageHandler.Show(strTemp);
                           }
                       }

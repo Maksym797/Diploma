@@ -69,7 +69,7 @@ namespace SimAGS.Components.ExtendOption
             }
             hostBus.swshuntCalcB = newSWShunt;
             bYMatReBuild = true;
-            CustomMessageHandler.Show("----> SWShunt at bus " + hostBus.I + " changes from " + String.Format("%.2f", oldSWShunt) + " to " + String.Format("%.2f", newSWShunt));
+            CustomMessageHandler.Show("----> SWShunt at bus " + hostBus.I + " changes from " + _String.format("%.2f", oldSWShunt) + " to " + _String.format("%.2f", newSWShunt));
         }
 
         // set voltOptmVarIndx by pfVoltageHelper

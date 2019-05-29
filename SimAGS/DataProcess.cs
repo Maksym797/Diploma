@@ -95,7 +95,7 @@ namespace SimAGS
             {
                 for (int j = 0; j < xMat.columns(); j++)
                 {
-                    str = str + "\t" + String.Format("%9.5f", xMat.getQuick(i, j));
+                    str = str + "\t" + _String.format("%9.5f", xMat.getQuick(i, j));
                 }
                 str = str + "\n";
             }
@@ -108,11 +108,11 @@ namespace SimAGS
 
             if (inputVal > upLimit || (inputVal == upLimit && !upLimitInclueEq))
             {
-                return String.Format(" %8s = %10.3f exceeds up  limit = %10.3f %8s %8s", valStr, inputVal, upLimit, upLimitVarName, delimitorStr);
+                return _String.format(" %8s = %10.3f exceeds up  limit = %10.3f %8s %8s", valStr, inputVal, upLimit, upLimitVarName, delimitorStr);
             }
             if (inputVal < lowLimit || (inputVal == lowLimit && !lowLimitIncludeEq))
             {
-                return String.Format(" %8s = %10.3f exceeds low limit = %10.3f %8s %8s", valStr, inputVal, lowLimit, lowLimitVarName, delimitorStr);
+                return _String.format(" %8s = %10.3f exceeds low limit = %10.3f %8s %8s", valStr, inputVal, lowLimit, lowLimitVarName, delimitorStr);
             }
             return "";
         }

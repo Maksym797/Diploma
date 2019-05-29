@@ -37,7 +37,7 @@ namespace SimAGS.DistEvent
             CustomMessageHandler.println("----->" + "branch [" + frBusNum + "," + toBusNum + "," + branchID + "] is tripped");
             foreach (branch branTemp in sim.branchList)
             {
-                if (branTemp.frBus.I == frBusNum && branTemp.toBus.I == toBusNum && branTemp.CKT.equalsIgnoreCase(branchID))
+                if (branTemp.frBus.I == frBusNum && branTemp.toBus.I == toBusNum && branTemp.CKT._equalsIgnoreCase(branchID))
                 {
                     sim.yMat.removeBranch(branTemp);
                     return;

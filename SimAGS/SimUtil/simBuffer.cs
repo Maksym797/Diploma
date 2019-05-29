@@ -332,33 +332,33 @@ namespace SimAGS.SimUtil
                 String typeTemp = (String) resultHeader.get(i)[0];
                 String varTemp = (String) resultHeader.get(i)[3];
 
-                if (typeTemp.equalsIgnoreCase("Generator"))
+                if (typeTemp._equalsIgnoreCase("Generator"))
                 {
                     bus busTemp = dynProc.busList.get((int) resultHeader.get(i)[5]);
 
-                    if (varTemp.equalsIgnoreCase("Speed"))
+                    if (varTemp._equalsIgnoreCase("Speed"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).genDyn.getOmega();
                     }
-                    else if (varTemp.equalsIgnoreCase("PGen"))
+                    else if (varTemp._equalsIgnoreCase("PGen"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).genDyn.getPegen() *
                                         dynProc.setSBASE;
                     }
-                    else if (varTemp.equalsIgnoreCase("QGen"))
+                    else if (varTemp._equalsIgnoreCase("QGen"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).genDyn.getQegen() *
                                         dynProc.setSBASE;
                     }
-                    else if (varTemp.equalsIgnoreCase("Vt"))
+                    else if (varTemp._equalsIgnoreCase("Vt"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).genDyn.getVt();
                     }
-                    else if (varTemp.equalsIgnoreCase("Efd"))
+                    else if (varTemp._equalsIgnoreCase("Efd"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).genDyn.getEfd();
                     }
-                    else if (varTemp.equalsIgnoreCase("PGenSet"))
+                    else if (varTemp._equalsIgnoreCase("PGenSet"))
                     {
                         resultTemp[i] = busTemp.busGens.get((int) resultHeader.get(i)[6]).getMWSetting() *
                                         dynProc.setSBASE;
@@ -367,63 +367,63 @@ namespace SimAGS.SimUtil
                     }
 
                 }
-                else if (typeTemp.equalsIgnoreCase("AGC"))
+                else if (typeTemp._equalsIgnoreCase("AGC"))
                 {
-                    if (varTemp.equalsIgnoreCase("Freq"))
+                    if (varTemp._equalsIgnoreCase("Freq"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_areaFreq();
                     }
-                    else if (varTemp.equalsIgnoreCase("Tie Flow"))
+                    else if (varTemp._equalsIgnoreCase("Tie Flow"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_tieMWFlow() *
                                         dynProc.setSBASE;
                     }
-                    else if (varTemp.equalsIgnoreCase("ACE"))
+                    else if (varTemp._equalsIgnoreCase("ACE"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_ACE();
                     }
-                    else if (varTemp.equalsIgnoreCase("P_RefTotal"))
+                    else if (varTemp._equalsIgnoreCase("P_RefTotal"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_pRefTotal() *
                                         dynProc.setSBASE;
                     }
-                    else if (varTemp.equalsIgnoreCase("CPS1"))
+                    else if (varTemp._equalsIgnoreCase("CPS1"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_CPS1();
                     }
-                    else if (varTemp.equalsIgnoreCase("CPS2"))
+                    else if (varTemp._equalsIgnoreCase("CPS2"))
                     {
                         resultTemp[i] = dynProc.AGCList.get((int) resultHeader.get(i)[5]).get_CPS2();
                     }
 
                 }
-                else if (typeTemp.equalsIgnoreCase("Bus"))
+                else if (typeTemp._equalsIgnoreCase("Bus"))
                 {
-                    if (varTemp.equalsIgnoreCase("Voltage"))
+                    if (varTemp._equalsIgnoreCase("Voltage"))
                     {
                         resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).getVolt(dynProc.yVector);
                     }
-                    //else if (varTemp.equalsIgnoreCase("Angle")) {
+                    //else if (varTemp._equalsIgnoreCase("Angle")) {
                     //	resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).getAngle(dynProc.yVector);
                     //}
-                    else if (varTemp.equalsIgnoreCase("Freq"))
+                    else if (varTemp._equalsIgnoreCase("Freq"))
                     {
                         resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).busFreq;
                     }
-                    else if (varTemp.equalsIgnoreCase("PLoad"))
+                    else if (varTemp._equalsIgnoreCase("PLoad"))
                     {
                         resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).dynLoad.getDynPInj() *
                                         dynProc.setSBASE;
                     }
-                    else if (varTemp.equalsIgnoreCase("QLoad"))
+                    else if (varTemp._equalsIgnoreCase("QLoad"))
                     {
                         resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).dynLoad.getDynQInj() *
                                         dynProc.setSBASE;
                     }
                 }
-                else if (typeTemp.equalsIgnoreCase("Wind"))
+                else if (typeTemp._equalsIgnoreCase("Wind"))
                 {
-                    if (varTemp.equalsIgnoreCase("Injection"))
+                    if (varTemp._equalsIgnoreCase("Injection"))
                     {
                         resultTemp[i] = dynProc.busList.get((int) resultHeader.get(i)[5]).windModel.getCurrentMW() *
                                         dynProc.setSBASE;

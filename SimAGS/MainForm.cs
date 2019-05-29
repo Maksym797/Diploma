@@ -86,7 +86,7 @@ namespace SimAGS
                 CGS.pfProc.buildYMatrix();          // build Y matrix 
                 CGS.pfProc.solvePQ();               // calculate power flow 
 
-                CustomMessageHandler.println("Power flow calculation is completed after " + String.Format("%1.5f", (DateTime.Now - startTime).Milliseconds / 1E3) + " seconds");
+                CustomMessageHandler.println("Power flow calculation is completed after " + _String.format("%1.5f", (DateTime.Now - startTime).Milliseconds / 1E3) + " seconds");
 
                 // update table element 
                 CustomTableHandler.updateTableForCurrentTreeNode();

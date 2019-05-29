@@ -45,7 +45,7 @@ namespace SimAGS.DistEvent
                 {
                     foreach (gen genTemp in busTemp.busGens)
                     {
-                        if (genTemp.I == genBusNum && genTemp.ID.equalsIgnoreCase(genID))
+                        if (genTemp.I == genBusNum && genTemp.ID._equalsIgnoreCase(genID))
                         {
                             genTemp.changeMWSetting(genMWSetVal);
                             return;

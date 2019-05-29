@@ -64,7 +64,7 @@ namespace SimAGS.Components.ExtendOption
             hostTrans.kRatio = newKRatio;
             hostTrans.calcTWPara();
             bYMatReBuild = true;
-            CustomMessageHandler.Show("----> Trans at (" + hostTrans.I + "," + hostTrans.J + ") tap changes from " + String.Format("%.4f", oldKRatio) + " to " + String.Format("%.4f", newKRatio));
+            CustomMessageHandler.Show("----> Trans at (" + hostTrans.I + "," + hostTrans.J + ") tap changes from " + _String.format("%.4f", oldKRatio) + " to " + _String.format("%.4f", newKRatio));
         }
 
         // set voltOptmVarIndx by pfVoltageHelper

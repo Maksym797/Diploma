@@ -135,12 +135,11 @@ namespace SimAGS.DynProcessor
         // add model 
         public void addDynModel(String[] token)
         {
-
             String type = token[1].substring(1, token[1].lastIndexOf("'"));
             int busNum = Integer.parseInt(token[0]);
 
             // ~~~~~~~~~~~~~~~~~~~ generator models ~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-            if (type.equalsIgnoreCase("GENCLS"))
+            if (type._equalsIgnoreCase("GENCLS"))
             {
                 GENCLS loadedModel = new GENCLS(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -148,7 +147,7 @@ namespace SimAGS.DynProcessor
                 nGENCLS++;
             }
 
-            if (type.equalsIgnoreCase("GENROU"))
+            if (type._equalsIgnoreCase("GENROU"))
             {
                 GENROU loadedModel = new GENROU(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -157,7 +156,7 @@ namespace SimAGS.DynProcessor
             }
 
             // exciter models 
-            if (type.equalsIgnoreCase("ESDC1A"))
+            if (type._equalsIgnoreCase("ESDC1A"))
             {
                 ESDC1A loadedModel = new ESDC1A(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -165,7 +164,7 @@ namespace SimAGS.DynProcessor
                 nESDC1A++;
             }
             
-            if (type.equalsIgnoreCase("ESAC4A"))
+            if (type._equalsIgnoreCase("ESAC4A"))
             {
                 ESAC4A loadedModel = new ESAC4A(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -174,7 +173,7 @@ namespace SimAGS.DynProcessor
             }
             
             // ~~~~~~~~~~~~~~~~~~~~~~~~~ governor models ~~~~~~~~~~~~~~~~~~~~~~~~//  
-            if (type.equalsIgnoreCase("TGOV1"))
+            if (type._equalsIgnoreCase("TGOV1"))
             {
                 TGOV1 loadedModel = new TGOV1(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -182,7 +181,7 @@ namespace SimAGS.DynProcessor
                 nTGOV1++;
             }
             
-            if (type.equalsIgnoreCase("HYGOV"))
+            if (type._equalsIgnoreCase("HYGOV"))
             {
                 HYGOV loadedModel = new HYGOV(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -191,7 +190,7 @@ namespace SimAGS.DynProcessor
             }
             
             
-            if (type.equalsIgnoreCase("IEEEG2"))
+            if (type._equalsIgnoreCase("IEEEG2"))
             {
                 IEEEG2 loadedModel = new IEEEG2(findGenAt(busNum, token[2]), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -201,7 +200,7 @@ namespace SimAGS.DynProcessor
             
             
             // ~~~~~~~~~~~~~~~~~~~~~ dynamic data load data ~~~~~~~~~~~~~~~~~~~~~~~// 
-            if (type.equalsIgnoreCase("DYNLOADUDM"))
+            if (type._equalsIgnoreCase("DYNLOADUDM"))
             {
                 DynLoadUDM loadedModel = new DynLoadUDM(findBusAt(busNum), token, numAlge, numState);
                 numAlge = loadedModel.last_AlgeVar_Pos;
@@ -210,7 +209,7 @@ namespace SimAGS.DynProcessor
             }
             
             // ~~~~~~~~~~~~~~~~~ bus frequency measurement data ~~~~~~~~~~~~~~~~~~~~//
-            if (type.equalsIgnoreCase("FREQBUS"))
+            if (type._equalsIgnoreCase("FREQBUS"))
             {
                 if (findBusAt(busNum).bHasFreqMeasure == false)
                 {
@@ -227,7 +226,7 @@ namespace SimAGS.DynProcessor
             }
 
             // ~~~~~~~~~~~~~~~~~ branch MW flow measurement data ~~~~~~~~~~~~~~~~~~~//
-            if (type.equalsIgnoreCase("BRANMON"))
+            if (type._equalsIgnoreCase("BRANMON"))
             {
                 branch branTemp;
                 int frBusNum = Integer.parseInt(token[2]);
@@ -779,7 +778,7 @@ namespace SimAGS.DynProcessor
             {
                 foreach (gen genTemp in busTemp.busGens)
                 {
-                    if (genTemp.I == BusNum && genTemp.ID.equalsIgnoreCase(ID))
+                    if (/*genTemp.I == BusNum && */genTemp.ID._equalsIgnoreCase(ID))
                     {
                         return genTemp;
                     }
@@ -809,11 +808,11 @@ namespace SimAGS.DynProcessor
             for (int i = 0; i < branchList.size(); i++)
             {
                 branch branchTemp = branchList.get(i);
-                if (branchTemp.I == frBus && branchTemp.J == toBus && branchTemp.CKT.equalsIgnoreCase(id))
+                if (branchTemp.I == frBus && branchTemp.J == toBus && branchTemp.CKT._equalsIgnoreCase(id))
                 {
                     return branchTemp;
                 }
-                else if (branchTemp.J == frBus && branchTemp.I == toBus && branchTemp.CKT.equalsIgnoreCase(id))
+                else if (branchTemp.J == frBus && branchTemp.I == toBus && branchTemp.CKT._equalsIgnoreCase(id))
                 {
                     return branchTemp;
                 }
